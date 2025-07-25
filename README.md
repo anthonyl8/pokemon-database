@@ -16,5 +16,7 @@ The application is meant to be a Pokemon game management lookup system. The data
 ## Members
 
 **Graydon Strachan**
+
 **Anthony Lu**
+
 **Dikpaal Patel**
