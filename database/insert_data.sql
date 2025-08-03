@@ -151,7 +151,7 @@ INSERT ALL
     INTO Trainer (trainer_id, name, location_name) VALUES (10, 'Giovanni', NULL)
     INTO Trainer (trainer_id, name, location_name) VALUES (11, 'John', 'Pallet Town')
     INTO Trainer (trainer_id, name, location_name) VALUES (12, 'Joe', NULL)
-    INTO Trainer (trainer_id, name, location_name) VALUES (12, 'Amanda', NULL)
+    INTO Trainer (trainer_id, name, location_name) VALUES (13, 'Amanda', NULL)
 SELECT * FROM dual;
 
 INSERT ALL
