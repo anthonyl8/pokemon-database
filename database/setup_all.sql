@@ -5,4 +5,4 @@
 @create_pokemon_db.sql
 
 -- Insert sample data  
--- @insert_data.sql
+@insert_data.sql
