@@ -317,3 +317,12 @@ INSERT ALL
     INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (26, 10)
     INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (26, 12)
 SELECT * FROM dual;
+
+INSERT ALL
+    INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (1, 1)
+    INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (1, 2)
+    INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (1, 3)
+    INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (1, 4)
+    INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (2, 1)
+    INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (2, 2)
+SELECT * FROM dual;
