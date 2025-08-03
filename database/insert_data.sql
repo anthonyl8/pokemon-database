@@ -116,7 +116,120 @@ INSERT ALL
     INTO Pokemon_3 (total_XP, pokemon_level) VALUES (45000, 45)
 SELECT * FROM dual;
 
--- Insert Species_Can_Learn_Move data
+INSERT ALL
+    INTO Item_2 (price, rarity) VALUES (0, 'Quest')
+    INTO Item_2 (price, rarity) VALUES (100, 'Common')
+    INTO Item_2 (price, rarity) VALUES (200, 'Common')
+    INTO Item_2 (price, rarity) VALUES (600, 'Uncommon')
+    INTO Item_2 (price, rarity) VALUES (1000, 'Rare')
+    INTO Item_2 (price, rarity) VALUES (2500, 'Very Rare')
+SELECT * FROM dual;
+
+INSERT ALL
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Easy', 1000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Medium', 2000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Hard', 3000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Very Hard', 5000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Expert', 10000)
+SELECT * FROM dual;
+
+INSERT ALL
+  INTO Trainer (trainer_id, name, location_name) VALUES (1, 'Ash', 'Pallet Town')
+  INTO Trainer (trainer_id, name, location_name) VALUES (2, 'Gary', NULL)
+  INTO Trainer (trainer_id, name, location_name) VALUES (3, 'Brock', 'Pewter City')
+  INTO Trainer (trainer_id, name, location_name) VALUES (4, 'Misty', 'Cerulean City')
+  INTO Trainer (trainer_id, name, location_name) VALUES (5, 'Lt. Surge', 'Vermilion City')
+  INTO Trainer (trainer_id, name, location_name) VALUES (6, 'Erika', 'Celadon City')
+  INTO Trainer (trainer_id, name, location_name) VALUES (7, 'Koga', 'Fuchsia City')
+  INTO Trainer (trainer_id, name, location_name) VALUES (8, 'Sabrina', 'Saffron City')
+  INTO Trainer (trainer_id, name, location_name) VALUES (9, 'Blaine', 'Route 1')
+  INTO Trainer (trainer_id, name, location_name) VALUES (10, 'Giovanni', NULL)
+SELECT * FROM dual;
+
+
+INSERT ALL
+    INTO Item_1 (name, description, price, location_name) VALUES ('Poké Ball', 'A ball thrown to catch a wild Pokémon. It has a 1x catch rate.', 100, 'Viridian City')
+    INTO Item_1 (name, description, price, location_name) VALUES ('Potion', 'A spray-type medicine for treating wounds. It restores the HP of one Pokémon by 20 points.', 200, 'Viridian City')
+    INTO Item_1 (name, description, price, location_name) VALUES ('Super Potion', 'A spray-type medicine for treating wounds. It restores the HP of one Pokémon by 50 points.', 600, 'Cerulean City')
+    INTO Item_1 (name, description, price, location_name) VALUES ('TM28 - Dig', 'A TM that teaches the move Dig to a compatible Pokémon.', 1000, 'Vermilion City')
+    INTO Item_1 (name, description, price, location_name) VALUES ('Rare Candy', 'A candy that is packed with energy. When consumed, it will instantly raise the level of a single Pokémon by one.', 2500, NULL)
+    INTO Item_1 (name, description, price, location_name) VALUES ('Bicycle', 'A folding Bicycle that enables a rider to get around much faster than with Running Shoes.', 0, 'Cerulean City')
+SELECT * FROM dual;
+
+INSERT ALL
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (1, 1, 'Bulbasaur', 1000, 'Modest', 25, 15, 20, 18, 4, 1)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (2, 1, 'Ivysaur', 3000, 'Calm', 28, 18, 25, 20, 4, 1)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (3, 1, 'Venusaur', 6000, 'Bold', 31, 20, 31, 22, 4, 2)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (4, 1, 'Charmander', 1000, 'Jolly', 22, 25, 18, 28, 5, 3)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (5, 1, 'Charmeleon', 3000, 'Adamant', 26, 30, 20, 25, 5, 4)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (6, 1, 'Charizard', 6000, 'Adamant', 31, 31, 22, 28, 5, 5)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (7, 1, 'Squirtle', 1000, 'Bold', 24, 18, 28, 20, 6, 5)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (8, 1, 'Wartortle', 3000, 'Relaxed', 28, 20, 30, 18, 6, 6)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (9, 1, 'Blastoise', 6000, 'Modest', 31, 15, 31, 25, 6, 7)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (25, 1, 'Pikachu', 3000, 'Timid', 20, 18, 15, 31, 2, 8)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (25, 2, 'Pikachu', 1000, 'Relaxed', 1, 31, 9, 6, 27, 8)
+    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (26, 1, 'Raichu', 6000, 'Jolly', 25, 25, 20, 31, 2, 9)
+SELECT * FROM dual;
+
+INSERT ALL
+    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (3, 1, 'Rock', 1)
+    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (4, 2, 'Water', 2)
+    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (5, 3, 'Electric', 3)
+    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (6, 4, 'Grass', 4)
+    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (7, 5, 'Poison', 5)
+    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (8, 5, 'Psychic', 6)
+SELECT * FROM dual;
+
+INSERT ALL
+    INTO Player (trainer_id, money) VALUES (1, 5000)
+    INTO Player (trainer_id, money) VALUES (2, 3000)
+SELECT * FROM dual;
+
+INSERT ALL
+    INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (1, 2, 16)
+    INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (2, 3, 32)
+    INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (4, 5, 16)
+    INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (5, 6, 36)
+    INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (7, 8, 16)
+    INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (8, 9, 36)
+    INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (25, 26, NULL)
+SELECT * FROM dual;
+
+INSERT ALL
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (1, 1, 1)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (1, 1, 2)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (1, 1, 3)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (4, 1, 1)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (4, 1, 2)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (4, 1, 4)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (7, 1, 1)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (7, 1, 2)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (7, 1, 6)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (25, 1, 1)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (25, 1, 8)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (25, 2, 9)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (26, 1, 8)
+    INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (26, 1, 9)
+SELECT * FROM dual;
+
+INSERT ALL
+    INTO Species_Has_Type (pokedex, type_name) VALUES (1, 'Grass')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (1, 'Poison')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (2, 'Grass')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (2, 'Poison')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (3, 'Grass')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (3, 'Poison')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (4, 'Fire')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (5, 'Fire')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (6, 'Fire')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (6, 'Flying')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (7, 'Water')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (8, 'Water')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (9, 'Water')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (25, 'Electric')
+    INTO Species_Has_Type (pokedex, type_name) VALUES (26, 'Electric')
+SELECT * FROM dual;
+
 INSERT ALL
     INTO Species_Can_Learn_Move (pokedex, move_id) VALUES (1, 1)
     INTO Species_Can_Learn_Move (pokedex, move_id) VALUES (1, 3)
@@ -147,66 +260,60 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-    INTO Item_2 (price, rarity) VALUES (0, 'Quest')
-    INTO Item_2 (price, rarity) VALUES (100, 'Common')
-    INTO Item_2 (price, rarity) VALUES (200, 'Common')
-    INTO Item_2 (price, rarity) VALUES (600, 'Uncommon')
-    INTO Item_2 (price, rarity) VALUES (1000, 'Rare')
-    INTO Item_2 (price, rarity) VALUES (2500, 'Very Rare')
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (1, 4)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (1, 8)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (2, 4)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (2, 8)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (3, 4)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (3, 8)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (4, 5)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (4, 9)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (5, 5)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (5, 9)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (6, 5)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (6, 9)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (7, 6)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (7, 10)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (8, 6)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (8, 10)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (9, 6)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (9, 10)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (25, 2)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (25, 11)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (26, 2)
+    INTO Species_Can_Have_Ability (pokedex, ability_id) VALUES (26, 11)
 SELECT * FROM dual;
 
 INSERT ALL
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Easy', 1000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Medium', 2000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Hard', 3000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Very Hard', 5000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Expert', 10000)
+    INTO Species_Located_In (pokedex, location_name) VALUES (1, 'Pallet Town')
+    INTO Species_Located_In (pokedex, location_name) VALUES (4, 'Pallet Town')
+    INTO Species_Located_In (pokedex, location_name) VALUES (7, 'Pallet Town')
+    INTO Species_Located_In (pokedex, location_name) VALUES (25, 'Viridian City')
+    INTO Species_Located_In (pokedex, location_name) VALUES (25, 'Vermilion City')
+    INTO Species_Located_In (pokedex, location_name) VALUES (26, 'Vermilion City')
 SELECT * FROM dual;
 
 INSERT ALL
-    INTO Trainer (trainer_id, name, location_name) VALUES (1, 'Ash', 'Pallet Town')
-    INTO Trainer (trainer_id, name, location_name) VALUES (2, 'Brock', 'Pewter City')
-    INTO Trainer (trainer_id, name, location_name) VALUES (3, 'Misty', 'Cerulean City')
-    INTO Trainer (trainer_id, name, location_name) VALUES (4, 'Lt. Surge', 'Viridian City')
-    INTO Trainer (trainer_id, name, location_name) VALUES (5, 'Erika', 'Vermilion City')
-    INTO Trainer (trainer_id, name, location_name) VALUES (6, 'Gary', NULL)
-SELECT * FROM dual;
-
-INSERT ALL
-    INTO Item_1 (name, description, price, location_name) VALUES ('Poké Ball', 'A ball thrown to catch a wild Pokémon. It has a 1x catch rate.', 100, 'Viridian City')
-    INTO Item_1 (name, description, price, location_name) VALUES ('Potion', 'A spray-type medicine for treating wounds. It restores the HP of one Pokémon by 20 points.', 200, 'Viridian City')
-    INTO Item_1 (name, description, price, location_name) VALUES ('Super Potion', 'A spray-type medicine for treating wounds. It restores the HP of one Pokémon by 50 points.', 600, 'Cerulean City')
-    INTO Item_1 (name, description, price, location_name) VALUES ('TM28 - Dig', 'A TM that teaches the move Dig to a compatible Pokémon.', 1000, 'Vermilion City')
-    INTO Item_1 (name, description, price, location_name) VALUES ('Rare Candy', 'A candy that is packed with energy. When consumed, it will instantly raise the level of a single Pokémon by one.', 2500, NULL)
-    INTO Item_1 (name, description, price, location_name) VALUES ('Bicycle', 'A folding Bicycle that enables a rider to get around much faster than with Running Shoes.', 0, 'Cerulean City')
-SELECT * FROM dual;
-
-INSERT ALL
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (1, 1, 'Bulbasaur', 1000, 'Modest', 25, 15, 20, 18, 4, 1)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (2, 1, 'Ivysaur', 3000, 'Calm', 28, 18, 25, 20, 4, 1)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (3, 1, 'Venusaur', 6000, 'Bold', 31, 20, 31, 22, 4, 2)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (4, 1, 'Charmander', 1000, 'Jolly', 22, 25, 18, 28, 5, 2)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (5, 1, 'Charmeleon', 3000, 'Adamant', 26, 30, 20, 25, 5, 3)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (6, 1, 'Charizard', 6000, 'Adamant', 31, 31, 22, 28, 5, 3)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (7, 1, 'Squirtle', 1000, 'Bold', 24, 18, 28, 20, 6, 4)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (8, 1, 'Wartortle', 3000, 'Relaxed', 28, 20, 30, 18, 6, 4)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (9, 1, 'Blastoise', 6000, 'Modest', 31, 15, 31, 25, 6, 5)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (25, 1, 'Pikachu', 3000, 'Timid', 20, 18, 15, 31, 2, 5)
-    INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (26, 1, 'Raichu', 6000, 'Jolly', 25, 25, 20, 31, 2, 6)
-SELECT * FROM dual;
-
-INSERT ALL
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (3, 1, 'Rock', 1)
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (4, 2, 'Water', 1)
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (5, 3, 'Electric', 2)
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (6, 4, 'Grass', 2)
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (7, 5, 'Poison', 3)
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (8, 6, 'Psychic', 3)
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (9, 7, 'Fire', 4)
-    INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (10, 8, 'Ground', 5)
-SELECT * FROM dual;
-
-INSERT ALL
-  INTO Player (trainer_id, money) VALUES (1, 5000)
-  INTO Player (trainer_id, money) VALUES (2, 3000)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (1, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (1, 3)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (2, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (2, 3)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (3, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (3, 3)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (4, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (4, 8)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (5, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (5, 8)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (6, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (6, 8)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (7, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (7, 6)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (8, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (8, 6)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (9, 13)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (9, 6)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (25, 10)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (25, 12)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (26, 10)
+    INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (26, 12)
 SELECT * FROM dual;
