@@ -121,7 +121,8 @@ VALUES
         9,
         'Blastoise',
         'It has jet nozzles on its shell. This impressive Pokémon uses these jets to charge toward foes with all the force of a rocket.'
-    ) (
+    ),
+    (
         25,
         'Pikachu',
         'When several of these Pokémon gather, their electricity can build and cause lightning storms.'
@@ -327,10 +328,10 @@ VALUES
     ('Impish', 'Defense', 'Sp. Atk'),
     ('Lonely', 'Attack', 'Defense');
 
+-- Fixed: Changed 'level' to 'pokemon_level'
 INSERT INTO
-    Pokemon_3 (total_XP, level)
+    Pokemon_3 (total_XP, pokemon_level)
 VALUES
-    (0, 1),
     (1000, 5),
     (3000, 10),
     (6000, 15),
