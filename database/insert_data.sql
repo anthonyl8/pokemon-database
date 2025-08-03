@@ -1,4 +1,3 @@
--- Insert Location data
 INSERT ALL
     INTO Location (name, climate, terrain_type) VALUES ('Pallet Town', 'Temperate', 'Grassland')
     INTO Location (name, climate, terrain_type) VALUES ('Viridian City', 'Temperate', 'Urban')
@@ -7,7 +6,6 @@ INSERT ALL
     INTO Location (name, climate, terrain_type) VALUES ('Vermilion City', 'Coastal', 'Port')
 SELECT * FROM dual;
 
--- Insert Type data
 INSERT ALL
     INTO Type (name, colour) VALUES ('Normal', 'Tan')
     INTO Type (name, colour) VALUES ('Fire', 'Red')
@@ -29,7 +27,15 @@ INSERT ALL
     INTO Type (name, colour) VALUES ('Fairy', 'Light Pink')
 SELECT * FROM dual;
 
--- Insert Ability data
+INSERT ALL
+    INTO Badge (badge_index, name) VALUES (1, 'Boulder Badge')
+    INTO Badge (badge_index, name) VALUES (2, 'Cascade Badge')
+    INTO Badge (badge_index, name) VALUES (3, 'Thunder Badge')
+    INTO Badge (badge_index, name) VALUES (4, 'Rainbow Badge')
+    INTO Badge (badge_index, name) VALUES (5, 'Soul Badge')
+    INTO Badge (badge_index, name) VALUES (6, 'Marsh Badge')
+SELECT * FROM dual;
+
 INSERT ALL
     INTO Ability (ability_id, name, description) VALUES (2, 'Static', 'Contact with the Pokémon may cause paralysis.')
     INTO Ability (ability_id, name, description) VALUES (4, 'Overgrow', 'Powers up Grass-type moves when the Pokémon''s HP is low.')
@@ -41,7 +47,6 @@ INSERT ALL
     INTO Ability (ability_id, name, description) VALUES (11, 'Lightning Rod', 'Draws in all Electric-type moves to boost its Sp. Atk stat.')
 SELECT * FROM dual;
 
--- Insert Species data
 INSERT ALL
     INTO Species (pokedex, name, description) VALUES (1, 'Bulbasaur', 'It carries a seed on its back right from birth. As its body grows larger, the seed does too.')
     INTO Species (pokedex, name, description) VALUES (2, 'Ivysaur', 'The bulb on its back grows as it absorbs nutrients. The bulb gives off a pleasant aroma when it blooms.')
@@ -56,7 +61,6 @@ INSERT ALL
     INTO Species (pokedex, name, description) VALUES (26, 'Raichu', 'Its tail discharges electricity into the ground, protecting it from getting shocked.')
 SELECT * FROM dual;
 
--- Insert Egg_Group data
 INSERT ALL
     INTO Egg_Group (egg_group_id, name, description) VALUES (1, 'Mineral', 'Pokemon in this group are inorganic in nature')
     INTO Egg_Group (egg_group_id, name, description) VALUES (2, 'Amorphous', 'Pokemon in this group are amorphous, having no definite form')
@@ -75,7 +79,6 @@ INSERT ALL
     INTO Egg_Group (egg_group_id, name, description) VALUES (15, 'No Eggs Discovered', 'Pokemon in this group are unable to breed')
 SELECT * FROM dual;
 
--- Insert Move data
 INSERT ALL
     INTO Move (move_id, name, power, pp, accuracy, description, type_name) VALUES (1, 'Tackle', 40, 35, 100, 'A physical attack in which the user charges and slams into the target with its whole body.', 'Normal')
     INTO Move (move_id, name, power, pp, accuracy, description, type_name) VALUES (2, 'Growl', 0, 40, 100, 'The user growls in an endearing way, making opposing Pokémon less wary and lowering their Attack stats.', 'Normal')
@@ -89,7 +92,6 @@ INSERT ALL
     INTO Move (move_id, name, power, pp, accuracy, description, type_name) VALUES (10, 'Double Team', 0, 15, 0, 'By moving rapidly, the user makes illusory copies of itself to raise its evasion.', 'Normal')
 SELECT * FROM dual;
 
--- Insert Pokemon_2 data
 INSERT ALL
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Adamant', 'Attack', 'Sp. Atk')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Modest', 'Sp. Atk', 'Attack')
@@ -103,7 +105,6 @@ INSERT ALL
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Lonely', 'Attack', 'Defense')
 SELECT * FROM dual;
 
--- Insert Pokemon_3 data
 INSERT ALL
     INTO Pokemon_3 (total_XP, pokemon_level) VALUES (1000, 5)
     INTO Pokemon_3 (total_XP, pokemon_level) VALUES (3000, 10)
