@@ -62,7 +62,7 @@ CREATE TABLE
 CREATE TABLE
     Pokemon_3 (
         total_XP INTEGER PRIMARY KEY,
-        level INTEGER NOT NULL
+        pokemon_level INTEGER NOT NULL
     );
 
 CREATE TABLE
@@ -153,7 +153,7 @@ CREATE TABLE
         pokemon_id INTEGER,
         move_id INTEGER,
         PRIMARY KEY (pokedex, pokemon_id, move_id),
-        FOREIGN KEY (pokedex, pokemon_id) REFERENCES Pokemon (pokedex, pokemon_id),
+        FOREIGN KEY (pokedex, pokemon_id) REFERENCES Pokemon_1 (pokedex, pokemon_id),
         FOREIGN KEY (move_id) REFERENCES Move (move_id)
     );
 
@@ -210,4 +210,3 @@ CREATE TABLE
         FOREIGN KEY (trainer_id) REFERENCES Player (trainer_id),
         FOREIGN KEY (badge_index) REFERENCES Badge (badge_index)
     );
-
