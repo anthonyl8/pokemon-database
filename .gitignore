@@ -1,0 +1,21 @@
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database backups
+database/backup/*.dmp
+database/backup/*.sql
+
+# Application specific
+app/config/database_local.php
+*.log
+
+# Temporary files
+*.tmp
+temp/
