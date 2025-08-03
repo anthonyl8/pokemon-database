@@ -120,7 +120,7 @@ CREATE TABLE
 CREATE TABLE
     Gym_Leader_1 (
         trainer_id INTEGER PRIMARY KEY,
-        difficulty VARCHAR(10) NOT NULL,
+        difficulty INTEGER NOT NULL,
         specialty_type_name VARCHAR(9) NOT NULL,
         badge_index INTEGER UNIQUE NOT NULL,
         FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id),
