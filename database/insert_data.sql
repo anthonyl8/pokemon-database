@@ -131,25 +131,27 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Easy', 1000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Medium', 2000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Hard', 3000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Very Hard', 5000)
-    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES ('Expert', 10000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES (1, 1000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES (2, 2000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES (3, 3000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES (4, 5000)
+    INTO Gym_Leader_2 (difficulty, cash_reward) VALUES (5, 10000)
 SELECT * FROM dual;
 
--- Error
 INSERT ALL
-  INTO Trainer (trainer_id, name, location_name) VALUES (1, 'Ash', 'Pallet Town')
-  INTO Trainer (trainer_id, name, location_name) VALUES (2, 'Gary', NULL)
-  INTO Trainer (trainer_id, name, location_name) VALUES (3, 'Brock', 'Pewter City')
-  INTO Trainer (trainer_id, name, location_name) VALUES (4, 'Misty', 'Cerulean City')
-  INTO Trainer (trainer_id, name, location_name) VALUES (5, 'Lt. Surge', 'Vermilion City')
-  INTO Trainer (trainer_id, name, location_name) VALUES (6, 'Erika', 'Celadon City')
-  INTO Trainer (trainer_id, name, location_name) VALUES (7, 'Koga', 'Fuchsia City')
-  INTO Trainer (trainer_id, name, location_name) VALUES (8, 'Sabrina', 'Saffron City')
-  INTO Trainer (trainer_id, name, location_name) VALUES (9, 'Blaine', 'Route 1')
-  INTO Trainer (trainer_id, name, location_name) VALUES (10, 'Giovanni', NULL)
+    INTO Trainer (trainer_id, name, location_name) VALUES (1, 'Ash', 'Pallet Town')
+    INTO Trainer (trainer_id, name, location_name) VALUES (2, 'Gary', NULL)
+    INTO Trainer (trainer_id, name, location_name) VALUES (3, 'Brock', 'Pewter City')
+    INTO Trainer (trainer_id, name, location_name) VALUES (4, 'Misty', 'Cerulean City')
+    INTO Trainer (trainer_id, name, location_name) VALUES (5, 'Lt. Surge', 'Vermilion City')
+    INTO Trainer (trainer_id, name, location_name) VALUES (6, 'Erika', 'Celadon City')
+    INTO Trainer (trainer_id, name, location_name) VALUES (7, 'Koga', 'Fuchsia City')
+    INTO Trainer (trainer_id, name, location_name) VALUES (8, 'Sabrina', 'Saffron City')
+    INTO Trainer (trainer_id, name, location_name) VALUES (9, 'Blaine', 'Route 1')
+    INTO Trainer (trainer_id, name, location_name) VALUES (10, 'Giovanni', NULL)
+    INTO Trainer (trainer_id, name, location_name) VALUES (11, 'John', 'Pallet Town')
+    INTO Trainer (trainer_id, name, location_name) VALUES (12, 'Joe', NULL)
+    INTO Trainer (trainer_id, name, location_name) VALUES (12, 'Amanda', NULL)
 SELECT * FROM dual;
 
 INSERT ALL
@@ -161,7 +163,6 @@ INSERT ALL
     INTO Item_1 (name, description, price, location_name) VALUES ('Bicycle', 'A folding Bicycle that enables a rider to get around much faster than with Running Shoes.', 0, 'Cerulean City')
 SELECT * FROM dual;
 
--- error
 INSERT ALL
     INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (1, 1, 'Bulbasaur', 1000, 'Modest', 25, 15, 20, 18, 4, 1)
     INTO Pokemon_1 (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) VALUES (2, 1, 'Ivysaur', 3000, 'Calm', 28, 18, 25, 20, 4, 1)
@@ -187,10 +188,12 @@ INSERT ALL
     INTO Gym_Leader_1 (trainer_id, difficulty, specialty_type_name, badge_index) VALUES (8, 5, 'Psychic', 6)
 SELECT * FROM dual;
 
--- error
 INSERT ALL
     INTO Player (trainer_id, money) VALUES (1, 5000)
     INTO Player (trainer_id, money) VALUES (2, 3000)
+    INTO Player (trainer_id, money) VALUES (11, 5000)
+    INTO Player (trainer_id, money) VALUES (12, 3000)
+    INTO Player (trainer_id, money) VALUES (13, 5000)
 SELECT * FROM dual;
 
 INSERT ALL
@@ -203,7 +206,6 @@ INSERT ALL
     INTO Species_Evolves_Into (old_pokedex, new_pokedex, evolution_level) VALUES (25, 26, NULL)
 SELECT * FROM dual;
 
--- error
 INSERT ALL
     INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (1, 1, 1)
     INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (1, 1, 2)
@@ -327,7 +329,6 @@ INSERT ALL
     INTO Species_Belongs_To_Egg_Group (pokedex, egg_group_id) VALUES (26, 12)
 SELECT * FROM dual;
 
--- error
 INSERT ALL
     INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (1, 1)
     INTO Player_Owns_Badge (trainer_id, badge_index) VALUES (1, 2)

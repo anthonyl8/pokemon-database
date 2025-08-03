@@ -73,7 +73,7 @@ CREATE TABLE
 
 CREATE TABLE
     Gym_Leader_2 (
-        difficulty VARCHAR(10) PRIMARY KEY,
+        difficulty INTEGER PRIMARY KEY,
         cash_reward INTEGER NOT NULL
     );
 
