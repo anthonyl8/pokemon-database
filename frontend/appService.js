@@ -3,6 +3,9 @@ const loadEnvFile = require('./utils/envUtil');
 
 const envVariables = loadEnvFile('./.env');
 
+const fs = require('fs');
+const path = require('path');
+
 // Database configuration setup. Ensure your .env file has the required database credentials.
 const dbConfig = {
     user: envVariables.ORACLE_USER,
@@ -85,21 +88,51 @@ async function fetchDemotableFromDb() {
     });
 }
 
-async function initiateDemotable() {
+async function initiatePokemonDB() {
     return await withOracleDB(async (connection) => {
         try {
-            await connection.execute(`DROP TABLE DEMOTABLE`);
-        } catch(err) {
-            console.log('Table might not exist, proceeding to create...');
+            // Read your SQL files
+            const resetSQL = fs.readFileSync(path.join(__dirname, '../database/reset.sql'), 'utf8');
+            const createSQL = fs.readFileSync(path.join(__dirname, '../database/create_pokemon_db.sql'), 'utf8');
+            const insertSQL = fs.readFileSync(path.join(__dirname, '../database/insert_data.sql'), 'utf8');
+            
+            // Execute reset (drop tables)
+            console.log('Dropping existing tables...');
+            const resetStatements = resetSQL.split(';').filter(stmt => stmt.trim());
+            for (const statement of resetStatements) {
+                if (statement.trim()) {
+                    try {
+                        await connection.execute(statement.trim());
+                    } catch (err) {
+                        console.log('Reset statement failed (may be normal):', err.message);
+                    }
+                }
+            }
+            
+            // Execute create tables
+            console.log('Creating tables...');
+            const createStatements = createSQL.split(';').filter(stmt => stmt.trim());
+            for (const statement of createStatements) {
+                if (statement.trim()) {
+                    await connection.execute(statement.trim());
+                }
+            }
+            
+            // Execute inserts
+            console.log('Inserting data...');
+            const insertStatements = insertSQL.split(';').filter(stmt => stmt.trim());
+            for (const statement of insertStatements) {
+                if (statement.trim()) {
+                    await connection.execute(statement.trim());
+                }
+            }
+            
+            console.log('Pokemon database setup complete!');
+            return true;
+        } catch (err) {
+            console.error('Error setting up Pokemon database:', err);
+            return false;
         }
-
-        const result = await connection.execute(`
-            CREATE TABLE DEMOTABLE (
-                id NUMBER PRIMARY KEY,
-                name VARCHAR2(20)
-            )
-        `);
-        return true;
     }).catch(() => {
         return false;
     });
@@ -145,7 +178,7 @@ async function countDemotable() {
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
-    initiateDemotable, 
+    initiatePokemonDB, 
     insertDemotable, 
     updateNameDemotable, 
     countDemotable

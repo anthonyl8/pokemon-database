@@ -21,7 +21,7 @@ router.get('/demotable', async (req, res) => {
 });
 
 router.post("/initiate-demotable", async (req, res) => {
-    const initiateResult = await appService.initiateDemotable();
+    const initiateResult = await appService.initiatePokemonDB();
     if (initiateResult) {
         res.json({ success: true });
     } else {
