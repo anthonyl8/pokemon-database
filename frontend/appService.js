@@ -96,20 +96,27 @@ async function initiatePokemonDB() {
             const createSQL = fs.readFileSync(path.join(__dirname, '../database/create_pokemon_db.sql'), 'utf8');
             const insertSQL = fs.readFileSync(path.join(__dirname, '../database/insert_data.sql'), 'utf8');
             
-            // Execute reset (drop tables)
+            // Execute reset (drop tables) - split by "/" for PL/SQL blocks
             console.log('Dropping existing tables...');
-            const resetStatements = resetSQL.split(';').filter(stmt => stmt.trim());
-            for (const statement of resetStatements) {
-                if (statement.trim()) {
+            const resetBlocks = resetSQL.split('/').filter(block => block.trim());
+            for (const block of resetBlocks) {
+                if (block.trim() && !block.trim().startsWith('PURGE')) {
                     try {
-                        await connection.execute(statement.trim());
+                        await connection.execute(block.trim());
                     } catch (err) {
-                        console.log('Reset statement failed (may be normal):', err.message);
+                        console.log('Reset block failed (may be normal):', err.message);
                     }
                 }
             }
             
-            // Execute create tables
+            // Handle the PURGE RECYCLEBIN separately
+            try {
+                await connection.execute('PURGE RECYCLEBIN');
+            } catch (err) {
+                console.log('Purge recyclebin failed (may be normal):', err.message);
+            }
+            
+            // Execute create tables - split by ";" 
             console.log('Creating tables...');
             const createStatements = createSQL.split(';').filter(stmt => stmt.trim());
             for (const statement of createStatements) {
@@ -118,12 +125,17 @@ async function initiatePokemonDB() {
                 }
             }
             
-            // Execute inserts
+            // Execute inserts - these use "SELECT * FROM dual;" so split by "SELECT * FROM dual;"
             console.log('Inserting data...');
-            const insertStatements = insertSQL.split(';').filter(stmt => stmt.trim());
-            for (const statement of insertStatements) {
-                if (statement.trim()) {
-                    await connection.execute(statement.trim());
+            const insertBlocks = insertSQL.split('SELECT * FROM dual;').filter(block => block.trim());
+            for (const block of insertBlocks) {
+                if (block.trim()) {
+                    const fullStatement = block.trim() + '\nSELECT * FROM dual';
+                    try {
+                        await connection.execute(fullStatement);
+                    } catch (err) {
+                        console.log('Insert block failed:', err.message);
+                    }
                 }
             }
             
