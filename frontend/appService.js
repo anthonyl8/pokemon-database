@@ -67,7 +67,6 @@ async function withOracleDB(action) {
     }
 }
 
-
 // ----------------------------------------------------------
 // Core functions for database operations
 // Modify these functions, especially the SQL queries, based on your project's requirements and design.
@@ -187,11 +186,121 @@ async function countDemotable() {
     });
 }
 
+// All Inserts
+
+async function insertTrainer(trainerId, name, locationName) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO Trainer (trainer_id, name, location_name) VALUES (:trainerId, :name, :locationName);`,
+            [trainerId, name, locationName || null], // Handle optional location_name
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error inserting trainer:', err);
+        return false;
+    });
+}
+
+async function insertPlayer(trainerId, money) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO Player (trainer_id, money) VALUES (:trainerId, :money);`,
+            [trainerId, money],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error inserting player:', err);
+        return false;
+    });
+}
+
+async function insertPokemon(pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO Pokemon_1 
+                (pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id) 
+            VALUES 
+                (:pokedex, :pokemon_id, :name, :total_XP, :nature, :HP_IV, :attack_IV, :defense_IV, :speed_IV, :ability_id, :trainer_id)`,
+            [pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id || null],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error inserting Pokemon:', err);
+        return false;
+    });
+}
+
+async function insertPokemonHasLearnedMove(pokedex, pokemon_id, move_id) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `INSERT INTO Pokemon_Has_Learned_Move (pokedex, pokemon_id, move_id) VALUES (:pokedex, :pokemon_id, :move_id)`,
+            [pokedex, pokemon_id, move_id], // All required - no nulls allowed
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error inserting Pokemon_Has_Learned_Move:', err);
+        return false;
+    });
+}
+
+// All Deletes
+
+async function deleteTrainer(trainerId) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `DELETE FROM Trainer WHERE trainer_id = :trainerID;`,
+            [trainerID], // All required - no nulls allowed
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error Deleting ', trainerId, ' Trainer Table:', err);
+        return false;
+    });
+}
+
+async function deletePokemon(condition) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `
+            DELETE FROM Pokemon_1 
+            WHERE (:condition)
+            `,
+            [pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id || null],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error inserting Pokemon:', err);
+        return false;
+    });
+}
+
+// 
+
 module.exports = {
     testOracleConnection,
     fetchDemotableFromDb,
     initiatePokemonDB, 
     insertDemotable, 
     updateNameDemotable, 
-    countDemotable
-};
+    countDemotable,
+    // Inserts statements
+    insertTrainer,
+    insertPlayer,
+    insertPokemon,
+    insertPokemonHasLearnedMove,
+    // detete statements
+    deleteTrainer,
+    deletePokemon,
+}

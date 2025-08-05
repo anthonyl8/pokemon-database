@@ -114,7 +114,7 @@ CREATE TABLE
         FOREIGN KEY (total_XP) REFERENCES Pokemon_3 (total_XP),
         FOREIGN KEY (nature) REFERENCES Pokemon_2 (nature),
         FOREIGN KEY (ability_id) REFERENCES Ability (ability_id),
-        FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id)
+        FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id),
     );
 
 CREATE TABLE

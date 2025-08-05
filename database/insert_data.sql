@@ -97,16 +97,21 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Adamant', 'Attack', 'Sp. Atk')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Adamant', 'Attack', 'Defense')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Modest', 'Sp. Atk', 'Attack')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Jolly', 'Speed', 'Sp. Atk')
-    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Calm', 'Sp. Def', 'Attack')
-    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Bold', 'Defense', 'Attack')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Timid', 'Speed', 'Attack')
-    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Relaxed', 'Defense', 'Speed')
-    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Hasty', 'Speed', 'Defense')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Bold', 'Defense', 'Attack')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Impish', 'Defense', 'Sp. Atk')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Calm', 'Sp. Def', 'Attack')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Careful', 'Sp. Def', 'Sp. Atk')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Naive', 'Speed', 'Sp. Def')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Hasty', 'Speed', 'Defense')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Brave', 'Attack', 'Speed')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Quiet', 'Sp. Atk', 'Speed')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Rash', 'Sp. Atk', 'Sp. Def')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Lonely', 'Attack', 'Defense')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Mild', 'Sp. Atk', 'Defense')
 SELECT * FROM dual;
 
 INSERT ALL

@@ -1,0 +1,28 @@
+INSERT
+Trainer, Player, Pokemon_1, Pokemon_Has_Learned_Move
+
+DELETE
+Trainer (Player, Gym Leader), Pokemon_1 (Pokemon_Has_Learned_Move, )
+
+UPDATE
+Trainer, Player, Pokemon_1, Pokemon_Has_Learned_Move
+
+Selection
+Pokemon_1
+
+Projection
+All tables
+
+Join
+Species_Located_In
+
+AGGREGATION (GROUP BY)
+Pokemon_1 - Return the pokemon each trainer owns that has the defense iv
+
+AGGREGATION (HAVING)
+Pokemon_1 - Return the pokemon each trainer owns that has the highest xp where each trainer has at least two pokemon
+
+Nested Aggregation with GROUP BY
+
+Division
+Species_Has_Type - Return all species that have a specific type or 2 types
