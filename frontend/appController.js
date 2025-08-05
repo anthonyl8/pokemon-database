@@ -189,6 +189,45 @@ router.post('/update-learned-move', async (req, res) => {
     }
 });
 
+router.post('/pokemon/selection', async (req, res) => {
+    try {
+        const { conditions } = req.body;
+        const result = await appService.fetchPokemonWithSelection(conditions);
+        res.json({ success: true, data: result });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.get('/tables', async (req, res) => {
+    try {
+        const tables = await appService.fetchTableNames();
+        res.json({ success: true, data: tables });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.get('/columns/:tableName', async (req, res) => {
+    try {
+        const tableName = req.params.tableName;
+        const columns = await appService.fetchColumnNames(tableName);
+        res.json({ success: true, data: columns });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post('/project', async (req, res) => {
+    try {
+        const { table, attributes } = req.body;
+        const data = await appService.executeProjectionQuery(table, attributes);
+        res.json({ success: true, data });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 router.get('/count-demotable', async (req, res) => {
     const tableCount = await appService.countDemotable();
     if (tableCount >= 0) {
@@ -203,6 +242,34 @@ router.get('/count-demotable', async (req, res) => {
         });
     }
 });
+
+router.post('/project', async (req, res) => {
+    try {
+        const { table, attributes } = req.body;
+        const data = await appService.executeProjectionQuery(table, attributes);
+        res.json({ success: true, data });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post('/selection-query', async (req, res) => {
+    try {
+        const { conditions } = req.body;
+        const data = await appService.executeSelectionQuery(conditions);
+        res.json({ success: true, data });
+    } catch (err) {
+        // More specific error for bad requests vs server errors
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ success: false, message: err.message });
+        } else {
+            res.status(500).json({ success: false, message: 'An error occurred while executing the query.' });
+        }
+    }
+});
+
+
+
 
 
 module.exports = router;

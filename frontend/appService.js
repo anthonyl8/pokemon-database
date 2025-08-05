@@ -439,7 +439,6 @@ async function deletePokemon(pokedex, pokemon_id) {
 }
 
 // Update functions
-
 async function validateTrainerExists(trainerId) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -505,12 +504,10 @@ async function updatePokemon(pokedex, pokemonId, updates) {
 }
 
 async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMoveId) {
-    // Validate Pokemon exists
     if (!(await validatePokemonExists(pokedex, pokemonId))) {
         throw new Error('Pokemon not found');
     }
     
-    // Validate the old move exists for this Pokemon
     const oldMoveExists = await withOracleDB(async (connection) => {
         const result = await connection.execute(
             'SELECT 1 FROM Pokemon_Has_Learned_Move WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :moveId',
@@ -523,7 +520,6 @@ async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMov
         throw new Error('Pokemon does not know the specified move');
     }
     
-    // Validate the new move exists
     const newMoveExists = await withOracleDB(async (connection) => {
         const result = await connection.execute(
             'SELECT 1 FROM Move WHERE move_id = :moveId',
@@ -536,7 +532,6 @@ async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMov
         throw new Error('New move ID does not exist');
     }
     
-    // Validate the Pokemon can learn the new move
     const canLearnMove = await withOracleDB(async (connection) => {
         const result = await connection.execute(
             'SELECT 1 FROM Species_Can_Learn_Move WHERE pokedex = :pokedex AND move_id = :moveId',
@@ -549,7 +544,6 @@ async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMov
         throw new Error('This Pokemon species cannot learn the specified move');
     }
     
-    // Check if Pokemon already knows the new move
     const alreadyKnowsMove = await withOracleDB(async (connection) => {
         const result = await connection.execute(
             'SELECT 1 FROM Pokemon_Has_Learned_Move WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :moveId',
@@ -562,7 +556,6 @@ async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMov
         throw new Error('Pokemon already knows this move');
     }
     
-    // Update the move
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             'UPDATE Pokemon_Has_Learned_Move SET move_id = :newMoveId WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :oldMoveId',
@@ -625,7 +618,87 @@ async function updateEntity(table, idField, idValue, updates, allowedFields) {
     });
 }
 
-// 
+// Selection
+
+async function fetchPokemonWithSelection(conditions) {
+    return await withOracleDB(async (connection) => {
+        let query = `
+            SELECT p.pokedex, p.pokemon_id, p.name, p3.pokemon_level, p.nature,
+                   p.HP_IV, p.attack_IV, p.defense_IV, p.speed_IV, p.ability_id, p.trainer_id
+            FROM Pokemon_1 p
+            JOIN Pokemon_3 p3 ON p.total_XP = p3.total_XP
+        `;
+        const bindVars = {};
+        let i = 1;
+
+        if (conditions && conditions.length > 0) {
+            query += " WHERE ";
+            conditions.forEach((condition, index) => {
+                if (index > 0) {
+                    query += ` ${conditions[index - 1].logical} `;
+                }
+                const bindName = `val${i++}`;
+                query += `${condition.attribute} ${condition.operator} :${bindName}`;
+                bindVars[bindName] = condition.operator.toUpperCase() === 'LIKE' ? `%${condition.value}%` : condition.value;
+            });
+        }
+
+        query += " ORDER BY p.pokedex, p.pokemon_id";
+        
+        const result = await connection.execute(query, bindVars);
+        return result.rows;
+    }).catch((err) => {
+        console.error('Error during pokemon selection:', err);
+        throw err; // Re-throw the error to be caught by the controller
+    });
+}
+
+// Projection
+async function fetchTableNames() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT table_name FROM user_tables`
+        );
+        return result.rows.map(row => row[0]);
+    }).catch((err) => {
+        console.error('Error fetching table names:', err);
+        throw err;
+    });
+}
+
+async function fetchColumnNames(tableName) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT column_name FROM user_tab_columns WHERE table_name = :tableName`,
+            [tableName.toUpperCase()]
+        );
+        return result.rows.map(row => row[0]);
+    }).catch((err) => {
+        console.error(`Error fetching columns for table ${tableName}:`, err);
+        throw err;
+    });
+}
+
+async function executeProjectionQuery(table, attributes) {
+    return await withOracleDB(async (connection) => {
+        const validTableName = table.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/) ? table : null;
+        if (!validTableName) {
+            throw new Error('Invalid table name');
+        }
+        
+        const validAttributes = attributes.filter(attr => attr.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/));
+        if (validAttributes.length === 0) {
+            throw new Error('No valid attributes provided');
+        }
+        
+        const query = `SELECT ${validAttributes.join(', ')} FROM ${validTableName}`;
+        const result = await connection.execute(query);
+        return result.rows;
+    }).catch((err) => {
+        console.error('Error executing projection query:', err);
+        throw err;
+    });
+}
 
 module.exports = {
     testOracleConnection,
@@ -655,5 +728,11 @@ module.exports = {
     fetchSpeciesFromDb,
     fetchMovesFromDb,
     fetchAbilitiesFromDb,
-    fetchNaturesFromDb
+    fetchNaturesFromDb,
+    // Selection
+    fetchPokemonWithSelection,
+    // Projection functions
+    fetchTableNames,
+    fetchColumnNames,
+    executeProjectionQuery
 };

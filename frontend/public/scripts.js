@@ -602,28 +602,360 @@ async function updateLearnedMove(event) {
     }
 }
 
-// ==================== PAGE INITIALIZATION ====================
+// Selection
+
+function addCondition() {
+    const container = document.getElementById('selectionConditions');
+    const newCondition = container.firstElementChild.cloneNode(true);
+    newCondition.querySelector('input[name="value"]').value = '';
+    container.appendChild(newCondition);
+}
+
+async function handlePokemonSelection(event) {
+    event.preventDefault();
+    const conditions = Array.from(document.querySelectorAll('#selectionConditions .condition')).map(div => {
+        return {
+            attribute: div.querySelector('[name="attribute"]').value,
+            operator: div.querySelector('[name="operator"]').value,
+            value: div.querySelector('[name="value"]').value,
+            logical: div.querySelector('[name="logical"]').value
+        };
+    });
+
+    const response = await fetch('/pokemon/selection', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ conditions })
+    });
+
+    const responseData = await response.json();
+    const tableBody = document.getElementById('pokemonSelectionTable').querySelector('tbody');
+    const messageElement = document.getElementById('pokemonSelectionResultMsg');
+    tableBody.innerHTML = '';
+
+    if (responseData.success && responseData.data.length > 0) {
+        messageElement.textContent = `Found ${responseData.data.length} Pokémon.`;
+        messageElement.style.color = 'green';
+        responseData.data.forEach(pokemon => {
+            const row = tableBody.insertRow();
+            pokemon.forEach((field, index) => {
+                const cell = row.insertCell(index);
+                cell.textContent = field || 'NULL';
+            });
+        });
+    } else if (responseData.success) {
+        messageElement.textContent = 'No Pokémon found with the specified criteria.';
+        messageElement.style.color = 'orange';
+    } else {
+        messageElement.textContent = 'Error performing search: ' + responseData.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+// Projection
+
+async function populateTableDropdown() {
+    try {
+        const response = await fetch('/tables', { method: 'GET' });
+        const responseData = await response.json();
+        const tables = responseData.data;
+        
+        const tableSelect = document.getElementById('tableSelect');
+        tableSelect.innerHTML = '<option value="" disabled selected>Select a table</option>';
+        
+        tables.forEach(table => {
+            const option = document.createElement('option');
+            option.value = table;
+            option.textContent = table;
+            tableSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error fetching tables:', error);
+        document.getElementById('projectionResultMsg').textContent = 'Error fetching tables: ' + error.message;
+        document.getElementById('projectionResultMsg').style.color = 'red';
+    }
+}
+
+async function populateAttributeCheckboxes() {
+    const tableSelect = document.getElementById('tableSelect');
+    const tableName = tableSelect.value;
+    const attributeCheckboxes = document.getElementById('attributeCheckboxes');
+    attributeCheckboxes.innerHTML = '';
+    
+    if (!tableName) return;
+    
+    try {
+        const response = await fetch(`/columns/${tableName}`, { method: 'GET' });
+        const responseData = await response.json();
+        const columns = responseData.data;
+        
+        if (columns.length === 0) {
+            attributeCheckboxes.innerHTML = '<p>No attributes available for this table.</p>';
+            return;
+        }
+        
+        columns.forEach(column => {
+            const label = document.createElement('label');
+            label.style.marginRight = '15px';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = column;
+            checkbox.name = 'attributes';
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(` ${column}`));
+            attributeCheckboxes.appendChild(label);
+        });
+    } catch (error) {
+        console.error('Error fetching columns:', error);
+        document.getElementById('projectionResultMsg').textContent = 'Error fetching attributes: ' + error.message;
+        document.getElementById('projectionResultMsg').style.color = 'red';
+    }
+}
+
+async function runProjectionQuery(event) {
+    event.preventDefault();
+    
+    const tableName = document.getElementById('tableSelect').value;
+    const checkboxes = document.getElementsByName('attributes');
+    const selectedAttributes = Array.from(checkboxes)
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.value);
+    
+    if (!tableName || selectedAttributes.length === 0) {
+        document.getElementById('projectionResultMsg').textContent = 'Please select a table and at least one attribute.';
+        document.getElementById('projectionResultMsg').style.color = 'red';
+        return;
+    }
+    
+    try {
+        const response = await fetch('/project', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ table: tableName, attributes: selectedAttributes })
+        });
+        
+        const result = await response.json();
+        const messageElement = document.getElementById('projectionResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = 'Projection query executed successfully!';
+            messageElement.style.color = 'green';
+            displayProjectionResults(result.data, selectedAttributes);
+        } else {
+            messageElement.textContent = result.message || 'Error executing projection query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('projectionResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayProjectionResults(data, attributes) {
+    const tableElement = document.getElementById('projectionResultTable');
+    const tableHead = tableElement.querySelector('thead');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableHead.innerHTML = '';
+    tableBody.innerHTML = '';
+    
+    const headerRow = tableHead.insertRow();
+    attributes.forEach(attr => {
+        const th = document.createElement('th');
+        th.textContent = attr;
+        headerRow.appendChild(th);
+    });
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach((field, index) => {
+            const td = tr.insertCell(index);
+            td.textContent = field || 'NULL';
+        });
+    });
+}
+
+function createConditionRow() {
+    const conditionDiv = document.createElement('div');
+    conditionDiv.className = 'condition-row';
+    conditionDiv.style.marginBottom = '10px';
+
+    // Dropdown for Pokemon attributes
+    const attributes = ['pokedex', 'pokemon_id', 'name', 'total_XP', 'nature', 'HP_IV', 'attack_IV', 'defense_IV', 'speed_IV', 'ability_id', 'trainer_id'];
+    const attrSelect = document.createElement('select');
+    attrSelect.className = 'attribute-select';
+    attributes.forEach(attr => {
+        const option = document.createElement('option');
+        option.value = attr;
+        option.textContent = attr;
+        attrSelect.appendChild(option);
+    });
+
+    // Dropdown for operators
+    const operators = ['=', '!=', '>', '<', '>=', '<='];
+    const opSelect = document.createElement('select');
+    opSelect.className = 'operator-select';
+    operators.forEach(op => {
+        const option = document.createElement('option');
+        option.value = op;
+        option.textContent = op;
+        opSelect.appendChild(option);
+    });
+
+    // Input for value
+    const valueInput = document.createElement('input');
+    valueInput.type = 'text';
+    valueInput.className = 'value-input';
+    valueInput.placeholder = 'Enter value';
+
+    // Dropdown for logical operator (AND/OR)
+    const logicalSelect = document.createElement('select');
+    logicalSelect.className = 'logical-select';
+    logicalSelect.innerHTML = '<option value="AND">AND</option><option value="OR">OR</option>';
+    logicalSelect.style.display = 'none'; // Hide by default
+
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = () => {
+        conditionDiv.remove();
+        updateLogicalSelects();
+    };
+    
+    conditionDiv.appendChild(attrSelect);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(opSelect);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(valueInput);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(logicalSelect);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(removeBtn);
+    
+    document.getElementById('conditionsContainer').appendChild(conditionDiv);
+    updateLogicalSelects();
+}
+
+function updateLogicalSelects() {
+    const conditions = document.querySelectorAll('.condition-row');
+    conditions.forEach((condition, index) => {
+        const logicalSelect = condition.querySelector('.logical-select');
+        if (index < conditions.length - 1) {
+            logicalSelect.style.display = 'inline';
+        } else {
+            logicalSelect.style.display = 'none';
+        }
+    });
+}
+
+async function handleSelectionQuery(event) {
+    event.preventDefault();
+
+    const conditions = [];
+    const conditionRows = document.querySelectorAll('.condition-row');
+    
+    if (conditionRows.length === 0) {
+        document.getElementById('selectionResultMsg').textContent = 'Please add at least one condition.';
+        document.getElementById('selectionResultMsg').style.color = 'red';
+        return;
+    }
+
+    conditionRows.forEach(row => {
+        const attribute = row.querySelector('.attribute-select').value;
+        const operator = row.querySelector('.operator-select').value;
+        const value = row.querySelector('.value-input').value;
+        const logical = row.querySelector('.logical-select').value;
+
+        if (value.trim() === '') {
+            return; // Skip empty conditions
+        }
+        conditions.push({ attribute, operator, value, logical });
+    });
+    
+    try {
+        const response = await fetch('/selection-query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conditions })
+        });
+        
+        const result = await response.json();
+        const resultElement = document.getElementById('selectionResultMsg');
+
+        if (result.success) {
+            resultElement.textContent = `Found ${result.data.length} Pokemon.`;
+            resultElement.style.color = 'green';
+            displaySelectionResults(result.data);
+        } else {
+            resultElement.textContent = result.message || 'Error executing selection query!';
+            resultElement.style.color = 'red';
+        }
+    } catch (error) {
+        const resultElement = document.getElementById('selectionResultMsg');
+        resultElement.textContent = 'Client-side error: ' + error.message;
+        resultElement.style.color = 'red';
+    }
+}
+
+function displaySelectionResults(data) {
+    const tableElement = document.getElementById('selectionResultTable');
+    const tableHead = tableElement.querySelector('thead');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableHead.innerHTML = '';
+    tableBody.innerHTML = '';
+
+    if (data.length === 0) return;
+
+    // These are the columns returned by our new backend endpoint
+    const headers = ['Pokedex #', 'Pokemon ID', 'Name', 'Level', 'Nature', 'HP IV', 'Attack IV', 'Defense IV', 'Speed IV', 'Ability ID', 'Trainer ID'];
+    const headerRow = tableHead.insertRow();
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+
+    data.forEach(rowData => {
+        const tr = tableBody.insertRow();
+        rowData.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
 
 window.onload = function() {
-    // Initialize page
     checkDbConnection();
-    refreshAllTables(); // Load all tables on page load
+    refreshAllTables();
+    populateTableDropdown();
     
-    // Set up event listeners
     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
     document.getElementById("insertTrainer").addEventListener("submit", insertTrainer);
     document.getElementById("insertPlayer").addEventListener("submit", insertPlayer);
     document.getElementById("insertPokemon").addEventListener("submit", insertPokemon);
     document.getElementById("insertLearnedMove").addEventListener("submit", insertLearnedMove);
     
-    // Add delete event listeners
     document.getElementById("deleteTrainer").addEventListener("submit", deleteTrainer);
-    // document.getElementById("deletePlayer").addEventListener("submit", deletePlayer); // This line was commented out in the original file
     document.getElementById("deletePokemon").addEventListener("submit", deletePokemon);
-
+    
     document.getElementById('updateTrainer').addEventListener('submit', updateTrainer);
     document.getElementById('updatePlayer').addEventListener('submit', updatePlayer);
     document.getElementById('updatePokemon').addEventListener('submit', updatePokemon);
-
     document.getElementById('updateLearnedMove').addEventListener('submit', updateLearnedMove);
+
+    document.getElementById('addCondition').addEventListener('click', addCondition);
+    document.getElementById('pokemonSelectionForm').addEventListener('submit', handlePokemonSelection);
+
+    document.getElementById('tableSelect').addEventListener('change', populateAttributeCheckboxes);
+    document.getElementById('projectionQuery').addEventListener('submit', runProjectionQuery);
+
+    document.getElementById('addConditionBtn').addEventListener('click', createConditionRow);
+    document.getElementById('selectionQueryForm').addEventListener('submit', handleSelectionQuery);
+
 };
