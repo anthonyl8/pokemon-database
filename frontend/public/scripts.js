@@ -306,7 +306,7 @@ async function updateTrainer(event) {
         });
         
         const result = await response.json();
-        const resultElement = document.getElementById('updateTrainerResult');
+        const messageElement = document.getElementById('updateTrainerResultMsg');
         
         resultElement.textContent = result.message;
         resultElement.style.color = result.success ? 'green' : 'red';
@@ -374,10 +374,10 @@ async function updatePlayer(event) {
         });
         
         const result = await response.json();
-        const resultElement = document.getElementById('updatePlayerResult');
+        const messageElement = document.getElementById('updatePlayerResultMsg');
         
-        resultElement.textContent = result.message;
-        resultElement.style.color = result.success ? 'green' : 'red';
+        messageElement.textContent = result.message;
+        messageElement.style.color = result.success ? 'green' : 'red';
         
         if (result.success) {
             alert("Player updated successfully!");
@@ -509,7 +509,7 @@ async function updatePokemon(event) {
         });
         
         const result = await response.json();
-        const resultElement = document.getElementById('updatePokemonResult');
+        const resultElement = document.getElementById('updatePokemonResultMsg');
         
         resultElement.textContent = result.message;
         resultElement.style.color = result.success ? 'green' : 'red';
