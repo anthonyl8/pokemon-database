@@ -129,17 +129,6 @@ router.delete('/delete-trainer', async (req, res) => {
     }
 });
 
-
-router.delete('/delete-player', async (req, res) => {
-    const { trainerId } = req.body;
-    const success = await appService.deletePlayer(trainerId); // This deletes player via cascade
-    if (success) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
 router.delete('/delete-pokemon', async (req, res) => {
     const { pokedex, pokemon_id } = req.body;
     const success = await appService.deletePokemon(pokedex, pokemon_id);
@@ -157,6 +146,36 @@ router.post("/update-name-demotable", async (req, res) => {
         res.json({ success: true });
     } else {
         res.status(500).json({ success: false });
+    }
+});
+
+router.post('/update-trainer', async (req, res) => {
+    try {
+        const { trainerId, updates } = req.body;
+        const success = await appService.updateTrainer(trainerId, updates);
+        res.json({ success, message: "Trainer updated successfully" });
+    } catch (err) {
+        res.status(400).json({ success: false, message: err.message });
+    }
+});
+
+router.post('/update-player', async (req, res) => {
+    try {
+        const { trainerId, updates } = req.body;
+        const success = await appService.updatePlayer(trainerId, updates);
+        res.json({ success, message: "Player updated successfully" });
+    } catch (err) {
+        res.status(400).json({ success: false, message: err.message });
+    }
+});
+
+router.post('/update-pokemon', async (req, res) => {
+    try {
+        const { pokedex, pokemonId, updates } = req.body;
+        const success = await appService.updatePokemon(pokedex, pokemonId, updates);
+        res.json({ success, message: "Pokemon updated successfully" });
+    } catch (err) {
+        res.status(400).json({ success: false, message: err.message });
     }
 });
 

@@ -423,21 +423,6 @@ async function deleteTrainer(trainerId) {
     });
 }
 
-async function deletePlayer(trainerId) {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            `DELETE FROM Player WHERE trainer_id = :trainerId`,
-            [trainerId],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch((err) => {
-        console.error('Error deleting player:', trainerId, err);
-        return false;
-    });
-}
-
 async function deletePokemon(pokedex, pokemon_id) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -453,96 +438,190 @@ async function deletePokemon(pokedex, pokemon_id) {
     });
 }
 
-async function updateTrainer(trainer_id, updates) {
-    const setClauses = [];
-    const bindParams = { trainer_id };
+// Update functions
 
-    let i = 1;
-    for (const [key, value] of Object.entries(updates)) {
-        const paramName = `val${i}`;
-        setClauses.push(`${key} = :${paramName}`);
-        bindParams[paramName] = value;
-        i++;
-    }
-
-    const query = `
-        UPDATE Trainer
-        SET ${setClauses.join(', ')}
-        WHERE trainer_id = :trainer_id;
-    `;
-
+async function validateTrainerExists(trainerId) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            query,
-            bindParams,
-            { autoCommit: true }
+            'SELECT 1 FROM Trainer WHERE trainer_id = :id', 
+            [trainerId]
         );
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch((err) => {
-        console.error('Error updating Trainer:', err);
-        return false;
+        return result.rows.length > 0;
     });
 }
 
-async function updatePlayer(trainer_id, money) {
-    const setClauses = [];
-    const bindParams = { trainer_id };
-
-    let i = 1;
-    for (const [key, value] of Object.entries(updates)) {
-        const paramName = `val${i}`;
-        setClauses.push(`${key} = :${paramName}`);
-        bindParams[paramName] = value;
-        i++;
-    }
-
-    const query = `
-        UPDATE Player
-        SET ${setClauses.join(', ')}
-        WHERE trainer_id = :trainer_id;
-    `;
-
+async function validatePokemonExists(pokedex, pokemonId) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            query,
-            bindParams,
-            { autoCommit: true }
+            'SELECT 1 FROM Pokemon_1 WHERE pokedex = :pokedex AND pokemon_id = :pokemonId',
+            [pokedex, pokemonId]
         );
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch((err) => {
-        console.error('Error updating Player:', err);
-        return false;
+        return result.rows.length > 0;
     });
 }
 
-async function updatePokemon(pokedex, pokemon_id, updates) {
-    const setClauses = [];
-    const bindParams = { pokedex, pokemon_id };
+async function updateTrainer(trainerId, updates) {
+    if (!(await validateTrainerExists(trainerId))) {
+        throw new Error('Trainer not found');
+    }
+    
+    const validFields = ['name', 'location_name'];
+    return await updateEntity('Trainer', 'trainer_id', trainerId, updates, validFields);
+}
 
-    let i = 1;
+async function updatePlayer(trainerId, updates) {
+    const validFields = ['money'];
+    return await updateEntity('Player', 'trainer_id', trainerId, updates, validFields);
+}
+
+async function updatePokemon(pokedex, pokemonId, updates) {
+    if (!(await validatePokemonExists(pokedex, pokemonId))) {
+        throw new Error('Pokemon not found');
+    }
+    
+    if (updates.ability_id !== undefined) {
+        const abilityExists = await withOracleDB(async (connection) => {
+            const result = await connection.execute(
+                'SELECT 1 FROM Ability WHERE ability_id = :abilityId',
+                [updates.ability_id]
+            );
+            return result.rows.length > 0;
+        });
+        
+        if (!abilityExists) {
+            throw new Error('Ability ID does not exist');
+        }
+    }
+    
+    if (updates.trainer_id !== undefined && updates.trainer_id !== null) {
+        const trainerExists = await validateTrainerExists(updates.trainer_id);
+        if (!trainerExists) {
+            throw new Error('Trainer ID does not exist');
+        }
+    }
+    
+    const validFields = ['name', 'total_XP', 'nature', 'HP_IV', 'attack_IV', 'defense_IV', 'speed_IV', 'ability_id', 'trainer_id'];
+    return await updateEntity('Pokemon_1', ['pokedex', 'pokemon_id'], [pokedex, pokemonId], updates, validFields);
+}
+
+async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMoveId) {
+    // Validate Pokemon exists
+    if (!(await validatePokemonExists(pokedex, pokemonId))) {
+        throw new Error('Pokemon not found');
+    }
+    
+    // Validate the old move exists for this Pokemon
+    const oldMoveExists = await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT 1 FROM Pokemon_Has_Learned_Move WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :moveId',
+            [pokedex, pokemonId, oldMoveId]
+        );
+        return result.rows.length > 0;
+    });
+    
+    if (!oldMoveExists) {
+        throw new Error('Pokemon does not know the specified move');
+    }
+    
+    // Validate the new move exists
+    const newMoveExists = await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT 1 FROM Move WHERE move_id = :moveId',
+            [newMoveId]
+        );
+        return result.rows.length > 0;
+    });
+    
+    if (!newMoveExists) {
+        throw new Error('New move ID does not exist');
+    }
+    
+    // Validate the Pokemon can learn the new move
+    const canLearnMove = await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT 1 FROM Species_Can_Learn_Move WHERE pokedex = :pokedex AND move_id = :moveId',
+            [pokedex, newMoveId]
+        );
+        return result.rows.length > 0;
+    });
+    
+    if (!canLearnMove) {
+        throw new Error('This Pokemon species cannot learn the specified move');
+    }
+    
+    // Check if Pokemon already knows the new move
+    const alreadyKnowsMove = await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'SELECT 1 FROM Pokemon_Has_Learned_Move WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :moveId',
+            [pokedex, pokemonId, newMoveId]
+        );
+        return result.rows.length > 0;
+    });
+    
+    if (alreadyKnowsMove) {
+        throw new Error('Pokemon already knows this move');
+    }
+    
+    // Update the move
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            'UPDATE Pokemon_Has_Learned_Move SET move_id = :newMoveId WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :oldMoveId',
+            [newMoveId, pokedex, pokemonId, oldMoveId],
+            { autoCommit: true }
+        );
+        
+        if (result.rowsAffected === 0) {
+            throw new Error('No records were updated - move not found');
+        }
+        
+        return true;
+    });
+}
+
+async function updateEntity(table, idField, idValue, updates, allowedFields) {
+    const filteredUpdates = {};
     for (const [key, value] of Object.entries(updates)) {
-        const paramName = `val${i}`;
-        setClauses.push(`${key} = :${paramName}`);
-        bindParams[paramName] = value;
+        if (allowedFields.includes(key) && value !== undefined) {
+            filteredUpdates[key] = value;
+        }
+    }
+
+    if (Object.keys(filteredUpdates).length === 0) {
+        throw new Error('No valid fields provided for update');
+    }
+
+    const setClauses = [];
+    const bindVars = {};
+    let i = 1;
+
+    for (const [key, value] of Object.entries(filteredUpdates)) {
+        setClauses.push(`${key} = :val${i}`);
+        bindVars[`val${i}`] = value;
         i++;
     }
 
-    const query = `
-        UPDATE Pokemon_1
-        SET ${setClauses.join(', ')}
-        WHERE pokedex = :pokedex AND pokemon_id = :pokemon_id
-    `;
+
+    let whereClause;
+    if (Array.isArray(idField)) {
+        whereClause = idField.map((field, index) => `${field} = :id${index}`).join(' AND ');
+        idField.forEach((field, index) => {
+            bindVars[`id${index}`] = Array.isArray(idValue) ? idValue[index] : idValue;
+        });
+    } else {
+        whereClause = `${idField} = :id`;
+        bindVars.id = idValue;
+    }
+
+    const query = `UPDATE ${table} SET ${setClauses.join(', ')} WHERE ${whereClause}`;
 
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            query,
-            bindParams,
-            { autoCommit: true }
-        );
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch((err) => {
-        console.error('Error updating Pokemon:', err);
-        return false;
+        const result = await connection.execute(query, bindVars, { autoCommit: true });
+        
+        if (result.rowsAffected === 0) {
+            throw new Error('No records were updated - record not found');
+        }
+        
+        return true;
     });
 }
 
@@ -562,8 +641,12 @@ module.exports = {
     insertPokemonHasLearnedMove,
     // Delete functions
     deleteTrainer,
-    deletePlayer,
     deletePokemon,
+    updateTrainer,
+    updatePlayer,
+    updatePokemon,
+    updatePokemonHasLearnedMove,
+    updateEntity,
     // Fetch functions for all tables
     fetchTrainersFromDb,
     fetchPlayersFromDb,

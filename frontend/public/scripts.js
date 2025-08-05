@@ -286,6 +286,41 @@ async function deleteTrainer(event) {
     }
 }
 
+async function updateTrainer(event) {
+    event.preventDefault();
+    
+    const trainerId = document.getElementById('updateTrainerId').value;
+    const updates = {};
+    
+    const name = document.getElementById('updateTrainerName').value.trim();
+    if (name) updates.name = name;
+    
+    const location = document.getElementById('updateTrainerLocation').value.trim();
+    if (location) updates.location_name = location;
+    
+    try {
+        const response = await fetch('/update-trainer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ trainerId, updates })
+        });
+        
+        const result = await response.json();
+        const resultElement = document.getElementById('updateTrainerResult');
+        
+        resultElement.textContent = result.message;
+        resultElement.style.color = result.success ? 'green' : 'red';
+        
+        if (result.success) {
+            document.getElementById('updateTrainerForm').reset();
+            refreshAllTables();
+        }
+    } catch (error) {
+        document.getElementById('updateTrainerResult').textContent = 'Error: ' + error.message;
+        document.getElementById('updateTrainerResult').style.color = 'red';
+    }
+}
+
 async function insertPlayer(event) {
     event.preventDefault();
 
@@ -317,30 +352,35 @@ async function insertPlayer(event) {
     }
 }
 
-async function deletePlayer(event) {
+async function updatePlayer(event) {
     event.preventDefault();
-
-    const trainerIdValue = document.getElementById('deletePlayerId').value;
-
-    const response = await fetch('/delete-player', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({trainerId: trainerIdValue})
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('deletePlayerResultMsg');
-
-    if (responseData.success) {
-        alert("Player deleted successfully!");
-        messageElement.textContent = "Player deleted successfully!";
-        document.getElementById('deletePlayer').reset();
-        refreshAllTables(); // Refresh all tables to show changes
-    } else {
-        alert("Error deleting player! Check your input.");
-        messageElement.textContent = "Error deleting player!";
+    
+    const trainerId = document.getElementById('updatePlayerId').value;
+    const updates = {};
+    
+    const money = document.getElementById('updatePlayerMoney').value;
+    if (money) updates.money = money;
+    
+    try {
+        const response = await fetch('/update-player', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ trainerId, updates })
+        });
+        
+        const result = await response.json();
+        const resultElement = document.getElementById('updatePlayerResult');
+        
+        resultElement.textContent = result.message;
+        resultElement.style.color = result.success ? 'green' : 'red';
+        
+        if (result.success) {
+            document.getElementById('updatePlayerForm').reset();
+            refreshAllTables();
+        }
+    } catch (error) {
+        document.getElementById('updatePlayerResult').textContent = 'Error: ' + error.message;
+        document.getElementById('updatePlayerResult').style.color = 'red';
     }
 }
 
@@ -424,6 +464,56 @@ async function deletePokemon(event) {
     }
 }
 
+async function updatePokemon(event) {
+    event.preventDefault();
+    
+    const pokedex = document.getElementById('updatePokemonPokedex').value;
+    const pokemonId = document.getElementById('updatePokemonId').value;
+    const updates = {};
+    
+    // Add all possible fields
+    const fields = [
+        { id: 'updatePokemonName', field: 'name', type: 'string' },
+        { id: 'updatePokemonXP', field: 'total_XP', type: 'number' },
+        { id: 'updatePokemonNature', field: 'nature', type: 'string' },
+        { id: 'updatePokemonHPIV', field: 'HP_IV', type: 'number' },
+        { id: 'updatePokemonAttackIV', field: 'attack_IV', type: 'number' },
+        { id: 'updatePokemonDefenseIV', field: 'defense_IV', type: 'number' },
+        { id: 'updatePokemonSpeedIV', field: 'speed_IV', type: 'number' },
+        { id: 'updatePokemonAbilityId', field: 'ability_id', type: 'number' },
+        { id: 'updatePokemonTrainerId', field: 'trainer_id', type: 'number' }
+    ];
+    
+    fields.forEach(({id, field, type}) => {
+        const element = document.getElementById(id);
+        if (element.value) {
+            updates[field] = type === 'number' ? parseInt(element.value) : element.value;
+        }
+    });
+    
+    try {
+        const response = await fetch('/update-pokemon', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pokedex, pokemonId, updates })
+        });
+        
+        const result = await response.json();
+        const resultElement = document.getElementById('updatePokemonResult');
+        
+        resultElement.textContent = result.message;
+        resultElement.style.color = result.success ? 'green' : 'red';
+        
+        if (result.success) {
+            document.getElementById('updatePokemonForm').reset();
+            refreshAllTables();
+        }
+    } catch (error) {
+        document.getElementById('updatePokemonResult').textContent = 'Error: ' + error.message;
+        document.getElementById('updatePokemonResult').style.color = 'red';
+    }
+}
+
 async function insertLearnedMove(event) {
     event.preventDefault();
 
@@ -475,4 +565,9 @@ window.onload = function() {
     document.getElementById("deleteTrainer").addEventListener("submit", deleteTrainer);
     document.getElementById("deletePlayer").addEventListener("submit", deletePlayer);
     document.getElementById("deletePokemon").addEventListener("submit", deletePokemon);
+
+    document.getElementById('updateTrainer').addEventListener('submit', updateTrainer);
+    document.getElementById('updatePlayer').addEventListener('submit', updatePlayer);
+    document.getElementById('updatePokemon').addEventListener('submit', updatePokemon);
+    
 };

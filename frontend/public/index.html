@@ -45,7 +45,16 @@
     </form>
     <div id="insertTrainerResultMsg"></div>
 
-    <h3>Delete Trainer</h3>
+    <h3>Update Trainer</h3>
+    <form id="updateTrainer">
+        Trainer ID: <input type="number" id="updateTrainerId" placeholder="Enter Trainer ID to Update" required> <br><br>
+        New Name: <input type="text" id="updateTrainerName" placeholder="Enter New Name (optional)" maxlength="255"> <br><br>
+        New Location: <input type="text" id="updateTrainerLocation" placeholder="Enter New Location (optional)" maxlength="40"> <br><br>
+        <button type="submit">Update Trainer</button>
+    </form>
+    <div id="updateTrainerResultMsg"></div>
+
+    <h3>Delete Trainer (Cascades to Player/Gym Leader)</h3>
     <form id="deleteTrainer">
         Trainer ID: <input type="number" id="deleteTrainerId" placeholder="Enter Trainer ID" required> <br><br>
         <button type="submit">Delete Trainer</button>
@@ -75,13 +84,13 @@
     </form>
     <div id="insertPlayerResultMsg"></div>
 
-    <h3>Delete Player</h3>
-    <form id="deletePlayer">
-        Player ID: <input type="number" id="deletePlayerId" placeholder="Enter Player ID" required> <br><br>
-        <button type="submit">Delete Player</button>
+    <h3>Update Player Money</h3>
+    <form id="updatePlayer">
+        Trainer ID: <input type="number" id="updatePlayerTrainerId" placeholder="Enter Player's Trainer ID" required> <br><br>
+        New Money: <input type="number" id="updatePlayerMoney" placeholder="Enter New Money Amount" required> <br><br>
+        <button type="submit">Update Player</button>
     </form>
-    <div id="deletePlayerResultMsg"></div>
-
+    <div id="updatePlayerResultMsg"></div>
 
     <br><hr><br>
 
@@ -123,7 +132,19 @@
     </form>
     <div id="insertPokemonResultMsg"></div>
 
-    <h3>Delete Pokemon</h3>
+    <h3>Update Pokemon</h3>
+    <form id="updatePokemon">
+        Pokedex #: <input type="number" id="updatePokemonPokedex" placeholder="Pokemon Pokedex #" required> <br><br>
+        Pokemon ID: <input type="number" id="updatePokemonId" placeholder="Pokemon ID" required> <br><br>
+        New Name: <input type="text" id="updatePokemonName" placeholder="New Pokemon Name (optional)" maxlength="20"> <br><br>
+        New Total XP: <input type="number" id="updatePokemonXP" placeholder="New Total XP (optional)"> <br><br>
+        New Nature: <input type="text" id="updatePokemonNature" placeholder="New Nature (optional)" maxlength="12"> <br><br>
+        New Trainer ID: <input type="number" id="updatePokemonTrainerId" placeholder="New Trainer ID (optional)"> <br><br>
+        <button type="submit">Update Pokemon</button>
+    </form>
+    <div id="updatePokemonResultMsg"></div>
+
+    <h3>Delete Pokemon (Cascades to Learned Moves)</h3>
     <form id="deletePokemon">
         Pokedex #: <input type="number" id="deletePokemonPokedex" placeholder="Enter Pokedex Number" required> <br><br>
         Pokemon ID: <input type="number" id="deletePokemonId" placeholder="Enter Pokemon ID" required> <br><br>
@@ -156,6 +177,25 @@
         <button type="submit">Teach Move</button>
     </form>
     <div id="insertLearnedMoveResultMsg"></div>
+
+    <h3>Update Learned Move</h3>
+    <form id="updateLearnedMove">
+        Pokedex #: <input type="number" id="updateLearnedMovePokedex" placeholder="Pokemon Pokedex #" required> <br><br>
+        Pokemon ID: <input type="number" id="updateLearnedMovePokemonId" placeholder="Pokemon ID" required> <br><br>
+        Old Move ID: <input type="number" id="updateLearnedMoveOldId" placeholder="Current Move ID" required> <br><br>
+        New Move ID: <input type="number" id="updateLearnedMoveNewId" placeholder="New Move ID" required> <br><br>
+        <button type="submit">Update Move</button>
+    </form>
+    <div id="updateLearnedMoveResultMsg"></div>
+
+    <h3>Remove Learned Move</h3>
+    <form id="deleteLearnedMove">
+        Pokedex #: <input type="number" id="deleteLearnedMovePokedex" placeholder="Pokemon Pokedex #" required> <br><br>
+        Pokemon ID: <input type="number" id="deleteLearnedMovePokemonId" placeholder="Pokemon ID" required> <br><br>
+        Move ID: <input type="number" id="deleteLearnedMoveId" placeholder="Move ID to Remove" required> <br><br>
+        <button type="submit">Remove Move</button>
+    </form>
+    <div id="deleteLearnedMoveResultMsg"></div>
 
     <br><hr><br>
 
