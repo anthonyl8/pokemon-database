@@ -115,6 +115,10 @@ async function initiatePokemonDB() {
                 console.log('Purge recyclebin failed (may be normal):', err.message);
             }
             
+            // Commit after drops
+            await connection.commit();
+            console.log('Committed drops');
+            
             // Execute create tables - split by ";" 
             console.log('Creating tables...');
             const createStatements = createSQL.split(';').filter(stmt => stmt.trim());
@@ -131,6 +135,10 @@ async function initiatePokemonDB() {
                 }
             }
             console.log(`Total tables created: ${tableCount}`);
+            
+            // Commit after creates
+            await connection.commit();
+            console.log('Committed table creation');
             
             // Execute inserts - now much simpler since they're individual INSERT statements
             console.log('Inserting data...');
@@ -161,6 +169,10 @@ async function initiatePokemonDB() {
                 }
             }
             
+            // CRITICAL: Commit all the inserts
+            await connection.commit();
+            console.log('Committed all inserts');
+            
             console.log(`Successfully executed ${successfulInserts} out of ${insertStatements.length} insert statements`);
             
             // Check if data was inserted
@@ -182,6 +194,13 @@ async function initiatePokemonDB() {
             return true;
         } catch (err) {
             console.error('Error setting up Pokemon database:', err);
+            // Rollback on error
+            try {
+                await connection.rollback();
+                console.log('Rolled back due to error');
+            } catch (rollbackErr) {
+                console.error('Error during rollback:', rollbackErr);
+            }
             return false;
         }
     }).catch((err) => {
@@ -296,9 +315,13 @@ async function insertPokemonHasLearnedMove(pokedex, pokemon_id, move_id) {
 
 async function fetchTrainersFromDb() {
     return await withOracleDB(async (connection) => {
+        console.log('Fetching trainers...');
         const result = await connection.execute('SELECT * FROM Trainer ORDER BY trainer_id');
+        console.log('Trainers result:', result.rows.length, 'rows');
+        console.log('First trainer:', result.rows[0]);
         return result.rows;
-    }).catch(() => {
+    }).catch((err) => {
+        console.error('Error fetching trainers:', err);
         return [];
     });
 }
