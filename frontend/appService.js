@@ -118,24 +118,59 @@ async function initiatePokemonDB() {
             // Execute create tables - split by ";" 
             console.log('Creating tables...');
             const createStatements = createSQL.split(';').filter(stmt => stmt.trim());
+            let tableCount = 0;
             for (const statement of createStatements) {
                 if (statement.trim()) {
-                    await connection.execute(statement.trim());
+                    try {
+                        await connection.execute(statement.trim());
+                        tableCount++;
+                        console.log(`Created table ${tableCount}`);
+                    } catch (err) {
+                        console.error('Error creating table:', err.message);
+                    }
+                }
+            }
+            console.log(`Total tables created: ${tableCount}`);
+            
+            // Execute inserts - these use "SELECT * FROM dual;" so split by that
+            console.log('Inserting data...');
+            console.log('Insert SQL length:', insertSQL.length);
+            
+            // Let's try a different approach - split by "SELECT * FROM dual;" and process each INSERT ALL block
+            const insertBlocks = insertSQL.split('SELECT * FROM dual;').filter(block => block.trim());
+            console.log(`Found ${insertBlocks.length} insert blocks`);
+            
+            let successfulInserts = 0;
+            for (let i = 0; i < insertBlocks.length; i++) {
+                const block = insertBlocks[i];
+                if (block.trim()) {
+                    try {
+                        // Execute the INSERT ALL block
+                        await connection.execute(block.trim());
+                        successfulInserts++;
+                        console.log(`Successfully executed insert block ${i + 1}`);
+                    } catch (err) {
+                        console.error(`Insert block ${i + 1} failed:`, err.message);
+                        console.error('Block content:', block.trim().substring(0, 200) + '...');
+                    }
                 }
             }
             
-            // Execute inserts - these use "SELECT * FROM dual;" so split by "SELECT * FROM dual;"
-            console.log('Inserting data...');
-            const insertBlocks = insertSQL.split('SELECT * FROM dual;').filter(block => block.trim());
-            for (const block of insertBlocks) {
-                if (block.trim()) {
-                    const fullStatement = block.trim() + '\nSELECT * FROM dual';
-                    try {
-                        await connection.execute(fullStatement);
-                    } catch (err) {
-                        console.log('Insert block failed:', err.message);
-                    }
-                }
+            console.log(`Successfully executed ${successfulInserts} out of ${insertBlocks.length} insert blocks`);
+            
+            // Let's also manually check if data was inserted
+            try {
+                const testResult = await connection.execute('SELECT COUNT(*) FROM Trainer');
+                console.log('Trainers in database after insert:', testResult.rows[0][0]);
+            } catch (err) {
+                console.error('Error checking trainer count:', err.message);
+            }
+            
+            try {
+                const testResult2 = await connection.execute('SELECT COUNT(*) FROM Pokemon_1');
+                console.log('Pokemon in database after insert:', testResult2.rows[0][0]);
+            } catch (err) {
+                console.error('Error checking pokemon count:', err.message);
             }
             
             console.log('Pokemon database setup complete!');
@@ -144,7 +179,8 @@ async function initiatePokemonDB() {
             console.error('Error setting up Pokemon database:', err);
             return false;
         }
-    }).catch(() => {
+    }).catch((err) => {
+        console.error('Database connection error:', err);
         return false;
     });
 }
@@ -359,6 +395,21 @@ async function deleteTrainer(trainerId) {
     });
 }
 
+async function deletePlayer(trainerId) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `DELETE FROM Player WHERE trainer_id = :trainerId`,
+            [trainerId],
+            { autoCommit: true }
+        );
+
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error deleting player:', trainerId, err);
+        return false;
+    });
+}
+
 async function deletePokemon(pokedex, pokemon_id) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -483,6 +534,7 @@ module.exports = {
     insertPokemonHasLearnedMove,
     // Delete functions
     deleteTrainer,
+    deletePlayer,
     deletePokemon,
     // Fetch functions for all tables
     fetchTrainersFromDb,

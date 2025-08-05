@@ -120,23 +120,33 @@ router.get('/natures', async (req, res) => {
 });
 
 router.delete('/delete-trainer', async (req, res) => {
-    const trainerId = req.params.id;
-
-    const success = await deleteTrainer(trainerId);
+    const { trainerId } = req.body;  // Get from body, not params
+    const success = await appService.deleteTrainer(trainerId);
     if (success) {
-        res.status(200).json({ message: `Trainer ${trainerId} deleted successfully.` });
+        res.json({ success: true });
     } else {
-        res.status(500).json({ error: `Failed to delete trainer ${trainerId}.` });
+        res.status(500).json({ success: false });
+    }
+});
+
+
+router.delete('/delete-player', async (req, res) => {
+    const { trainerId } = req.body;
+    const success = await appService.deleteTrainer(trainerId); // This deletes player via cascade
+    if (success) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
     }
 });
 
 router.delete('/delete-pokemon', async (req, res) => {
-    const condition = req.body; // Expecting a JSON with condition fields
-    const success = await deletePokemon(condition);
+    const { pokedex, pokemon_id } = req.body;
+    const success = await appService.deletePokemon(pokedex, pokemon_id);
     if (success) {
-        res.status(200).json({ message: `Pokemon deleted successfully.` });
+        res.json({ success: true });
     } else {
-        res.status(500).json({ error: `Failed to delete pokemon.` });
+        res.status(500).json({ success: false });
     }
 });
 

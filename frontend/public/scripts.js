@@ -35,7 +35,8 @@ async function resetDemotable() {
         const messageElement = document.getElementById('resetResultMsg');
         messageElement.textContent = "Pokemon database initiated successfully!";
         alert("Database reset successful!");
-        setTimeout(refreshAllTables, 1000); // Refresh tables after reset
+        
+        setTimeout(refreshAllTables, 2000);
     } else {
         alert("Error initiating database!");
     }
@@ -258,6 +259,33 @@ async function insertTrainer(event) {
     }
 }
 
+async function deleteTrainer(event) {
+    event.preventDefault();
+
+    const trainerIdValue = document.getElementById('deleteTrainerId').value;
+
+    const response = await fetch('/delete-trainer', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({trainerId: trainerIdValue})
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('deleteTrainerResultMsg');
+
+    if (responseData.success) {
+        alert("Trainer deleted successfully!");
+        messageElement.textContent = "Trainer deleted successfully!";
+        document.getElementById('deleteTrainer').reset();
+        refreshAllTables(); // Refresh all tables to show changes
+    } else {
+        alert("Error deleting trainer! Check your input.");
+        messageElement.textContent = "Error deleting trainer!";
+    }
+}
+
 async function insertPlayer(event) {
     event.preventDefault();
 
@@ -286,6 +314,33 @@ async function insertPlayer(event) {
     } else {
         alert("Error inserting player! Make sure trainer exists.");
         messageElement.textContent = "Error inserting player!";
+    }
+}
+
+async function deletePlayer(event) {
+    event.preventDefault();
+
+    const trainerIdValue = document.getElementById('deletePlayerId').value;
+
+    const response = await fetch('/delete-player', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({trainerId: trainerIdValue})
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('deletePlayerResultMsg');
+
+    if (responseData.success) {
+        alert("Player deleted successfully!");
+        messageElement.textContent = "Player deleted successfully!";
+        document.getElementById('deletePlayer').reset();
+        refreshAllTables(); // Refresh all tables to show changes
+    } else {
+        alert("Error deleting player! Check your input.");
+        messageElement.textContent = "Error deleting player!";
     }
 }
 
@@ -338,6 +393,37 @@ async function insertPokemon(event) {
     }
 }
 
+async function deletePokemon(event) {
+    event.preventDefault();
+
+    const pokedexValue = document.getElementById('deletePokemonPokedex').value;
+    const pokemonIdValue = document.getElementById('deletePokemonId').value;
+
+    const response = await fetch('/delete-pokemon', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            pokedex: pokedexValue,
+            pokemon_id: pokemonIdValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('deletePokemonResultMsg');
+
+    if (responseData.success) {
+        alert("Pokemon deleted successfully!");
+        messageElement.textContent = "Pokemon deleted successfully!";
+        document.getElementById('deletePokemon').reset();
+        refreshAllTables(); // Refresh all tables to show changes
+    } else {
+        alert("Error deleting Pokemon! Check your input.");
+        messageElement.textContent = "Error deleting Pokemon!";
+    }
+}
+
 async function insertLearnedMove(event) {
     event.preventDefault();
 
@@ -384,4 +470,9 @@ window.onload = function() {
     document.getElementById("insertPlayer").addEventListener("submit", insertPlayer);
     document.getElementById("insertPokemon").addEventListener("submit", insertPokemon);
     document.getElementById("insertLearnedMove").addEventListener("submit", insertLearnedMove);
+    
+    // Add delete event listeners
+    document.getElementById("deleteTrainer").addEventListener("submit", deleteTrainer);
+    document.getElementById("deletePlayer").addEventListener("submit", deletePlayer);
+    document.getElementById("deletePokemon").addEventListener("submit", deletePokemon);
 };
