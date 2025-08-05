@@ -312,8 +312,13 @@ async function updateTrainer(event) {
         resultElement.style.color = result.success ? 'green' : 'red';
         
         if (result.success) {
-            document.getElementById('updateTrainerForm').reset();
-            refreshAllTables();
+            alert("Trainer updated successfully!");
+            messageElement.textContent = "Trainer updated successfully!";
+            document.getElementById('updateTrainer').reset();
+            refreshAllTables(); // Refresh all tables to show changes
+        } else {
+            alert("Error updating Trainer! Check your input.");
+            messageElement.textContent = "Error updating Trainer!";
         }
     } catch (error) {
         document.getElementById('updateTrainerResult').textContent = 'Error: ' + error.message;
@@ -375,8 +380,13 @@ async function updatePlayer(event) {
         resultElement.style.color = result.success ? 'green' : 'red';
         
         if (result.success) {
-            document.getElementById('updatePlayerForm').reset();
-            refreshAllTables();
+            alert("Player updated successfully!");
+            messageElement.textContent = "Player updated successfully!";
+            document.getElementById('updatePlayer').reset();
+            refreshAllTables(); // Refresh all tables to show changes
+        } else {
+            alert("Error updating Player! Check your input.");
+            messageElement.textContent = "Error updating Player!";
         }
     } catch (error) {
         document.getElementById('updatePlayerResult').textContent = 'Error: ' + error.message;
@@ -505,8 +515,13 @@ async function updatePokemon(event) {
         resultElement.style.color = result.success ? 'green' : 'red';
         
         if (result.success) {
-            document.getElementById('updatePokemonForm').reset();
-            refreshAllTables();
+            alert("Pokemon updated successfully!");
+            messageElement.textContent = "Pokemon updated successfully!";
+            document.getElementById('updatePokemon').reset();
+            refreshAllTables(); // Refresh all tables to show changes
+        } else {
+            alert("Error updating Pokemon! Check your input.");
+            messageElement.textContent = "Error updating Pokemon!";
         }
     } catch (error) {
         document.getElementById('updatePokemonResult').textContent = 'Error: ' + error.message;
