@@ -2,84 +2,219 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- This meta tag ensures that the website renders correctly across different device sizes, enhancing mobile responsiveness. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Link to the external CSS stylesheet. Uncomment if you wish to customize or add styling. -->
-    <!-- <link rel="stylesheet" href="styles.css">   -->
-
-    <title>Database Application</title>
+    <title>Pokemon Database Application</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- ===================================================================================== -->
-    <!-- Display the current status of the database connection. 
-         !!HERE TO HELP U DEBUGGING, NOT REQUIRED IN YOUR OWN PROJECT!!
-         -->
-    <h1>Database Connection Status: 
-        <!-- An in-line placeholder to display connection status. -->
+    <!-- Database Connection Status -->
+    <h1>Pokemon Database Connection Status: 
         <span id="dbStatus"> </span>
-        <!-- A loading GIF, will be hided once get the status. -->
         <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
     </h1>
 
-    <br><hr><br> <!-- ========================================================================= -->
+    <br><hr><br>
 
-    <!-- Show 'Demotable'. 
-        Data will be fetched and inserted here dynamically using JavaScript. -->
-    <h2>Show Demotable</h2>
-    <table id="demotable" border="1">
-        <thead>
-            <tr>
-                <!--Table head, need to be adjusted accordingly to align with your own.-->
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
-    <br><hr><br> <!-- ========================================================================= -->
-
-    <h2>Reset Demotable</h2>
-    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-    <button id="resetDemotable"> reset </button> <br>
-    <!-- A placeholder to display messages related to the reset operation. -->
+    <!-- Database Reset -->
+    <h2>Reset Pokemon Database</h2>
+    <p>Click reset to set up the Pokemon database. <strong>Use this first!</strong></p>
+    <button id="resetDemotable">Reset Database</button>
     <div id="resetResultMsg"></div>
 
-    <br><hr><br> <!-- ========================================================================= -->
+    <br><hr><br>
 
-    <h2> Insert Values into DemoTable </h2>
-    <form id="insertDemotable">
-        ID: <input type="number" id="insertId" placeholder="Enter ID" required> <br><br>
-        Name: <input type="text" id="insertName" placeholder="Enter Name" maxlength="20"> <br><br>
+    <!-- ====================== TRAINER SECTION ====================== -->
+    <h2>Trainers</h2>
+    <table id="trainersTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Name</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-        <button type="submit"> insert </button> <br>
+    <h3>Insert New Trainer</h3>
+    <form id="insertTrainer">
+        Trainer ID: <input type="number" id="insertTrainerId" placeholder="Enter Trainer ID" required> <br><br>
+        Name: <input type="text" id="insertTrainerName" placeholder="Enter Trainer Name" maxlength="255" required> <br><br>
+        Location: <input type="text" id="insertTrainerLocation" placeholder="Enter Location (optional)" maxlength="40"> <br><br>
+        <button type="submit">Insert Trainer</button>
     </form>
-    <div id="insertResultMsg"></div>
+    <div id="insertTrainerResultMsg"></div>
 
-    <br><hr><br> <!-- ========================================================================= -->
-
-    <h2>Update Name in DemoTable</h2>
-    <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
-    <form id="updataNameDemotable">
-        Old Name: <input type="text" id="updateOldName" placeholder="Enter Old Name" required> <br><br>
-        New Name: <input type="text" id="updateNewName" placeholder="Enter New Name" maxlength="20"> <br><br>
-
-        <button type="submit"> update </button> <br>
+    <h3>Delete Trainer</h3>
+    <form id="deleteTrainer">
+        Trainer ID: <input type="number" id="deleteTrainerId" placeholder="Enter Trainer ID" required> <br><br>
+        <button type="submit">Delete Trainer</button>
     </form>
-    <!-- A placeholder to display messages related to the update operation. -->
-    <div id="updateNameResultMsg"></div>
+    <div id="deleteTrainerResultMsg"></div>
 
-    <br><hr><br> <!-- ========================================================================= -->
+    <br><hr><br>
 
-    <h2>Count the Tuples in DemoTable</h2>
-    <button id="countDemotable"> count </button> <br><br>
-    <!-- A placeholder to display the count result. -->
-    <div id="countResultMsg"></div> <br>
+    <!-- ====================== PLAYER SECTION ====================== -->
+    <h2>Players</h2>
+    <table id="playersTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Trainer Name</th>
+                <th>Money</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-    <!-- ===================================================================================== -->
-    <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
+    <h3>Insert New Player</h3>
+    <form id="insertPlayer">
+        Trainer ID: <input type="number" id="insertPlayerTrainerId" placeholder="Enter Trainer ID" required> <br><br>
+        Money: <input type="number" id="insertPlayerMoney" placeholder="Enter Starting Money" required> <br><br>
+        <button type="submit">Insert Player</button>
+    </form>
+    <div id="insertPlayerResultMsg"></div>
+
+    <h3>Delete Trainer</h3>
+    <form id="deleteTrainer">
+        Trainer ID: <input type="number" id="deleteTrainerId" placeholder="Enter Trainer ID" required> <br><br>
+        <button type="submit">Delete Trainer</button>
+    </form>
+    <div id="deleteTrainerResultMsg"></div>
+
+    <br><hr><br>
+
+
+    <br><hr><br>
+
+    <!-- ====================== POKEMON SECTION ====================== -->
+    <h2>Pokemon</h2>
+    <table id="pokemonTable" border="1">
+        <thead>
+            <tr>
+                <th>Pokedex #</th>
+                <th>Pokemon ID</th>
+                <th>Name</th>
+                <th>Level</th>
+                <th>Nature</th>
+                <th>HP IV</th>
+                <th>Attack IV</th>
+                <th>Defense IV</th>
+                <th>Speed IV</th>
+                <th>Ability ID</th>
+                <th>Trainer ID</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Insert New Pokemon</h3>
+    <form id="insertPokemon">
+        Pokedex #: <input type="number" id="insertPokemonPokedex" placeholder="Enter Pokedex Number" required> <br><br>
+        Pokemon ID: <input type="number" id="insertPokemonId" placeholder="Enter Pokemon ID" required> <br><br>
+        Name: <input type="text" id="insertPokemonName" placeholder="Enter Pokemon Name" maxlength="20" required> <br><br>
+        Total XP: <input type="number" id="insertPokemonXP" placeholder="Enter Total XP" required> <br><br>
+        Nature: <input type="text" id="insertPokemonNature" placeholder="Enter Nature" maxlength="12" required> <br><br>
+        HP IV: <input type="number" id="insertPokemonHPIV" placeholder="HP IV (0-31)" min="0" max="31" required> <br><br>
+        Attack IV: <input type="number" id="insertPokemonAttackIV" placeholder="Attack IV (0-31)" min="0" max="31" required> <br><br>
+        Defense IV: <input type="number" id="insertPokemonDefenseIV" placeholder="Defense IV (0-31)" min="0" max="31" required> <br><br>
+        Speed IV: <input type="number" id="insertPokemonSpeedIV" placeholder="Speed IV (0-31)" min="0" max="31" required> <br><br>
+        Ability ID: <input type="number" id="insertPokemonAbilityId" placeholder="Enter Ability ID" required> <br><br>
+        Trainer ID: <input type="number" id="insertPokemonTrainerId" placeholder="Enter Trainer ID (optional)"> <br><br>
+        <button type="submit">Insert Pokemon</button>
+    </form>
+    <div id="insertPokemonResultMsg"></div>
+
+    <h3>Delete Pokemon</h3>
+    <form id="insertPokemon">
+        Pokedex #: <input type="number" id="deletePokemonPokedex" placeholder="Enter Pokedex Number" required> <br><br>
+        Pokemon ID: <input type="number" id="deletePokemonId" placeholder="Enter Pokemon ID" required> <br><br>
+        <button type="submit">Delete Pokemon</button>
+    </form>
+    <div id="deletePokemonResultMsg"></div>
+
+    <br><hr><br>
+
+    <!-- ====================== LEARNED MOVES SECTION ====================== -->
+    <h2>Pokemon Learned Moves</h2>
+    <table id="learnedMovesTable" border="1">
+        <thead>
+            <tr>
+                <th>Pokedex #</th>
+                <th>Pokemon ID</th>
+                <th>Move ID</th>
+                <th>Pokemon Name</th>
+                <th>Move Name</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Teach Pokemon a Move</h3>
+    <form id="insertLearnedMove">
+        Pokedex #: <input type="number" id="insertLearnedMovePokedex" placeholder="Enter Pokedex Number" required> <br><br>
+        Pokemon ID: <input type="number" id="insertLearnedMovePokemonId" placeholder="Enter Pokemon ID" required> <br><br>
+        Move ID: <input type="number" id="insertLearnedMoveId" placeholder="Enter Move ID" required> <br><br>
+        <button type="submit">Teach Move</button>
+    </form>
+    <div id="insertLearnedMoveResultMsg"></div>
+
+    <br><hr><br>
+
+    <!-- ====================== REFERENCE TABLES ====================== -->
+    <h2>Reference Data</h2>
+    
+    <h3>Available Pokemon Species</h3>
+    <table id="speciesTable" border="1">
+        <thead>
+            <tr>
+                <th>Pokedex #</th>
+                <th>Species Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Available Moves</h3>
+    <table id="movesTable" border="1">
+        <thead>
+            <tr>
+                <th>Move ID</th>
+                <th>Move Name</th>
+                <th>Type</th>
+                <th>Power</th>
+                <th>PP</th>
+                <th>Accuracy</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Available Abilities</h3>
+    <table id="abilitiesTable" border="1">
+        <thead>
+            <tr>
+                <th>Ability ID</th>
+                <th>Ability Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Available Natures</h3>
+    <table id="naturesTable" border="1">
+        <thead>
+            <tr>
+                <th>Nature</th>
+                <th>Stat Increased</th>
+                <th>Stat Decreased</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
     <script src="scripts.js"></script>
 </body>
 </html>

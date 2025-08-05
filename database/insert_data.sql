@@ -97,7 +97,7 @@ INSERT ALL
 SELECT * FROM dual;
 
 INSERT ALL
-    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Adamant', 'Attack', 'Defense')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Adamant', 'Attack', 'Sp. Atk')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Modest', 'Sp. Atk', 'Attack')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Jolly', 'Speed', 'Sp. Atk')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Timid', 'Speed', 'Attack')
@@ -112,6 +112,7 @@ INSERT ALL
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Rash', 'Sp. Atk', 'Sp. Def')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Lonely', 'Attack', 'Defense')
     INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Mild', 'Sp. Atk', 'Defense')
+    INTO Pokemon_2 (nature, stat_increased, stat_decreased) VALUES ('Relaxed', 'Defense', 'Speed')
 SELECT * FROM dual;
 
 INSERT ALL

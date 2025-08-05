@@ -191,8 +191,8 @@ async function countDemotable() {
 async function insertTrainer(trainerId, name, locationName) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `INSERT INTO Trainer (trainer_id, name, location_name) VALUES (:trainerId, :name, :locationName);`,
-            [trainerId, name, locationName || null], // Handle optional location_name
+            `INSERT INTO Trainer (trainer_id, name, location_name) VALUES (:trainerId, :name, :locationName)`,
+            [trainerId, name, locationName || null], 
             { autoCommit: true }
         );
 
@@ -206,7 +206,7 @@ async function insertTrainer(trainerId, name, locationName) {
 async function insertPlayer(trainerId, money) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `INSERT INTO Player (trainer_id, money) VALUES (:trainerId, :money);`,
+            `INSERT INTO Player (trainer_id, money) VALUES (:trainerId, :money)`,
             [trainerId, money],
             { autoCommit: true }
         );
@@ -251,37 +251,218 @@ async function insertPokemonHasLearnedMove(pokedex, pokemon_id, move_id) {
     });
 }
 
+// Fetch 
+
+async function fetchTrainersFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM Trainer ORDER BY trainer_id');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchPlayersFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT p.trainer_id, t.name, p.money 
+            FROM Player p 
+            JOIN Trainer t ON p.trainer_id = t.trainer_id 
+            ORDER BY p.trainer_id
+        `);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchPokemonFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT p.pokedex, p.pokemon_id, p.name, p3.pokemon_level, p.nature, 
+                   p.HP_IV, p.attack_IV, p.defense_IV, p.speed_IV, p.ability_id, p.trainer_id
+            FROM Pokemon_1 p
+            JOIN Pokemon_3 p3 ON p.total_XP = p3.total_XP
+            ORDER BY p.pokedex, p.pokemon_id
+        `);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchLearnedMovesFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`
+            SELECT lm.pokedex, lm.pokemon_id, lm.move_id, p.name as pokemon_name, m.name as move_name
+            FROM Pokemon_Has_Learned_Move lm
+            JOIN Pokemon_1 p ON lm.pokedex = p.pokedex AND lm.pokemon_id = p.pokemon_id
+            JOIN Move m ON lm.move_id = m.move_id
+            ORDER BY lm.pokedex, lm.pokemon_id, lm.move_id
+        `);
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchSpeciesFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM Species ORDER BY pokedex');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchMovesFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT move_id, name, type_name, power, pp, accuracy FROM Move ORDER BY move_id');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchAbilitiesFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM Ability ORDER BY ability_id');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
+async function fetchNaturesFromDb() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute('SELECT * FROM Pokemon_2 ORDER BY nature');
+        return result.rows;
+    }).catch(() => {
+        return [];
+    });
+}
+
 // All Deletes
 
 async function deleteTrainer(trainerId) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `DELETE FROM Trainer WHERE trainer_id = :trainerID;`,
-            [trainerID], // All required - no nulls allowed
+            `DELETE FROM Trainer WHERE trainer_id = :trainerId`,
+            [trainerId],
             { autoCommit: true }
         );
 
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch((err) => {
-        console.error('Error Deleting ', trainerId, ' Trainer Table:', err);
+        console.error('Error deleting trainer:', trainerId, err);
         return false;
     });
 }
 
-async function deletePokemon(condition) {
+async function deletePokemon(pokedex, pokemon_id) {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `
-            DELETE FROM Pokemon_1 
-            WHERE (:condition)
-            `,
-            [pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id || null],
+            `DELETE FROM Pokemon_1 WHERE pokedex = :pokedex AND pokemon_id = :pokemon_id`,
+            [pokedex, pokemon_id],
             { autoCommit: true }
         );
 
         return result.rowsAffected && result.rowsAffected > 0;
     }).catch((err) => {
-        console.error('Error inserting Pokemon:', err);
+        console.error('Error deleting Pokemon:', err);
+        return false;
+    });
+}
+
+async function updateTrainer(trainer_id, updates) {
+    const setClauses = [];
+    const bindParams = { trainer_id };
+
+    let i = 1;
+    for (const [key, value] of Object.entries(updates)) {
+        const paramName = `val${i}`;
+        setClauses.push(`${key} = :${paramName}`);
+        bindParams[paramName] = value;
+        i++;
+    }
+
+    const query = `
+        UPDATE Trainer
+        SET ${setClauses.join(', ')}
+        WHERE trainer_id = :trainer_id;
+    `;
+
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            query,
+            bindParams,
+            { autoCommit: true }
+        );
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error updating Trainer:', err);
+        return false;
+    });
+}
+
+async function updatePlayer(trainer_id, money) {
+    const setClauses = [];
+    const bindParams = { trainer_id };
+
+    let i = 1;
+    for (const [key, value] of Object.entries(updates)) {
+        const paramName = `val${i}`;
+        setClauses.push(`${key} = :${paramName}`);
+        bindParams[paramName] = value;
+        i++;
+    }
+
+    const query = `
+        UPDATE Player
+        SET ${setClauses.join(', ')}
+        WHERE trainer_id = :trainer_id;
+    `;
+
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            query,
+            bindParams,
+            { autoCommit: true }
+        );
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error updating Player:', err);
+        return false;
+    });
+}
+
+async function updatePokemon(pokedex, pokemon_id, updates) {
+    const setClauses = [];
+    const bindParams = { pokedex, pokemon_id };
+
+    let i = 1;
+    for (const [key, value] of Object.entries(updates)) {
+        const paramName = `val${i}`;
+        setClauses.push(`${key} = :${paramName}`);
+        bindParams[paramName] = value;
+        i++;
+    }
+
+    const query = `
+        UPDATE Pokemon_1
+        SET ${setClauses.join(', ')}
+        WHERE pokedex = :pokedex AND pokemon_id = :pokemon_id
+    `;
+
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            query,
+            bindParams,
+            { autoCommit: true }
+        );
+        return result.rowsAffected && result.rowsAffected > 0;
+    }).catch((err) => {
+        console.error('Error updating Pokemon:', err);
         return false;
     });
 }
@@ -295,12 +476,21 @@ module.exports = {
     insertDemotable, 
     updateNameDemotable, 
     countDemotable,
-    // Inserts statements
+    // Insert functions
     insertTrainer,
     insertPlayer,
     insertPokemon,
     insertPokemonHasLearnedMove,
-    // detete statements
+    // Delete functions
     deleteTrainer,
     deletePokemon,
-}
+    // Fetch functions for all tables
+    fetchTrainersFromDb,
+    fetchPlayersFromDb,
+    fetchPokemonFromDb,
+    fetchLearnedMovesFromDb,
+    fetchSpeciesFromDb,
+    fetchMovesFromDb,
+    fetchAbilitiesFromDb,
+    fetchNaturesFromDb
+};

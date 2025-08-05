@@ -114,7 +114,7 @@ CREATE TABLE
         FOREIGN KEY (total_XP) REFERENCES Pokemon_3 (total_XP),
         FOREIGN KEY (nature) REFERENCES Pokemon_2 (nature),
         FOREIGN KEY (ability_id) REFERENCES Ability (ability_id),
-        FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id),
+        FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id)
     );
 
 CREATE TABLE
@@ -123,7 +123,8 @@ CREATE TABLE
         difficulty INTEGER NOT NULL,
         specialty_type_name VARCHAR(9) NOT NULL,
         badge_index INTEGER UNIQUE NOT NULL,
-        FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id),
+        FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id)
+            ON DELETE CASCADE,
         FOREIGN KEY (difficulty) REFERENCES Gym_Leader_2 (difficulty),
         FOREIGN KEY (specialty_type_name) REFERENCES Type (name),
         FOREIGN KEY (badge_index) REFERENCES Badge (badge_index)
@@ -134,6 +135,7 @@ CREATE TABLE
         trainer_id INTEGER PRIMARY KEY,
         money INTEGER NOT NULL,
         FOREIGN KEY (trainer_id) REFERENCES Trainer (trainer_id)
+            ON DELETE CASCADE
     );
 
 -- Many-to-Many Relationships:
@@ -153,7 +155,8 @@ CREATE TABLE
         pokemon_id INTEGER,
         move_id INTEGER,
         PRIMARY KEY (pokedex, pokemon_id, move_id),
-        FOREIGN KEY (pokedex, pokemon_id) REFERENCES Pokemon_1 (pokedex, pokemon_id),
+        FOREIGN KEY (pokedex, pokemon_id) REFERENCES Pokemon_1 (pokedex, pokemon_id)
+            ON DELETE CASCADE,
         FOREIGN KEY (move_id) REFERENCES Move (move_id)
     );
 
@@ -207,6 +210,7 @@ CREATE TABLE
         trainer_id INTEGER,
         badge_index INTEGER,
         PRIMARY KEY (trainer_id, badge_index),
-        FOREIGN KEY (trainer_id) REFERENCES Player (trainer_id),
+        FOREIGN KEY (trainer_id) REFERENCES Player (trainer_id)
+            ON DELETE CASCADE,
         FOREIGN KEY (badge_index) REFERENCES Badge (badge_index)
     );
