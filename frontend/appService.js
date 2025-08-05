@@ -132,35 +132,38 @@ async function initiatePokemonDB() {
             }
             console.log(`Total tables created: ${tableCount}`);
             
-            // Execute inserts - these use "SELECT * FROM dual;" so split by that
+            // Execute inserts - now much simpler since they're individual INSERT statements
             console.log('Inserting data...');
             console.log('Insert SQL length:', insertSQL.length);
             
-            // Split by "SELECT * FROM dual;" and process each INSERT ALL block
-            const insertBlocks = insertSQL.split('SELECT * FROM dual;').filter(block => block.trim());
-            console.log(`Found ${insertBlocks.length} insert blocks`);
+            // Split by semicolon and filter out empty statements
+            const insertStatements = insertSQL.split(';').filter(stmt => {
+                const trimmed = stmt.trim();
+                return trimmed && trimmed.toLowerCase().startsWith('insert');
+            });
+            
+            console.log(`Found ${insertStatements.length} insert statements`);
             
             let successfulInserts = 0;
-            for (let i = 0; i < insertBlocks.length; i++) {
-                const block = insertBlocks[i];
-                if (block.trim()) {
+            for (let i = 0; i < insertStatements.length; i++) {
+                const statement = insertStatements[i].trim();
+                if (statement) {
                     try {
-                        // Add back the "SELECT * FROM dual;" that was removed by splitting
-                        // Make sure to include the semicolon!
-                        const completeStatement = block.trim() + '\nSELECT * FROM dual;';
-                        await connection.execute(completeStatement);
+                        await connection.execute(statement);
                         successfulInserts++;
-                        console.log(`Successfully executed insert block ${i + 1}`);
+                        if (successfulInserts % 10 === 0) {
+                            console.log(`Successfully executed ${successfulInserts} insert statements...`);
+                        }
                     } catch (err) {
-                        console.error(`Insert block ${i + 1} failed:`, err.message);
-                        console.error('Block content:', block.trim().substring(0, 200) + '...');
+                        console.error(`Insert statement ${i + 1} failed:`, err.message);
+                        console.error('Statement:', statement.substring(0, 100) + '...');
                     }
                 }
             }
             
-            console.log(`Successfully executed ${successfulInserts} out of ${insertBlocks.length} insert blocks`);
+            console.log(`Successfully executed ${successfulInserts} out of ${insertStatements.length} insert statements`);
             
-            // Let's also manually check if data was inserted
+            // Check if data was inserted
             try {
                 const testResult = await connection.execute('SELECT COUNT(*) FROM Trainer');
                 console.log('Trainers in database after insert:', testResult.rows[0][0]);
