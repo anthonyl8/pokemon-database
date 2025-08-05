@@ -179,6 +179,16 @@ router.post('/update-pokemon', async (req, res) => {
     }
 });
 
+router.post('/update-learned-move', async (req, res) => {
+    try {
+        const { pokedex, pokemonId, oldMoveId, newMoveId } = req.body;
+        const success = await appService.updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMoveId);
+        res.json({ success, message: "Move updated successfully" });
+    } catch (err) {
+        res.status(400).json({ success: false, message: err.message });
+    }
+});
+
 router.get('/count-demotable', async (req, res) => {
     const tableCount = await appService.countDemotable();
     if (tableCount >= 0) {

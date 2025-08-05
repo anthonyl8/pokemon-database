@@ -321,8 +321,8 @@ async function updateTrainer(event) {
             messageElement.textContent = "Error updating Trainer!";
         }
     } catch (error) {
-        document.getElementById('updateTrainerResult').textContent = 'Error: ' + error.message;
-        document.getElementById('updateTrainerResult').style.color = 'red';
+        document.getElementById('updateTrainerResultMsg').textContent = 'Error: ' + error.message;
+        document.getElementById('updateTrainerResultMsg').style.color = 'red';
     }
 }
 
@@ -360,11 +360,13 @@ async function insertPlayer(event) {
 async function updatePlayer(event) {
     event.preventDefault();
     
-    const trainerId = document.getElementById('updatePlayerId').value;
+    const trainerId = document.getElementById('updatePlayerTrainerId').value;
     const updates = {};
     
     const money = document.getElementById('updatePlayerMoney').value;
-    if (money) updates.money = money;
+    if (money) {
+        updates.money = money;
+    }
     
     try {
         const response = await fetch('/update-player', {
@@ -376,21 +378,19 @@ async function updatePlayer(event) {
         const result = await response.json();
         const messageElement = document.getElementById('updatePlayerResultMsg');
         
-        messageElement.textContent = result.message;
-        messageElement.style.color = result.success ? 'green' : 'red';
-        
         if (result.success) {
             alert("Player updated successfully!");
             messageElement.textContent = "Player updated successfully!";
             document.getElementById('updatePlayer').reset();
             refreshAllTables(); // Refresh all tables to show changes
         } else {
-            alert("Error updating Player! Check your input.");
-            messageElement.textContent = "Error updating Player!";
+            alert("Error updating Player! " + result.message);
+            messageElement.textContent = "Error updating Player: " + result.message;
         }
     } catch (error) {
-        document.getElementById('updatePlayerResult').textContent = 'Error: ' + error.message;
-        document.getElementById('updatePlayerResult').style.color = 'red';
+        const messageElement = document.getElementById('updatePlayerResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
     }
 }
 
@@ -524,8 +524,8 @@ async function updatePokemon(event) {
             messageElement.textContent = "Error updating Pokemon!";
         }
     } catch (error) {
-        document.getElementById('updatePokemonResult').textContent = 'Error: ' + error.message;
-        document.getElementById('updatePokemonResult').style.color = 'red';
+        document.getElementById('updatePokemonResultMsg').textContent = 'Error: ' + error.message;
+        document.getElementById('updatePokemonResultMsg').style.color = 'red';
     }
 }
 
@@ -562,6 +562,46 @@ async function insertLearnedMove(event) {
     }
 }
 
+async function updateLearnedMove(event) {
+    event.preventDefault();
+
+    const pokedex = document.getElementById('updateLearnedMovePokedex').value;
+    const pokemonId = document.getElementById('updateLearnedMovePokemonId').value;
+    const oldMoveId = document.getElementById('updateLearnedMoveOldId').value;
+    const newMoveId = document.getElementById('updateLearnedMoveNewId').value;
+
+    try {
+        const response = await fetch('/update-learned-move', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                pokedex: parseInt(pokedex),
+                pokemonId: parseInt(pokemonId),
+                oldMoveId: parseInt(oldMoveId),
+                newMoveId: parseInt(newMoveId)
+            })
+        });
+
+        const result = await response.json();
+        const messageElement = document.getElementById('updateLearnedMoveResultMsg');
+
+        if (result.success) {
+            alert("Move updated successfully!");
+            messageElement.textContent = "Move updated successfully!";
+            document.getElementById('updateLearnedMove').reset();
+            refreshAllTables();
+        } else {
+            alert("Error updating move: " + result.message);
+            messageElement.textContent = "Error: " + result.message;
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('updateLearnedMoveResultMsg');
+        messageElement.textContent = 'A client-side error occurred: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
 // ==================== PAGE INITIALIZATION ====================
 
 window.onload = function() {
@@ -578,11 +618,12 @@ window.onload = function() {
     
     // Add delete event listeners
     document.getElementById("deleteTrainer").addEventListener("submit", deleteTrainer);
-    document.getElementById("deletePlayer").addEventListener("submit", deletePlayer);
+    // document.getElementById("deletePlayer").addEventListener("submit", deletePlayer); // This line was commented out in the original file
     document.getElementById("deletePokemon").addEventListener("submit", deletePokemon);
 
     document.getElementById('updateTrainer').addEventListener('submit', updateTrainer);
     document.getElementById('updatePlayer').addEventListener('submit', updatePlayer);
     document.getElementById('updatePokemon').addEventListener('submit', updatePokemon);
-    
+
+    document.getElementById('updateLearnedMove').addEventListener('submit', updateLearnedMove);
 };
