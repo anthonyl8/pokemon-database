@@ -305,13 +305,13 @@ async function updateTrainer(event) {
             body: JSON.stringify({ trainerId, updates })
         });
         
-        const result = await response.json();
+        const responseData = await response.json();
         const messageElement = document.getElementById('updateTrainerResultMsg');
         
-        messageElement.textContent = result.message;
-        messageElement.style.color = result.success ? 'green' : 'red';
+        messageElement.textContent = responseData.message;
+        messageElement.style.color = responseData.success ? 'green' : 'red';
         
-        if (result.success) {
+        if (responseData.success) {
             alert("Trainer updated successfully!");
             messageElement.textContent = "Trainer updated successfully!";
             document.getElementById('updateTrainer').reset();
@@ -375,17 +375,17 @@ async function updatePlayer(event) {
             body: JSON.stringify({ trainerId, updates })
         });
         
-        const result = await response.json();
+        const responseData = await response.json();
         const messageElement = document.getElementById('updatePlayerResultMsg');
         
-        if (result.success) {
+        if (responseData.success) {
             alert("Player updated successfully!");
             messageElement.textContent = "Player updated successfully!";
             document.getElementById('updatePlayer').reset();
             refreshAllTables(); // Refresh all tables to show changes
         } else {
-            alert("Error updating Player! " + result.message);
-            messageElement.textContent = "Error updating Player: " + result.message;
+            alert("Error updating Player! " + responseData.message);
+            messageElement.textContent = "Error updating Player: " + responseData.message;
         }
     } catch (error) {
         const messageElement = document.getElementById('updatePlayerResultMsg');
@@ -508,13 +508,13 @@ async function updatePokemon(event) {
             body: JSON.stringify({ pokedex, pokemonId, updates })
         });
         
-        const result = await response.json();
+        const responseData = await response.json();
         const messageElement = document.getElementById('updatePokemonResultMsg');
         
-        messageElement.textContent = result.message;
-        messageElement.style.color = result.success ? 'green' : 'red';
+        messageElement.textContent = responseData.message;
+        messageElement.style.color = responseData.success ? 'green' : 'red';
         
-        if (result.success) {
+        if (responseData.success) {
             alert("Pokemon updated successfully!");
             messageElement.textContent = "Pokemon updated successfully!";
             document.getElementById('updatePokemon').reset();
@@ -582,17 +582,17 @@ async function updateLearnedMove(event) {
             })
         });
 
-        const result = await response.json();
+        const responseData = await response.json();
         const messageElement = document.getElementById('updateLearnedMoveResultMsg');
 
-        if (result.success) {
+        if (responseData.success) {
             alert("Move updated successfully!");
             messageElement.textContent = "Move updated successfully!";
             document.getElementById('updateLearnedMove').reset();
             refreshAllTables();
         } else {
-            alert("Error updating move: " + result.message);
-            messageElement.textContent = "Error: " + result.message;
+            alert("Error updating move: " + responseData.message);
+            messageElement.textContent = "Error: " + responseData.message;
             messageElement.style.color = 'red';
         }
     } catch (error) {
