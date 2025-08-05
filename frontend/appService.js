@@ -136,7 +136,7 @@ async function initiatePokemonDB() {
             console.log('Inserting data...');
             console.log('Insert SQL length:', insertSQL.length);
             
-            // Let's try a different approach - split by "SELECT * FROM dual;" and process each INSERT ALL block
+            // Split by "SELECT * FROM dual;" and process each INSERT ALL block
             const insertBlocks = insertSQL.split('SELECT * FROM dual;').filter(block => block.trim());
             console.log(`Found ${insertBlocks.length} insert blocks`);
             
@@ -145,8 +145,10 @@ async function initiatePokemonDB() {
                 const block = insertBlocks[i];
                 if (block.trim()) {
                     try {
-                        // Execute the INSERT ALL block
-                        await connection.execute(block.trim());
+                        // Add back the "SELECT * FROM dual;" that was removed by splitting
+                        // Make sure to include the semicolon!
+                        const completeStatement = block.trim() + '\nSELECT * FROM dual;';
+                        await connection.execute(completeStatement);
                         successfulInserts++;
                         console.log(`Successfully executed insert block ${i + 1}`);
                     } catch (err) {

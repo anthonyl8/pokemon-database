@@ -132,7 +132,7 @@ router.delete('/delete-trainer', async (req, res) => {
 
 router.delete('/delete-player', async (req, res) => {
     const { trainerId } = req.body;
-    const success = await appService.deleteTrainer(trainerId); // This deletes player via cascade
+    const success = await appService.deletePlayer(trainerId); // This deletes player via cascade
     if (success) {
         res.json({ success: true });
     } else {
