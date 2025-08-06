@@ -4,32 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Pokemon Database Application</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div class="container">
-        <!-- ====================== SYSTEM STATUS ====================== -->
-        <h1>Pokemon Database Connection Status:
-            <span id="dbStatus"> </span>
-            <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
-        </h1>
+    <!-- CONNECTION STATUS -->
+    <h1>Pokemon Database Connection Status:
+        <span id="dbStatus"> </span>
+        <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
+    </h1>
 
     <br>
     <hr><br>
 
-    <!-- ====================== DATABASE RESET ====================== -->
+    <!-- RESET THE DATABASE-->
     <h2>Reset Pokemon Database</h2>
     <p>Click reset to set up the Pokemon database. <strong>Use this first!</strong></p>
-    <button id="resetDemotable">Reset Database</button>
+    <button id="resetDatabase">Reset Database</button>
     <div id="resetResultMsg"></div>
 
     <br>
     <hr><br>
 
-    <!-- ====================== TRAINER MANAGEMENT ====================== -->
+    <!-- TRAINER -->
     <h2>Trainers</h2>
     <table id="trainersTable" border="1">
         <thead>
@@ -75,7 +73,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== PLAYER MANAGEMENT ====================== -->
+    <!-- PLAYER -->
     <h2>Players</h2>
     <table id="playersTable" border="1">
         <thead>
@@ -108,7 +106,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== POKEMON MANAGEMENT ====================== -->
+    <!-- POKEMON -->
     <h2>Pokemon</h2>
     <table id="pokemonTable" border="1">
         <thead>
@@ -187,7 +185,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== LEARNED MOVES MANAGEMENT ====================== -->
+    <!-- MOVES LEARNED-->
     <h2>Pokemon Learned Moves</h2>
     <table id="learnedMovesTable" border="1">
         <thead>
@@ -235,7 +233,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== SELECTION QUERIES ====================== -->
+    <!-- SELECTION -->
     <h2>Selection Query on Pokemon</h2>
     <p>Create a query to filter Pokemon based on specific criteria. Add multiple conditions using AND/OR logic.</p>
     <form id="selectionQueryForm">
@@ -275,7 +273,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== PROJECTION QUERIES ====================== -->
+    <!-- PROJECTION -->
     <h2>Projection Query</h2>
     <p>Select specific attributes from any table in the database.</p>
     <form id="projectionQuery">
@@ -297,7 +295,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== JOIN QUERIES ====================== -->
+    <!-- JOIN -->
     <h2>Join Query: Species Located In</h2>
     <p>Find Pokemon species and their locations (or all species in a certain location) using JOIN operation.</p>
     <form id="joinQueryForm">
@@ -326,7 +324,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== AGGREGATION QUERIES ====================== -->
+    <!-- AGGREGATION WITH GROUP BY -->
     <h2>Aggregation with GROUP BY</h2>
     <p>Group Pokemon by trainer and analyze statistics.</p>
     
@@ -369,7 +367,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== AGGREGATION WITH HAVING ====================== -->
+    <!-- AGGREGATION WITH HAVING-->
     <h2>Aggregation with HAVING</h2>
     <p>Find trainers with multiple Pokemon and analyze their highest XP Pokemon.</p>
     
@@ -418,7 +416,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== NESTED AGGREGATION ====================== -->
+    <!-- NESTED AGGREGATION WITH GROUP BY -->
     <h2>Nested Aggregation with GROUP BY</h2>
     <p>Complex aggregation queries with nested subqueries.</p>
     
@@ -456,7 +454,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== DIVISION QUERIES ====================== -->
+    <!-- DIVISION -->
     <h2>Division Query: Species Has Type</h2>
     <p>Find all species that have specific types or combinations of types.</p>
     
@@ -509,7 +507,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== REFERENCE DATA TABLES ====================== -->
+    <!-- REFERENCE TABLES -->
     <h2>Reference Data</h2>
 
     <h3>Available Pokemon Species</h3>
@@ -563,7 +561,6 @@
         <tbody></tbody>
     </table>
 
-    </div>
     <script src="scripts.js"></script>
 </body>
 

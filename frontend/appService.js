@@ -5,7 +5,7 @@ const path = require('path');
 
 const envVariables = loadEnvFile('./.env');
 
-// =================== DATABASE CONFIGURATION ===================
+// Database configuration setup. Ensure your .env file has the required database credentials.
 
 const dbConfig = {
     user: envVariables.ORACLE_USER,
@@ -17,8 +17,7 @@ const dbConfig = {
     poolTimeout: 60
 };
 
-// ==================== SERVER-SIDE INPUT VALIDATION ====================
-
+// SERVER-SIDE INPUT VALIDATION 
 function validateInteger(value, fieldName, options = {}) {
     if (value === null || value === undefined || value === '') {
         if (options.required) {
@@ -61,7 +60,7 @@ function validateString(value, fieldName, options = {}) {
     value = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     value = value.replace(/[<>]/g, '');
 
-    // Check for SQL injection patterns
+    // Check SQL injection patterns
     const sqlPatterns = [
         /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b)/gi,
         /(-{2}|\/\*|\*\/)/g,
@@ -174,8 +173,7 @@ function validateNature(nature) {
     return nature;
 }
 
-// ================== CONNECTION POOL MANAGEMENT ====================
-
+// initialize connection pool
 async function initializeConnectionPool() {
     try {
         await oracledb.createPool(dbConfig);
@@ -188,7 +186,7 @@ async function initializeConnectionPool() {
 async function closePoolAndExit() {
     console.log('\nTerminating');
     try {
-        await oracledb.getPool().close(10);
+        await oracledb.getPool().close(10); // 10 seconds grace period for connections to finish
         console.log('Pool closed');
         process.exit(0);
     } catch (err) {
@@ -203,12 +201,12 @@ process
     .once('SIGTERM', closePoolAndExit)
     .once('SIGINT', closePoolAndExit);
 
-// ==================== CONNECTION WRAPPER ==================
-
+// ----------------------------------------------------------
+// Wrapper to manage OracleDB actions, simplifying connection handling.
 async function withOracleDB(action) {
     let connection;
     try {
-        connection = await oracledb.getConnection();
+        connection = await oracledb.getConnection(); // Gets a connection from the default pool 
         return await action(connection);
     } catch (err) {
         console.error(err);
@@ -224,8 +222,9 @@ async function withOracleDB(action) {
     }
 }
 
-// ==================== SYSTEM FUNCTIONS ====================
-
+// ----------------------------------------------------------
+// Core functions for database operations
+// Modify these functions, especially the SQL queries, based on your project's requirements and design.
 async function testOracleConnection() {
     return await withOracleDB(async (connection) => {
         return true;
@@ -348,26 +347,7 @@ async function initiatePokemonDB() {
     });
 }
 
-// ==================== BASIC FETCH FUNCTIONS ====================
-
-async function fetchDemotableFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM DEMOTABLE');
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
-}
-
-async function countDemotable() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT Count(*) FROM DEMOTABLE');
-        return result.rows[0][0];
-    }).catch(() => {
-        return -1;
-    });
-}
-
+// FETCH FUNCTIONS
 async function fetchTrainersFromDb() {
     return await withOracleDB(async (connection) => {
         console.log('Fetching trainers...');
@@ -461,25 +441,7 @@ async function fetchNaturesFromDb() {
     });
 }
 
-// ==================== INSERT FUNCTIONS (WITH VALIDATION) ====================
-
-async function insertDemotable(id, name) {
-    return await withOracleDB(async (connection) => {
-        const validId = validateInteger(id, 'ID', { required: true });
-        const validName = validateString(name, 'Name', { required: true, maxLength: 255 });
-
-        const result = await connection.execute(
-            `INSERT INTO DEMOTABLE (id, name) VALUES (:id, :name)`,
-            [validId, validName],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
+// INSERT FUNCTIONS
 async function insertTrainer(trainerId, name, locationName) {
     return await withOracleDB(async (connection) => {
         // Server-side validation
@@ -567,8 +529,7 @@ async function insertPokemonHasLearnedMove(pokedex, pokemon_id, move_id) {
     });
 }
 
-// ==================== DELETE FUNCTIONS ====================
-
+// DELETE FUNCTIONS
 async function deleteTrainer(trainerId) {
     return await withOracleDB(async (connection) => {
         const validTrainerId = validateInteger(trainerId, 'Trainer ID', { required: true, min: 1 });
@@ -623,25 +584,7 @@ async function deletePokemonHasLearnedMove(pokedex, pokemon_id, move_id) {
     });
 }
 
-// ==================== UPDATE FUNCTIONs ==================
-
-async function updateNameDemotable(oldName, newName) {
-    return await withOracleDB(async (connection) => {
-        const validOldName = validateString(oldName, 'Old Name', { required: true, maxLength: 255 });
-        const validNewName = validateString(newName, 'New Name', { required: true, maxLength: 255 });
-
-        const result = await connection.execute(
-            `UPDATE DEMOTABLE SET name=:newName where name=:oldName`,
-            [validNewName, validOldName],
-            { autoCommit: true }
-        );
-
-        return result.rowsAffected && result.rowsAffected > 0;
-    }).catch(() => {
-        return false;
-    });
-}
-
+// UPDATE FUNCTIONS
 async function updateTrainer(trainerId, updates) {
     const validTrainerId = validateInteger(trainerId, 'Trainer ID', { required: true, min: 1 });
 
@@ -794,8 +737,7 @@ async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMov
     });
 }
 
-// ==================== UPDATE HELPERs ====================
-
+// UPDATE HELPERS
 async function validateTrainerExists(trainerId) {
     const validTrainerId = validateInteger(trainerId, 'Trainer ID', { required: true, min: 1 });
 
@@ -881,45 +823,7 @@ async function updateEntity(table, idField, idValue, updates, allowedFields) {
     });
 }
 
-// ================== SECURE SELECTION QUERIES ====================
-
-async function fetchPokemonWithSelection(conditions) {
-    return await withOracleDB(async (connection) => {
-        let query = `
-            SELECT p.pokedex, p.pokemon_id, p.name, p3.pokemon_level, p.nature,
-                   p.HP_IV, p.attack_IV, p.defense_IV, p.speed_IV, p.ability_id, p.trainer_id
-            FROM Pokemon_1 p
-            JOIN Pokemon_3 p3 ON p.total_XP = p3.total_XP
-        `;
-        const bindVars = {};
-        let i = 1;
-
-        if (conditions && conditions.length > 0) {
-            query += " WHERE ";
-            conditions.forEach((condition, index) => {
-                const validAttribute = validatePokemonAttribute(condition.attribute);
-                const validOperator = validateOperator(condition.operator);
-                const validLogical = (index > 0) ? validateLogicalOperator(conditions[index - 1].logical) : null;
-
-                if (index > 0) {
-                    query += ` ${validLogical} `;
-                }
-                const bindName = `val${i++}`;
-                query += `${validAttribute} ${validOperator} :${bindName}`;
-                bindVars[bindName] = condition.operator.toUpperCase() === 'LIKE' ? `%${condition.value}%` : condition.value;
-            });
-        }
-
-        query += " ORDER BY p.pokedex, p.pokemon_id";
-
-        const result = await connection.execute(query, bindVars);
-        return result.rows;
-    }).catch((err) => {
-        console.error('Error during pokemon selection:', err);
-        throw err;
-    });
-}
-
+// SELECTION
 async function executeSelectionQuery(conditions) {
     return await withOracleDB(async (connection) => {
         let query = `
@@ -960,8 +864,7 @@ async function executeSelectionQuery(conditions) {
     });
 }
 
-// ================== SECURE PROJECTION QUERIES ====================
-
+// PROJECTION
 async function fetchTableNames() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
@@ -1017,8 +920,7 @@ async function executeProjectionQuery(table, attributes) {
     });
 }
 
-// ================== SECURE JOIN QUERIES ===================
-
+// JOIN QUERIES
 async function executeSpeciesLocationJoin(locationName = null) {
     return await withOracleDB(async (connection) => {
         let query = `
@@ -1056,8 +958,7 @@ async function fetchLocationsForJoin() {
     });
 }
 
-// ==================== AGGREGATION ====================
-
+// AGGREGATION WITH GROUP BY
 async function executeDefenseIVGroupBy(minDefenseIV = null) {
     return await withOracleDB(async (connection) => {
         let query = `
@@ -1102,8 +1003,7 @@ async function executeTrainerPokemonCount() {
     });
 }
 
-// ==================== AGGREGATION WITH HAVING ====================
-
+// AGGREGATION WITH HAVING
 async function executeHighestXPHaving(minPokemonCount = 2) {
     return await withOracleDB(async (connection) => {
         const validMinCount = validateInteger(minPokemonCount, 'Minimum Pokemon Count', { required: true, min: 1, max: 20 });
@@ -1158,8 +1058,7 @@ async function executeTrainersWithMultiplePokemon(minXP = null) {
     });
 }
 
-// ==================== NESTED AGGREGATION ====================
-
+// NESTED AGGREGATION WITH GROUP BY
 async function executeNestedAggregation() {
     return await withOracleDB(async (connection) => {
         const query = `
@@ -1216,7 +1115,7 @@ async function executeTrainersAboveAverageXP() {
     });
 }
 
-// ==================== DIVISION ====================
+// DIVISION
 
 async function executeSpeciesWithAllTypes(typeNames = []) {
     return await withOracleDB(async (connection) => {
@@ -1316,16 +1215,13 @@ async function executeSpeciesByTypeCount(exactTypeCount = null) {
     });
 }
 
-// ==================== EXPORTS ====================
-
+// EXPORTS
 module.exports = {
     // System functions
     testOracleConnection,
     initiatePokemonDB,
-    countDemotable,
 
-    // Basic fetch functions
-    fetchDemotableFromDb,
+    // Fetch functions
     fetchTrainersFromDb,
     fetchPlayersFromDb,
     fetchPokemonFromDb,
@@ -1336,7 +1232,6 @@ module.exports = {
     fetchNaturesFromDb,
 
     // Insert functions
-    insertDemotable,
     insertTrainer,
     insertPlayer,
     insertPokemon,
@@ -1348,27 +1243,25 @@ module.exports = {
     deletePokemonHasLearnedMove,
 
     // Update functions
-    updateNameDemotable,
     updateTrainer,
     updatePlayer,
     updatePokemon,
     updatePokemonHasLearnedMove,
     updateEntity,
 
-    // Selection queries
-    fetchPokemonWithSelection,
+    // Selection
     executeSelectionQuery,
 
-    // Projection queries
+    // Projection
     fetchTableNames,
     fetchColumnNames,
     executeProjectionQuery,
 
-    // Join queries
+    // Join
     executeSpeciesLocationJoin,
     fetchLocationsForJoin,
 
-    // Aggregation queries
+    // Aggregation with GROUP BY
     executeDefenseIVGroupBy,
     executeTrainerPokemonCount,
 
@@ -1376,11 +1269,11 @@ module.exports = {
     executeHighestXPHaving,
     executeTrainersWithMultiplePokemon,
 
-    // Nested aggregation
+    // Nested aggregation with GROUP BY
     executeNestedAggregation,
     executeTrainersAboveAverageXP,
 
-    // Division queries
+    // Division
     executeSpeciesWithAllTypes,
     fetchAllTypes,
     executeSpeciesByTypeCount

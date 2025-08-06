@@ -3,8 +3,10 @@ const appService = require('./appService');
 
 const router = express.Router();
 
-// ==================== SYSTEM ENDPOINTS ====================
+// ----------------------------------------------------------
+// API endpoints
 
+// SYSTEM ENDPOINTS
 router.get('/check-db-connection', async (req, res) => {
     const isConnect = await appService.testOracleConnection();
     if (isConnect) {
@@ -14,7 +16,7 @@ router.get('/check-db-connection', async (req, res) => {
     }
 });
 
-router.post("/initiate-demotable", async (req, res) => {
+router.post("/initiate-database", async (req, res) => {
     const initiateResult = await appService.initiatePokemonDB();
     if (initiateResult) {
         res.json({ success: true });
@@ -23,28 +25,7 @@ router.post("/initiate-demotable", async (req, res) => {
     }
 });
 
-router.get('/count-demotable', async (req, res) => {
-    const tableCount = await appService.countDemotable();
-    if (tableCount >= 0) {
-        res.json({ 
-            success: true,  
-            count: tableCount
-        });
-    } else {
-        res.status(500).json({ 
-            success: false, 
-            count: tableCount
-        });
-    }
-});
-
-// ==================== BASIC FETCH ENDPOINTS ====================
-
-router.get('/demotable', async (req, res) => {
-    const tableContent = await appService.fetchDemotableFromDb();
-    res.json({data: tableContent});
-});
-
+// FETCH ENDPOINTS
 router.get('/trainers', async (req, res) => {
     const tableContent = await appService.fetchTrainersFromDb();
     res.json({data: tableContent});
@@ -75,6 +56,15 @@ router.get('/moves', async (req, res) => {
     res.json({data: tableContent});
 });
 
+router.get('/types', async (req, res) => {
+    try {
+        const types = await appService.fetchAllTypes();
+        res.json({ success: true, data: types });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 router.get('/abilities', async (req, res) => {
     const tableContent = await appService.fetchAbilitiesFromDb();
     res.json({data: tableContent});
@@ -85,18 +75,7 @@ router.get('/natures', async (req, res) => {
     res.json({data: tableContent});
 });
 
-// ==================== INSERT OPERATIONS ====================
-
-router.post("/insert-demotable", async (req, res) => {
-    const { id, name } = req.body;
-    const insertResult = await appService.insertDemotable(id, name);
-    if (insertResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
+// INSERT ENDPOINTS
 router.post("/insert-trainer", async (req, res) => {
     const { trainerId, name, locationName } = req.body;
     const insertResult = await appService.insertTrainer(trainerId, name, locationName);
@@ -137,8 +116,7 @@ router.post("/insert-learned-move", async (req, res) => {
     }
 });
 
-// ==================== DELETE OPERATIONS ====================
-
+// DELETE ENDPOINTS
 router.delete('/delete-trainer', async (req, res) => {
     const { trainerId } = req.body;
     const success = await appService.deleteTrainer(trainerId);
@@ -169,18 +147,7 @@ router.delete('/delete-learned-move', async (req, res) => {
     }
 });
 
-// ==================== UPDATE OPERATIONS ====================
-
-router.post("/update-name-demotable", async (req, res) => {
-    const { oldName, newName } = req.body;
-    const updateResult = await appService.updateNameDemotable(oldName, newName);
-    if (updateResult) {
-        res.json({ success: true });
-    } else {
-        res.status(500).json({ success: false });
-    }
-});
-
+// UPDATE ENDPOINTS
 router.post('/update-trainer', async (req, res) => {
     try {
         const { trainerId, updates } = req.body;
@@ -221,18 +188,7 @@ router.post('/update-learned-move', async (req, res) => {
     }
 });
 
-// ==================== SELECTION QUERY ====================
-
-router.post('/pokemon/selection', async (req, res) => {
-    try {
-        const { conditions } = req.body;
-        const result = await appService.fetchPokemonWithSelection(conditions);
-        res.json({ success: true, data: result });
-    } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
+// SELECTION ENDPOINTS
 router.post('/selection-query', async (req, res) => {
     try {
         const { conditions } = req.body;
@@ -247,8 +203,7 @@ router.post('/selection-query', async (req, res) => {
     }
 });
 
-// ==================== PROJECTION QUERY ====================
-
+// PROJECTION ENDPOINTS
 router.get('/tables', async (req, res) => {
     try {
         const tables = await appService.fetchTableNames();
@@ -278,8 +233,7 @@ router.post('/project', async (req, res) => {
     }
 });
 
-// ==================== JOIN QUERIES ====================
-
+// JOIN ENDPOINTS
 router.get('/join/species-location', async (req, res) => {
     try {
         const { location } = req.query;
@@ -299,8 +253,7 @@ router.get('/locations', async (req, res) => {
     }
 });
 
-// ==================== AGGREGATION QUERIES ====================
-
+// AGGREGATION WITH GROUP BY ENDPOINTS
 router.get('/aggregation/defense-iv', async (req, res) => {
     try {
         const { minDefenseIV } = req.query;
@@ -320,8 +273,7 @@ router.get('/aggregation/trainer-pokemon-count', async (req, res) => {
     }
 });
 
-// ==================== AGGREGATION WITH HAVING ====================
-
+// AGGREGATION WITH HAVING ENDPOINTS
 router.get('/aggregation/highest-xp-having', async (req, res) => {
     try {
         const { minPokemonCount } = req.query;
@@ -342,8 +294,7 @@ router.get('/aggregation/trainers-multiple-pokemon', async (req, res) => {
     }
 });
 
-// ==================== NESTED AGGREGATION ====================
-
+// NESTED AGGREGATION ENDPOINTS
 router.get('/aggregation/nested', async (req, res) => {
     try {
         const data = await appService.executeNestedAggregation();
@@ -362,22 +313,12 @@ router.get('/aggregation/trainers-above-average', async (req, res) => {
     }
 });
 
-// ==================== DIVISION QUERIES ====================
-
+// DIVISION ENDPOINTS
 router.post('/division/species-with-types', async (req, res) => {
     try {
         const { types } = req.body;
         const data = await appService.executeSpeciesWithAllTypes(types);
         res.json({ success: true, data });
-    } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-router.get('/types', async (req, res) => {
-    try {
-        const types = await appService.fetchAllTypes();
-        res.json({ success: true, data: types });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }

@@ -3,8 +3,8 @@
  * Handles all form submissions, data display, and table refreshing
  */
 
-// ==================== SYSTEM FUNCTIONS ====================
-
+// SYSTEM FUNCTIONS
+// This function checks the database connection and updates its status on the frontend.
 async function checkDbConnection() {
     const statusElem = document.getElementById('dbStatus');
     const loadingGifElem = document.getElementById('loadingGif');
@@ -12,8 +12,9 @@ async function checkDbConnection() {
     const response = await fetch('/check-db-connection', {
         method: "GET"
     });
-
+    // Hide the loading GIF once the response is received.
     loadingGifElem.style.display = 'none';
+    // Display the statusElem's text in the placeholder.
     statusElem.style.display = 'inline';
 
     response.text()
@@ -21,12 +22,13 @@ async function checkDbConnection() {
             statusElem.textContent = text;
         })
         .catch((error) => {
-            statusElem.textContent = 'connection timed out';
+            statusElem.textContent = 'connection timed out'; // Adjust error handling if required.
         });
 }
 
-async function resetDemotable() {
-    const response = await fetch("/initiate-demotable", {
+// This function resets or initializes the database.
+async function resetDatabase() {
+    const response = await fetch("/initiate-database", {
         method: 'POST'
     });
     const responseData = await response.json();
@@ -42,8 +44,7 @@ async function resetDemotable() {
     }
 }
 
-// ==================== TABLE DISPLAY FUNCTIONS ====================
-
+// FETCH AND DISPLAY
 async function fetchAndDisplayTrainers() {
     fetchAndDisplay('trainersTable', '/trainers');
 }
@@ -76,6 +77,7 @@ async function fetchAndDisplayNatures() {
     fetchAndDisplay('naturesTable', '/natures');
 }
 
+// Fetches data from given table using given endpoint and displays it.
 async function fetchAndDisplay(tableId, endpoint) {
     const tableElement = document.getElementById(tableId);
     const tableBody = tableElement.querySelector('tbody');
@@ -84,6 +86,7 @@ async function fetchAndDisplay(tableId, endpoint) {
     const responseData = await response.json();
     const content = responseData.data;
 
+    // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
@@ -97,6 +100,8 @@ async function fetchAndDisplay(tableId, endpoint) {
     });
 }
 
+// General function to refresh the displayed table data. 
+// You can invoke this after any table-modifying operation to keep consistency.
 function refreshAllTables() {
     fetchAndDisplayTrainers();
     fetchAndDisplayPlayers();
@@ -108,8 +113,8 @@ function refreshAllTables() {
     fetchAndDisplayNatures();
 }
 
-// ==================== INSERT FUNCTIONS ====================
-
+// INSERT FUNCTIONS
+// Inserts new records into each table.
 async function insertTrainer(event) {
     event.preventDefault();
 
@@ -256,8 +261,8 @@ async function insertLearnedMove(event) {
     }
 }
 
-// ==================== DELETE FUNCTIONS ====================
-
+// DELETE FUNCTIONS
+// Delete row based on primary key values
 async function deleteTrainer(event) {
     event.preventDefault();
 
@@ -349,8 +354,8 @@ async function deleteLearnedMove(event) {
     }
 }
 
-// ==================== UPDATE FUNCTIONS ====================
-
+// UPDATE FUNCTIONS
+// Updates attributes in each table.
 async function updateTrainer(event) {
     event.preventDefault();
 
@@ -518,8 +523,7 @@ async function updateLearnedMove(event) {
     }
 }
 
-// ==================== SELECTION QUERY FUNCTIONS ====================
-
+// SELECTION FUNCTIONS
 function createConditionRow() {
     const conditionDiv = document.createElement('div');
     conditionDiv.className = 'condition-row';
@@ -665,58 +669,7 @@ function displaySelectionResults(data) {
     });
 }
 
-function addCondition() {
-    const container = document.getElementById('selectionConditions');
-    const newCondition = container.firstElementChild.cloneNode(true);
-    newCondition.querySelector('input[name="value"]').value = '';
-    container.appendChild(newCondition);
-}
-
-async function handlePokemonSelection(event) {
-    event.preventDefault();
-    const conditions = Array.from(document.querySelectorAll('#selectionConditions .condition')).map(div => {
-        return {
-            attribute: div.querySelector('[name="attribute"]').value,
-            operator: div.querySelector('[name="operator"]').value,
-            value: div.querySelector('[name="value"]').value,
-            logical: div.querySelector('[name="logical"]').value
-        };
-    });
-
-    const response = await fetch('/pokemon/selection', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ conditions })
-    });
-
-    const responseData = await response.json();
-    const tableBody = document.getElementById('pokemonSelectionTable').querySelector('tbody');
-    const messageElement = document.getElementById('pokemonSelectionResultMsg');
-    tableBody.innerHTML = '';
-
-    if (responseData.success && responseData.data.length > 0) {
-        messageElement.textContent = `Found ${responseData.data.length} Pokémon.`;
-        messageElement.style.color = 'green';
-        responseData.data.forEach(pokemon => {
-            const row = tableBody.insertRow();
-            pokemon.forEach((field, index) => {
-                const cell = row.insertCell(index);
-                cell.textContent = field || 'NULL';
-            });
-        });
-    } else if (responseData.success) {
-        messageElement.textContent = 'No Pokémon found with the specified criteria.';
-        messageElement.style.color = 'orange';
-    } else {
-        messageElement.textContent = 'Error performing search: ' + responseData.message;
-        messageElement.style.color = 'red';
-    }
-}
-
-// ==================== PROJECTION QUERY FUNCTIONS ===================
-
+// PROJECTION FUNCTIONS
 async function populateTableDropdown() {
     try {
         const response = await fetch('/tables', { method: 'GET' });
@@ -846,8 +799,7 @@ function displayProjectionResults(data, attributes) {
     });
 }
 
-// ==================== JOIN QUERY FUNCTIONS ==================
-
+// JOIN FUNCTIONS
 async function populateLocationDropdown() {
     try {
         const response = await fetch('/locations', { method: 'GET' });
@@ -909,8 +861,7 @@ function displayJoinResults(data) {
     });
 }
 
-// =================== AGGREGATION QUERY FUNCTIONS ==================
-
+// AGGREGATION WITH GROUP BY FUNCTIONS
 async function handleDefenseIVQuery(event) {
     event.preventDefault();
 
@@ -988,8 +939,7 @@ function displayTrainerStatsResults(data) {
     });
 }
 
-// =================== AGGREGATION WITH HAVING FUNCTIONS ===================
-
+// AGGREGATION WITH HAVING FUNCTIONS
 async function handleHighestXPQuery(event) {
     event.preventDefault();
 
@@ -1072,8 +1022,7 @@ function displayMultiplePokemonResults(data) {
     });
 }
 
-// ================== NESTED AGGREGATION FUNCTIONS ====================
-
+// NESTED AGGREGATION FUNCTIONS
 async function handleNestedAggregation() {
     try {
         const response = await fetch('/aggregation/nested', { method: 'GET' });
@@ -1146,8 +1095,7 @@ function displayAboveAverageResults(data) {
     });
 }
 
-// ==================== DIVISION QUERY FUNCTIONS ====================
-
+// DIVISION FUNCTIONS
 async function populateTypeCheckboxes() {
     try {
         const response = await fetch('/types', { method: 'GET' });
@@ -1305,8 +1253,9 @@ function displayTypeCountResults(data) {
     });
 }
 
-// ==================== EVENT LISTENERS AND INITIALIZATION ====================
-
+// EVENT LISTENERS AND INITIALIZATION
+// Initializes the webpage functionalities.
+// Add or remove event listeners based on the desired functionalities.
 window.onload = function () {
     checkDbConnection();
     refreshAllTables();
@@ -1315,7 +1264,7 @@ window.onload = function () {
     populateTypeCheckboxes();
 
     // System events
-    document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+    document.getElementById("resetDatabase").addEventListener("click", resetDatabase);
 
     // Insert events
     document.getElementById("insertTrainer").addEventListener("submit", insertTrainer);
@@ -1335,8 +1284,6 @@ window.onload = function () {
     document.getElementById('updateLearnedMove').addEventListener('submit', updateLearnedMove);
 
     // Selection events
-    document.getElementById('addCondition').addEventListener('click', addCondition);
-    document.getElementById('pokemonSelectionForm').addEventListener('submit', handlePokemonSelection);
     document.getElementById('addConditionBtn').addEventListener('click', createConditionRow);
     document.getElementById('selectionQueryForm').addEventListener('submit', handleSelectionQuery);
 
