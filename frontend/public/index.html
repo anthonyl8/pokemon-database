@@ -42,7 +42,7 @@
 
     <h3>Insert New Trainer</h3>
     <form id="insertTrainer">
-        Trainer ID: <input type="number" id="insertTrainerId" placeholder="Enter Trainer ID" required> <br><br>
+        Trainer ID: <input type="number" id="insertTrainerId" placeholder="Enter Trainer ID" min="1" required> <br><br>
         Name: <input type="text" id="insertTrainerName" placeholder="Enter Trainer Name" maxlength="255" required>
         <br><br>
         Location: <input type="text" id="insertTrainerLocation" placeholder="Enter Location (optional)" maxlength="40">
@@ -53,7 +53,7 @@
 
     <h3>Update Trainer</h3>
     <form id="updateTrainer">
-        Trainer ID: <input type="number" id="updateTrainerId" placeholder="Enter Trainer ID to Update" required>
+        Trainer ID: <input type="number" id="updateTrainerId" placeholder="Enter Trainer ID to Update" min="1" required>
         <br><br>
         New Name: <input type="text" id="updateTrainerName" placeholder="Enter New Name (optional)" maxlength="255">
         <br><br>
@@ -65,7 +65,7 @@
 
     <h3>Delete Trainer (Cascades to Player/Gym Leader)</h3>
     <form id="deleteTrainer">
-        Trainer ID: <input type="number" id="deleteTrainerId" placeholder="Enter Trainer ID" required> <br><br>
+        Trainer ID: <input type="number" id="deleteTrainerId" placeholder="Enter Trainer ID" min="1" required> <br><br>
         <button type="submit">Delete Trainer</button>
     </form>
     <div id="deleteTrainerResultMsg"></div>
@@ -88,17 +88,17 @@
 
     <h3>Insert New Player</h3>
     <form id="insertPlayer">
-        Trainer ID: <input type="number" id="insertPlayerTrainerId" placeholder="Enter Trainer ID" required> <br><br>
-        Money: <input type="number" id="insertPlayerMoney" placeholder="Enter Starting Money" required> <br><br>
+        Trainer ID: <input type="number" id="insertPlayerTrainerId" placeholder="Enter Trainer ID" min="1" required> <br><br>
+        Money: <input type="number" id="insertPlayerMoney" placeholder="Enter Starting Money" min="0" required> <br><br>
         <button type="submit">Insert Player</button>
     </form>
     <div id="insertPlayerResultMsg"></div>
 
     <h3>Update Player Money</h3>
     <form id="updatePlayer">
-        Trainer ID: <input type="number" id="updatePlayerTrainerId" placeholder="Enter Player's Trainer ID" required>
+        Trainer ID: <input type="number" id="updatePlayerTrainerId" placeholder="Enter Player's Trainer ID" min="1" required>
         <br><br>
-        New Money: <input type="number" id="updatePlayerMoney" placeholder="Enter New Money Amount" required> <br><br>
+        New Money: <input type="number" id="updatePlayerMoney" placeholder="Enter New Money Amount" min="0" required> <br><br>
         <button type="submit">Update Player</button>
     </form>
     <div id="updatePlayerResultMsg"></div>
@@ -129,8 +129,8 @@
 
     <h3>Insert New Pokemon</h3>
     <form id="insertPokemon">
-        Pokedex #: <input type="number" id="insertPokemonPokedex" placeholder="Enter Pokedex Number" required> <br><br>
-        Pokemon ID: <input type="number" id="insertPokemonId" placeholder="Enter Pokemon ID" required> <br><br>
+        Pokedex #: <input type="number" id="insertPokemonPokedex" placeholder="Enter Pokedex Number" min="1" required> <br><br>
+        Pokemon ID: <input type="number" id="insertPokemonId" placeholder="Enter Pokemon ID" min="1" required> <br><br>
         Name: <input type="text" id="insertPokemonName" placeholder="Enter Pokemon Name" maxlength="20" required>
         <br><br>
         Total XP: <input type="number" id="insertPokemonXP" placeholder="Enter Total XP" required> <br><br>
@@ -143,16 +143,16 @@
             required> <br><br>
         Speed IV: <input type="number" id="insertPokemonSpeedIV" placeholder="Speed IV (0-31)" min="0" max="31"
             required> <br><br>
-        Ability ID: <input type="number" id="insertPokemonAbilityId" placeholder="Enter Ability ID" required> <br><br>
-        Trainer ID: <input type="number" id="insertPokemonTrainerId" placeholder="Enter Trainer ID (optional)"> <br><br>
+        Ability ID: <input type="number" id="insertPokemonAbilityId" placeholder="Enter Ability ID" min="1" required> <br><br>
+        Trainer ID: <input type="number" id="insertPokemonTrainerId" placeholder="Enter Trainer ID (optional)" min="1"> <br><br>
         <button type="submit">Insert Pokemon</button>
     </form>
     <div id="insertPokemonResultMsg"></div>
 
     <h3>Update Pokemon</h3>
     <form id="updatePokemon">
-        Pokedex #: <input type="number" id="updatePokemonPokedex" placeholder="Pokemon Pokedex #" required> <br><br>
-        Pokemon ID: <input type="number" id="updatePokemonId" placeholder="Pokemon ID" required> <br><br>
+        Pokedex #: <input type="number" id="updatePokemonPokedex" placeholder="Pokemon Pokedex #" min="1" required> <br><br>
+        Pokemon ID: <input type="number" id="updatePokemonId" placeholder="Pokemon ID" min="1" required> <br><br>
         New Name: <input type="text" id="updatePokemonName" placeholder="New Pokemon Name (optional)" maxlength="20">
         <br><br>
         New Total XP: <input type="number" id="updatePokemonXP" placeholder="New Total XP (optional)"> <br><br>
@@ -166,9 +166,9 @@
             max="31"> <br><br>
         New Speed IV: <input type="number" id="updatePokemonSpeedIV" placeholder="New Speed IV (optional)" min="0"
             max="31"> <br><br>
-        New Ability ID: <input type="number" id="updatePokemonAbilityId" placeholder="New Ability ID (optional)">
+        New Ability ID: <input type="number" id="updatePokemonAbilityId" placeholder="New Ability ID (optional)" min="1">
         <br><br>
-        New Trainer ID: <input type="number" id="updatePokemonTrainerId" placeholder="New Trainer ID (optional)">
+        New Trainer ID: <input type="number" id="updatePokemonTrainerId" placeholder="New Trainer ID (optional)" min="1">
         <br><br>
         <button type="submit">Update Pokemon</button>
     </form>
@@ -176,8 +176,8 @@
 
     <h3>Delete Pokemon (Cascades to Learned Moves)</h3>
     <form id="deletePokemon">
-        Pokedex #: <input type="number" id="deletePokemonPokedex" placeholder="Enter Pokedex Number" required> <br><br>
-        Pokemon ID: <input type="number" id="deletePokemonId" placeholder="Enter Pokemon ID" required> <br><br>
+        Pokedex #: <input type="number" id="deletePokemonPokedex" placeholder="Enter Pokedex Number" min="1" required> <br><br>
+        Pokemon ID: <input type="number" id="deletePokemonId" placeholder="Enter Pokemon ID" min="1" required> <br><br>
         <button type="submit">Delete Pokemon</button>
     </form>
     <div id="deletePokemonResultMsg"></div>
@@ -202,30 +202,30 @@
 
     <h3>Teach Pokemon a Move</h3>
     <form id="insertLearnedMove">
-        Pokedex #: <input type="number" id="insertLearnedMovePokedex" placeholder="Enter Pokedex Number" required>
+        Pokedex #: <input type="number" id="insertLearnedMovePokedex" placeholder="Enter Pokedex Number" min="1" required>
         <br><br>
-        Pokemon ID: <input type="number" id="insertLearnedMovePokemonId" placeholder="Enter Pokemon ID" required>
+        Pokemon ID: <input type="number" id="insertLearnedMovePokemonId" placeholder="Enter Pokemon ID" min="1" required>
         <br><br>
-        Move ID: <input type="number" id="insertLearnedMoveId" placeholder="Enter Move ID" required> <br><br>
+        Move ID: <input type="number" id="insertLearnedMoveId" placeholder="Enter Move ID" min="1" required> <br><br>
         <button type="submit">Teach Move</button>
     </form>
     <div id="insertLearnedMoveResultMsg"></div>
 
     <h3>Update Learned Move</h3>
     <form id="updateLearnedMove">
-        Pokedex #: <input type="number" id="updateLearnedMovePokedex" placeholder="Pokemon Pokedex #" required> <br><br>
-        Pokemon ID: <input type="number" id="updateLearnedMovePokemonId" placeholder="Pokemon ID" required> <br><br>
-        Old Move ID: <input type="number" id="updateLearnedMoveOldId" placeholder="Current Move ID" required> <br><br>
-        New Move ID: <input type="number" id="updateLearnedMoveNewId" placeholder="New Move ID" required> <br><br>
+        Pokedex #: <input type="number" id="updateLearnedMovePokedex" placeholder="Pokemon Pokedex #" min="1" required> <br><br>
+        Pokemon ID: <input type="number" id="updateLearnedMovePokemonId" placeholder="Pokemon ID" min="1" required> <br><br>
+        Old Move ID: <input type="number" id="updateLearnedMoveOldId" placeholder="Current Move ID" min="1" required> <br><br>
+        New Move ID: <input type="number" id="updateLearnedMoveNewId" placeholder="New Move ID" min="1" required> <br><br>
         <button type="submit">Update Move</button>
     </form>
     <div id="updateLearnedMoveResultMsg"></div>
 
     <h3>Remove Learned Move</h3>
     <form id="deleteLearnedMove">
-        Pokedex #: <input type="number" id="deleteLearnedMovePokedex" placeholder="Pokemon Pokedex #" required> <br><br>
-        Pokemon ID: <input type="number" id="deleteLearnedMovePokemonId" placeholder="Pokemon ID" required> <br><br>
-        Move ID: <input type="number" id="deleteLearnedMoveId" placeholder="Move ID to Remove" required> <br><br>
+        Pokedex #: <input type="number" id="deleteLearnedMovePokedex" placeholder="Pokemon Pokedex #" min="1" required> <br><br>
+        Pokemon ID: <input type="number" id="deleteLearnedMovePokemonId" placeholder="Pokemon ID" min="1" required> <br><br>
+        Move ID: <input type="number" id="deleteLearnedMoveId" placeholder="Move ID to Remove" min="1" required> <br><br>
         <button type="submit">Remove Move</button>
     </form>
     <div id="deleteLearnedMoveResultMsg"></div>
@@ -238,7 +238,7 @@
     <p>Create a query to filter Pokemon based on specific criteria. Add multiple conditions using AND/OR logic.</p>
     <form id="selectionQueryForm">
         <div id="conditionsContainer">
-            <!-- Conditions will be added here dynamically -->
+            <!-- Conditions added here dynamically -->
         </div>
         <br>
         <button type="button" id="addConditionBtn">Add Condition</button>
@@ -249,43 +249,6 @@
         <thead></thead>
         <tbody></tbody>
     </table>
-
-    <!-- Alternative Pokemon Selection Interface -->
-    <h3>Alternative Pokemon Search Interface</h3>
-    <form id="pokemonSelectionForm">
-        <div id="selectionConditions">
-            <div class="condition">
-                <select name="attribute">
-                    <option value="p.pokedex">Pokedex #</option>
-                    <option value="p.pokemon_id">Pokemon ID</option>
-                    <option value="p.name">Name</option>
-                    <option value="p.nature">Nature</option>
-                    <option value="p.HP_IV">HP IV</option>
-                    <option value="p.attack_IV">Attack IV</option>
-                    <option value="p.defense_IV">Defense IV</option>
-                    <option value="p.speed_IV">Speed IV</option>
-                    <option value="p.ability_id">Ability ID</option>
-                    <option value="p.trainer_id">Trainer ID</option>
-                </select>
-                <select name="operator">
-                    <option value="=">=</option>
-                    <option value=">">></option>
-                    <option value="<"><</option>
-                    <option value=">=">>=</option>
-                    <option value="<="><=</option>
-                    <option value="LIKE">LIKE</option>
-                </select>
-                <input type="text" name="value" placeholder="Value" required>
-                <select name="logical">
-                    <option value="AND">AND</option>
-                    <option value="OR">OR</option>
-                </select>
-            </div>
-        </div>
-        <button type="button" id="addCondition">Add Condition</button>
-        <button type="submit">Search</button>
-    </form>
-    <div id="pokemonSelectionResultMsg"></div>
 
     <h4>Search Results</h4>
     <table id="pokemonSelectionTable" border="1">
@@ -334,7 +297,7 @@
 
     <!-- ====================== JOIN QUERIES ====================== -->
     <h2>Join Query: Species Located In</h2>
-    <p>Find Pokemon species and their locations using JOIN operation.</p>
+    <p>Find Pokemon species and their locations (or all species in a certain location) using JOIN operation.</p>
     <form id="joinQueryForm">
         <label for="locationFilter">Filter by Location (optional):</label>
         <select id="locationFilter">

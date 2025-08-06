@@ -17,12 +17,14 @@ Join
 Species_Located_In
 
 AGGREGATION (GROUP BY)
-Pokemon_1 - Return the pokemon each trainer owns that has the defense iv
+Pokemon_1 - Return the pokemon each trainer owns that has the lowest defense iv
 
 AGGREGATION (HAVING)
 Pokemon_1 - Return the pokemon each trainer owns that has the highest xp where each trainer has at least two pokemon
 
 Nested Aggregation with GROUP BY
+Find trainers with pokemon with above average XP
+Compute avg Xp of all pokemon, compare each pokemon to the avg, group by trainer
 
 Division
 Species_Has_Type - Return all species that have a specific type or 2 types

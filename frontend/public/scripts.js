@@ -17,12 +17,12 @@ async function checkDbConnection() {
     statusElem.style.display = 'inline';
 
     response.text()
-    .then((text) => {
-        statusElem.textContent = text;
-    })
-    .catch((error) => {
-        statusElem.textContent = 'connection timed out';
-    });
+        .then((text) => {
+            statusElem.textContent = text;
+        })
+        .catch((error) => {
+            statusElem.textContent = 'connection timed out';
+        });
 }
 
 async function resetDemotable() {
@@ -35,7 +35,7 @@ async function resetDemotable() {
         const messageElement = document.getElementById('resetResultMsg');
         messageElement.textContent = "Pokemon database initiated successfully!";
         alert("Database reset successful!");
-        
+
         setTimeout(refreshAllTables, 2000);
     } else {
         alert("Error initiating database!");
@@ -412,7 +412,7 @@ async function deleteTrainer(event) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({trainerId: trainerIdValue})
+        body: JSON.stringify({ trainerId: trainerIdValue })
     });
 
     const responseData = await response.json();
@@ -497,29 +497,29 @@ async function deleteLearnedMove(event) {
 
 async function updateTrainer(event) {
     event.preventDefault();
-    
+
     const trainerId = document.getElementById('updateTrainerId').value;
     const updates = {};
-    
+
     const name = document.getElementById('updateTrainerName').value.trim();
     if (name) updates.name = name;
-    
+
     const location = document.getElementById('updateTrainerLocation').value.trim();
     if (location) updates.location_name = location;
-    
+
     try {
         const response = await fetch('/update-trainer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ trainerId, updates })
         });
-        
+
         const responseData = await response.json();
         const messageElement = document.getElementById('updateTrainerResultMsg');
-        
+
         messageElement.textContent = responseData.message;
         messageElement.style.color = responseData.success ? 'green' : 'red';
-        
+
         if (responseData.success) {
             alert("Trainer updated successfully!");
             document.getElementById('updateTrainer').reset();
@@ -535,25 +535,25 @@ async function updateTrainer(event) {
 
 async function updatePlayer(event) {
     event.preventDefault();
-    
+
     const trainerId = document.getElementById('updatePlayerTrainerId').value;
     const updates = {};
-    
+
     const money = document.getElementById('updatePlayerMoney').value;
     if (money) {
         updates.money = money;
     }
-    
+
     try {
         const response = await fetch('/update-player', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ trainerId, updates })
         });
-        
+
         const responseData = await response.json();
         const messageElement = document.getElementById('updatePlayerResultMsg');
-        
+
         if (responseData.success) {
             alert("Player updated successfully!");
             messageElement.textContent = "Player updated successfully!";
@@ -572,11 +572,11 @@ async function updatePlayer(event) {
 
 async function updatePokemon(event) {
     event.preventDefault();
-    
+
     const pokedex = document.getElementById('updatePokemonPokedex').value;
     const pokemonId = document.getElementById('updatePokemonId').value;
     const updates = {};
-    
+
     const fields = [
         { id: 'updatePokemonName', field: 'name', type: 'string' },
         { id: 'updatePokemonXP', field: 'total_XP', type: 'number' },
@@ -588,8 +588,8 @@ async function updatePokemon(event) {
         { id: 'updatePokemonAbilityId', field: 'ability_id', type: 'number' },
         { id: 'updatePokemonTrainerId', field: 'trainer_id', type: 'number' }
     ];
-    
-    fields.forEach(({id, field, type}) => {
+
+    fields.forEach(({ id, field, type }) => {
         const element = document.getElementById(id);
         if (element.value) {
             updates[field] = type === 'number' ? parseInt(element.value) : element.value;
@@ -603,12 +603,12 @@ async function updatePokemon(event) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pokedex, pokemonId, updates })
         });
-        
+
         const responseData = await response.json();
-        
+
         messageElement.textContent = responseData.message;
         messageElement.style.color = responseData.success ? 'green' : 'red';
-        
+
         if (responseData.success) {
             alert("Pokemon updated successfully!");
             document.getElementById('updatePokemon').reset();
@@ -706,7 +706,7 @@ function createConditionRow() {
         conditionDiv.remove();
         updateLogicalSelects();
     };
-    
+
     conditionDiv.appendChild(attrSelect);
     conditionDiv.appendChild(document.createTextNode(' '));
     conditionDiv.appendChild(opSelect);
@@ -716,7 +716,7 @@ function createConditionRow() {
     conditionDiv.appendChild(logicalSelect);
     conditionDiv.appendChild(document.createTextNode(' '));
     conditionDiv.appendChild(removeBtn);
-    
+
     document.getElementById('conditionsContainer').appendChild(conditionDiv);
     updateLogicalSelects();
 }
@@ -738,7 +738,7 @@ async function handleSelectionQuery(event) {
 
     const conditions = [];
     const conditionRows = document.querySelectorAll('.condition-row');
-    
+
     if (conditionRows.length === 0) {
         document.getElementById('selectionResultMsg').textContent = 'Please add at least one condition.';
         document.getElementById('selectionResultMsg').style.color = 'red';
@@ -756,14 +756,14 @@ async function handleSelectionQuery(event) {
         }
         conditions.push({ attribute, operator, value, logical });
     });
-    
+
     try {
         const response = await fetch('/selection-query', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ conditions })
         });
-        
+
         const result = await response.json();
         const resultElement = document.getElementById('selectionResultMsg');
 
@@ -786,7 +786,7 @@ function displaySelectionResults(data) {
     const tableElement = document.getElementById('selectionResultTable');
     const tableHead = tableElement.querySelector('thead');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableHead.innerHTML = '';
     tableBody.innerHTML = '';
 
@@ -859,17 +859,17 @@ async function handlePokemonSelection(event) {
     }
 }
 
-// ==================== PROJECTION QUERY FUNCTIONS ====================
+// ==================== PROJECTION QUERY FUNCTIONS ===================
 
 async function populateTableDropdown() {
     try {
         const response = await fetch('/tables', { method: 'GET' });
         const responseData = await response.json();
         const tables = responseData.data;
-        
+
         const tableSelect = document.getElementById('tableSelect');
         tableSelect.innerHTML = '<option value="" disabled selected>Select a table</option>';
-        
+
         tables.forEach(table => {
             const option = document.createElement('option');
             option.value = table;
@@ -888,14 +888,14 @@ async function populateAttributeCheckboxes() {
     const tableName = tableSelect.value;
     const attributeCheckboxes = document.getElementById('attributeCheckboxes');
     attributeCheckboxes.innerHTML = '';
-    
+
     if (!tableName) return;
-    
+
     try {
         const response = await fetch(`/columns/${tableName}`, { method: 'GET' });
         const responseData = await response.json();
         const columns = responseData.data;
-        
+
         if (columns.length === 0) {
             attributeCheckboxes.innerHTML = '<p>No attributes available for this table.</p>';
             return;
@@ -904,7 +904,7 @@ async function populateAttributeCheckboxes() {
         attributeCheckboxes.style.display = 'flex';
         attributeCheckboxes.style.flexDirection = 'column';
         attributeCheckboxes.style.gap = '10px';
-        
+
         columns.forEach(column => {
             const label = document.createElement('label');
             label.style.display = 'inline-flex';
@@ -928,29 +928,29 @@ async function populateAttributeCheckboxes() {
 
 async function runProjectionQuery(event) {
     event.preventDefault();
-    
+
     const tableName = document.getElementById('tableSelect').value;
     const checkboxes = document.getElementsByName('attributes');
     const selectedAttributes = Array.from(checkboxes)
         .filter(checkbox => checkbox.checked)
         .map(checkbox => checkbox.value);
-    
+
     if (!tableName || selectedAttributes.length === 0) {
         document.getElementById('projectionResultMsg').textContent = 'Please select a table and at least one attribute.';
         document.getElementById('projectionResultMsg').style.color = 'red';
         return;
     }
-    
+
     try {
         const response = await fetch('/project', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ table: tableName, attributes: selectedAttributes })
         });
-        
+
         const result = await response.json();
         const messageElement = document.getElementById('projectionResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = 'Projection query executed successfully!';
             messageElement.style.color = 'green';
@@ -970,17 +970,17 @@ function displayProjectionResults(data, attributes) {
     const tableElement = document.getElementById('projectionResultTable');
     const tableHead = tableElement.querySelector('thead');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableHead.innerHTML = '';
     tableBody.innerHTML = '';
-    
+
     const headerRow = tableHead.insertRow();
     attributes.forEach(attr => {
         const th = document.createElement('th');
         th.textContent = attr;
         headerRow.appendChild(th);
     });
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach((field, index) => {
@@ -990,17 +990,17 @@ function displayProjectionResults(data, attributes) {
     });
 }
 
-// ==================== JOIN QUERY FUNCTIONS ====================
+// ==================== JOIN QUERY FUNCTIONS ==================
 
 async function populateLocationDropdown() {
     try {
         const response = await fetch('/locations', { method: 'GET' });
         const responseData = await response.json();
         const locations = responseData.data;
-        
+
         const locationSelect = document.getElementById('locationFilter');
         locationSelect.innerHTML = '<option value="">All Locations</option>';
-        
+
         locations.forEach(location => {
             const option = document.createElement('option');
             option.value = location;
@@ -1014,15 +1014,15 @@ async function populateLocationDropdown() {
 
 async function handleJoinQuery(event) {
     event.preventDefault();
-    
+
     const location = document.getElementById('locationFilter').value;
     const url = location ? `/join/species-location?location=${encodeURIComponent(location)}` : '/join/species-location';
-    
+
     try {
         const response = await fetch(url, { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('joinResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Found ${result.data.length} species-location combinations.`;
             messageElement.style.color = 'green';
@@ -1041,9 +1041,9 @@ async function handleJoinQuery(event) {
 function displayJoinResults(data) {
     const tableElement = document.getElementById('joinResultTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1053,19 +1053,19 @@ function displayJoinResults(data) {
     });
 }
 
-// ==================== AGGREGATION QUERY FUNCTIONS ====================
+// =================== AGGREGATION QUERY FUNCTIONS ==================
 
 async function handleDefenseIVQuery(event) {
     event.preventDefault();
-    
+
     const minDefenseIV = document.getElementById('minDefenseIV').value;
     const url = minDefenseIV ? `/aggregation/defense-iv?minDefenseIV=${minDefenseIV}` : '/aggregation/defense-iv';
-    
+
     try {
         const response = await fetch(url, { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('defenseIVResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Found ${result.data.length} Pokemon records.`;
             messageElement.style.color = 'green';
@@ -1084,9 +1084,9 @@ async function handleDefenseIVQuery(event) {
 function displayDefenseIVResults(data) {
     const tableElement = document.getElementById('defenseIVTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1101,7 +1101,7 @@ async function handleTrainerStats() {
         const response = await fetch('/aggregation/trainer-pokemon-count', { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('trainerStatsResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Showing statistics for ${result.data.length} trainers.`;
             messageElement.style.color = 'green';
@@ -1120,9 +1120,9 @@ async function handleTrainerStats() {
 function displayTrainerStatsResults(data) {
     const tableElement = document.getElementById('trainerStatsTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1132,19 +1132,19 @@ function displayTrainerStatsResults(data) {
     });
 }
 
-// ==================== AGGREGATION WITH HAVING FUNCTIONS ====================
+// =================== AGGREGATION WITH HAVING FUNCTIONS ===================
 
 async function handleHighestXPQuery(event) {
     event.preventDefault();
-    
+
     const minPokemonCount = document.getElementById('minPokemonCount').value;
     const url = `/aggregation/highest-xp-having?minPokemonCount=${minPokemonCount}`;
-    
+
     try {
         const response = await fetch(url, { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('highestXPResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Found ${result.data.length} trainers with at least ${minPokemonCount} Pokemon.`;
             messageElement.style.color = 'green';
@@ -1163,9 +1163,9 @@ async function handleHighestXPQuery(event) {
 function displayHighestXPResults(data) {
     const tableElement = document.getElementById('highestXPTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1177,15 +1177,15 @@ function displayHighestXPResults(data) {
 
 async function handleMultiplePokemonQuery(event) {
     event.preventDefault();
-    
+
     const minXP = document.getElementById('minXPFilter').value;
     const url = minXP ? `/aggregation/trainers-multiple-pokemon?minXP=${minXP}` : '/aggregation/trainers-multiple-pokemon';
-    
+
     try {
         const response = await fetch(url, { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('multiplePokemonResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Found ${result.data.length} trainers with multiple Pokemon.`;
             messageElement.style.color = 'green';
@@ -1204,9 +1204,9 @@ async function handleMultiplePokemonQuery(event) {
 function displayMultiplePokemonResults(data) {
     const tableElement = document.getElementById('multiplePokemonTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1216,14 +1216,14 @@ function displayMultiplePokemonResults(data) {
     });
 }
 
-// ==================== NESTED AGGREGATION FUNCTIONS ====================
+// ================== NESTED AGGREGATION FUNCTIONS ====================
 
 async function handleNestedAggregation() {
     try {
         const response = await fetch('/aggregation/nested', { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('nestedAggregationResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Found ${result.data.length} trainers with above-average Pokemon XP.`;
             messageElement.style.color = 'green';
@@ -1242,9 +1242,9 @@ async function handleNestedAggregation() {
 function displayNestedAggregationResults(data) {
     const tableElement = document.getElementById('nestedAggregationTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1259,7 +1259,7 @@ async function handleAboveAverageQuery() {
         const response = await fetch('/aggregation/trainers-above-average', { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('aboveAverageResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Found ${result.data.length} trainers above global average.`;
             messageElement.style.color = 'green';
@@ -1278,9 +1278,9 @@ async function handleAboveAverageQuery() {
 function displayAboveAverageResults(data) {
     const tableElement = document.getElementById('aboveAverageTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1297,26 +1297,26 @@ async function populateTypeCheckboxes() {
         const response = await fetch('/types', { method: 'GET' });
         const responseData = await response.json();
         const types = responseData.data;
-        
+
         const typeContainer = document.getElementById('typeCheckboxes');
         typeContainer.innerHTML = '';
 
         typeContainer.style.display = 'flex';
         typeContainer.style.flexDirection = 'column';
         typeContainer.style.gap = '10px';
-        
+
         types.forEach(type => {
             const label = document.createElement('label');
             label.style.display = 'inline-flex';
             label.style.alignItems = 'center';
             label.style.gap = '8px';
             label.style.width = 'auto';
-            
+
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = type;
             checkbox.name = 'types';
-            
+
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(type));
             typeContainer.appendChild(label);
@@ -1328,22 +1328,22 @@ async function populateTypeCheckboxes() {
 
 async function handleDivisionQuery(event) {
     event.preventDefault();
-    
+
     const checkboxes = document.getElementsByName('types');
     const selectedTypes = Array.from(checkboxes)
         .filter(checkbox => checkbox.checked)
         .map(checkbox => checkbox.value);
-    
+
     try {
         const response = await fetch('/division/species-with-types', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ types: selectedTypes })
         });
-        
+
         const result = await response.json();
         const messageElement = document.getElementById('divisionResultMsg');
-        
+
         if (result.success) {
             if (selectedTypes.length === 0) {
                 messageElement.textContent = `Showing all ${result.data.length} species and their types.`;
@@ -1370,10 +1370,10 @@ async function showAllSpeciesTypes() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ types: [] })
         });
-        
+
         const result = await response.json();
         const messageElement = document.getElementById('divisionResultMsg');
-        
+
         if (result.success) {
             messageElement.textContent = `Showing all ${result.data.length} species and their types.`;
             messageElement.style.color = 'green';
@@ -1392,9 +1392,9 @@ async function showAllSpeciesTypes() {
 function displayDivisionResults(data) {
     const tableElement = document.getElementById('divisionResultTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1406,15 +1406,15 @@ function displayDivisionResults(data) {
 
 async function handleTypeCountQuery(event) {
     event.preventDefault();
-    
+
     const exactTypeCount = document.getElementById('exactTypeCount').value;
     const url = exactTypeCount ? `/division/species-by-type-count?exactTypeCount=${exactTypeCount}` : '/division/species-by-type-count';
-    
+
     try {
         const response = await fetch(url, { method: 'GET' });
         const result = await response.json();
         const messageElement = document.getElementById('typeCountResultMsg');
-        
+
         if (result.success) {
             if (exactTypeCount) {
                 messageElement.textContent = `Found ${result.data.length} species with exactly ${exactTypeCount} type(s).`;
@@ -1437,9 +1437,9 @@ async function handleTypeCountQuery(event) {
 function displayTypeCountResults(data) {
     const tableElement = document.getElementById('typeCountTable');
     const tableBody = tableElement.querySelector('tbody');
-    
+
     tableBody.innerHTML = '';
-    
+
     data.forEach(row => {
         const tr = tableBody.insertRow();
         row.forEach(field => {
@@ -1451,27 +1451,27 @@ function displayTypeCountResults(data) {
 
 // ==================== EVENT LISTENERS AND INITIALIZATION ====================
 
-window.onload = function() {
+window.onload = function () {
     checkDbConnection();
     refreshAllTables();
     populateTableDropdown();
     populateLocationDropdown();
     populateTypeCheckboxes();
-    
+
     // System events
     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
-    
+
     // Insert events
     document.getElementById("insertTrainer").addEventListener("submit", insertTrainer);
     document.getElementById("insertPlayer").addEventListener("submit", insertPlayer);
     document.getElementById("insertPokemon").addEventListener("submit", insertPokemon);
     document.getElementById("insertLearnedMove").addEventListener("submit", insertLearnedMove);
-    
+
     // Delete events
     document.getElementById("deleteTrainer").addEventListener("submit", deleteTrainer);
     document.getElementById("deletePokemon").addEventListener("submit", deletePokemon);
     document.getElementById("deleteLearnedMove").addEventListener("submit", deleteLearnedMove);
-    
+
     // Update events
     document.getElementById('updateTrainer').addEventListener('submit', updateTrainer);
     document.getElementById('updatePlayer').addEventListener('submit', updatePlayer);
