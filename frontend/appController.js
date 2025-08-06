@@ -8,8 +8,8 @@ const router = express.Router();
 
 // SYSTEM ENDPOINTS
 router.get('/check-db-connection', async (req, res) => {
-    const isConnect = await appService.testOracleConnection();
-    if (isConnect) {
+    const isConnected = await appService.testOracleConnection();
+    if (isConnected) {
         res.send('connected');
     } else {
         res.send('unable to connect');
@@ -78,8 +78,8 @@ router.get('/natures', async (req, res) => {
 // INSERT ENDPOINTS
 router.post("/insert-trainer", async (req, res) => {
     const { trainerId, name, locationName } = req.body;
-    const insertResult = await appService.insertTrainer(trainerId, name, locationName);
-    if (insertResult) {
+    const insertTrainerResults = await appService.insertTrainer(trainerId, name, locationName);
+    if (insertTrainerResults) {
         res.json({ success: true });
     } else {
         res.status(500).json({ success: false });
@@ -88,8 +88,8 @@ router.post("/insert-trainer", async (req, res) => {
 
 router.post("/insert-player", async (req, res) => {
     const { trainerId, money } = req.body;
-    const insertResult = await appService.insertPlayer(trainerId, money);
-    if (insertResult) {
+    const insertPlayerResults = await appService.insertPlayer(trainerId, money);
+    if (insertPlayerResults) {
         res.json({ success: true });
     } else {
         res.status(500).json({ success: false });
@@ -98,8 +98,8 @@ router.post("/insert-player", async (req, res) => {
 
 router.post("/insert-pokemon", async (req, res) => {
     const { pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id } = req.body;
-    const insertResult = await appService.insertPokemon(pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id);
-    if (insertResult) {
+    const insertPokemonResults = await appService.insertPokemon(pokedex, pokemon_id, name, total_XP, nature, HP_IV, attack_IV, defense_IV, speed_IV, ability_id, trainer_id);
+    if (insertPokemonResults) {
         res.json({ success: true });
     } else {
         res.status(500).json({ success: false });
@@ -108,8 +108,8 @@ router.post("/insert-pokemon", async (req, res) => {
 
 router.post("/insert-learned-move", async (req, res) => {
     const { pokedex, pokemon_id, move_id } = req.body;
-    const insertResult = await appService.insertPokemonHasLearnedMove(pokedex, pokemon_id, move_id);
-    if (insertResult) {
+    const insertLearnedMoveResults = await appService.insertPokemonHasLearnedMove(pokedex, pokemon_id, move_id);
+    if (insertLearnedMoveResults) {
         res.json({ success: true });
     } else {
         res.status(500).json({ success: false });
