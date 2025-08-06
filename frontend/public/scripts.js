@@ -46,178 +46,34 @@ async function resetDemotable() {
 
 async function fetchAndDisplayTrainers() {
     fetchAndDisplay('trainersTable', '/trainers');
-    // const tableElement = document.getElementById('trainersTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/trainers', { method: 'GET' });
-    // const responseData = await response.json();
-    // const trainersContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // trainersContent.forEach(trainer => {
-    //     const row = tableBody.insertRow();
-    //     trainer.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplayPlayers() {
     fetchAndDisplay('playersTable', '/players');
-    // const tableElement = document.getElementById('playersTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/players', { method: 'GET' });
-    // const responseData = await response.json();
-    // const playersContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // playersContent.forEach(player => {
-    //     const row = tableBody.insertRow();
-    //     player.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplayPokemon() {
     fetchAndDisplay('pokemonTable', '/pokemon');
-    // const tableElement = document.getElementById('pokemonTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/pokemon', { method: 'GET' });
-    // const responseData = await response.json();
-    // const pokemonContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // pokemonContent.forEach(pokemon => {
-    //     const row = tableBody.insertRow();
-    //     pokemon.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplayLearnedMoves() {
     fetchAndDisplay('learnedMovesTable', '/learned-moves');
-    // const tableElement = document.getElementById('learnedMovesTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/learned-moves', { method: 'GET' });
-    // const responseData = await response.json();
-    // const movesContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // movesContent.forEach(move => {
-    //     const row = tableBody.insertRow();
-    //     move.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplaySpecies() {
     fetchAndDisplay('speciesTable', '/species');
-    // const tableElement = document.getElementById('speciesTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/species', { method: 'GET' });
-    // const responseData = await response.json();
-    // const speciesContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // speciesContent.forEach(species => {
-    //     const row = tableBody.insertRow();
-    //     species.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplayMoves() {
     fetchAndDisplay('movesTable', '/moves');
-    // const tableElement = document.getElementById('movesTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/moves', { method: 'GET' });
-    // const responseData = await response.json();
-    // const movesContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // movesContent.forEach(move => {
-    //     const row = tableBody.insertRow();
-    //     move.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplayAbilities() {
     fetchAndDisplay('abilitiesTable', '/abilities');
-    // const tableElement = document.getElementById('abilitiesTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/abilities', { method: 'GET' });
-    // const responseData = await response.json();
-    // const abilitiesContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // abilitiesContent.forEach(ability => {
-    //     const row = tableBody.insertRow();
-    //     ability.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplayNatures() {
     fetchAndDisplay('naturesTable', '/natures');
-    // const tableElement = document.getElementById('naturesTable');
-    // const tableBody = tableElement.querySelector('tbody');
-
-    // const response = await fetch('/natures', { method: 'GET' });
-    // const responseData = await response.json();
-    // const naturesContent = responseData.data;
-
-    // if (tableBody) {
-    //     tableBody.innerHTML = '';
-    // }
-
-    // naturesContent.forEach(nature => {
-    //     const row = tableBody.insertRow();
-    //     nature.forEach((field, index) => {
-    //         const cell = row.insertCell(index);
-    //         cell.textContent = field || 'NULL';
-    //     });
-    // });
 }
 
 async function fetchAndDisplay(tableId, endpoint) {
