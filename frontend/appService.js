@@ -17,7 +17,7 @@ const dbConfig = {
     poolTimeout: 60
 };
 
-// SERVER-SIDE INPUT VALIDATION 
+// INPUT VALIDATION 
 function validateInteger(value, fieldName, options = {}) {
     if (value === null || value === undefined || value === '') {
         if (options.required) {
@@ -154,7 +154,7 @@ function validatePokemonAttribute(attribute) {
 function validateLogicalOperator(operator) {
     const validLogical = ['AND', 'OR'];
     if (!validLogical.includes(operator)) {
-        return 'AND'; // Default to AND for safety
+        return 'AND'; // AND is safest
     }
     return operator;
 }

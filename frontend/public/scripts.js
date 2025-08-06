@@ -174,7 +174,7 @@ async function insertPlayer(event) {
         document.getElementById('insertPlayer').reset();
         refreshAllTables();
     } else {
-        alert("Error inserting player! Make sure trainer exists.");
+        alert("Error inserting player! Make sure trainer exists or player has not already been inserted.");
         messageElement.textContent = "Error inserting player!";
     }
 }
@@ -256,7 +256,7 @@ async function insertLearnedMove(event) {
         document.getElementById('insertLearnedMove').reset();
         refreshAllTables();
     } else {
-        alert("Error teaching move! Make sure Pokemon and Move exist.");
+        alert("Error teaching move! Make sure Pokemon and Move exist or Pokemon does not already know that move.");
         messageElement.textContent = "Error teaching move!";
     }
 }

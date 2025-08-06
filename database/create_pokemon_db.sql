@@ -62,7 +62,7 @@ CREATE TABLE
 CREATE TABLE
     Pokemon_3 (
         total_XP INTEGER PRIMARY KEY,
-        pokemon_level INTEGER NOT NULL
+        pokemon_level INTEGER UNIQUE NOT NULL
     );
 
 CREATE TABLE
@@ -104,10 +104,10 @@ CREATE TABLE
         total_XP INTEGER NOT NULL,
         nature VARCHAR(12) NOT NULL,
         HP_IV INTEGER NOT NULL,
-        attack_IV INTEGER NOT NULL,
-        defense_IV INTEGER NOT NULL,
-        speed_IV INTEGER NOT NULL,
-        ability_id INTEGER NOT NULL,
+        attack_IV INTEGER DEFAULT 0 NOT NULL,
+        defense_IV INTEGER DEFAULT 0 NOT NULL,
+        speed_IV INTEGER DEFAULT 0 NOT NULL,
+        ability_id INTEGER DEFAULT 0 NOT NULL,
         trainer_id INTEGER,
         PRIMARY KEY (pokedex, pokemon_id),
         FOREIGN KEY (pokedex) REFERENCES Species (pokedex),
