@@ -886,7 +886,7 @@ async function populateAttributeCheckboxes() {
             checkbox.value = column;
             checkbox.name = 'attributes';
             label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(` ${column}`));
+            label.appendChild(document.createTextNode(column));
             attributeCheckboxes.appendChild(label);
         });
     } catch (error) {
@@ -1287,7 +1287,7 @@ async function populateTypeCheckboxes() {
             checkbox.name = 'types';
             
             label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(` ${type}`));
+            label.appendChild(document.createTextNode(type));
             typeContainer.appendChild(label);
         });
     } catch (error) {
