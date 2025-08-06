@@ -365,8 +365,8 @@ async function fetchPlayersFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
             SELECT p.trainer_id, t.name, p.money 
-            FROM Player p 
-            JOIN Trainer t ON p.trainer_id = t.trainer_id 
+            FROM Player p, Trainer t
+            WHERE p.trainer_id = t.trainer_id 
             ORDER BY p.trainer_id
         `);
         return result.rows;
@@ -378,11 +378,11 @@ async function fetchPlayersFromDb() {
 async function fetchPokemonFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
-            SELECT p.pokedex, p.pokemon_id, p.name, p3.pokemon_level, p.nature, 
-                   p.HP_IV, p.attack_IV, p.defense_IV, p.speed_IV, p.ability_id, p.trainer_id
-            FROM Pokemon_1 p
-            JOIN Pokemon_3 p3 ON p.total_XP = p3.total_XP
-            ORDER BY p.pokedex, p.pokemon_id
+            SELECT p1.pokedex, p1.pokemon_id, p1.name, p3.pokemon_level, p1.nature, 
+                   p1.HP_IV, p1.attack_IV, p1.defense_IV, p1.speed_IV, p1.ability_id, p1.trainer_id
+            FROM Pokemon_1 p1, Pokemon_3 p3 
+            WHERE p1.total_XP = p3.total_XP
+            ORDER BY p1.pokedex, p1.pokemon_id
         `);
         return result.rows;
     }).catch(() => {
@@ -394,9 +394,8 @@ async function fetchLearnedMovesFromDb() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`
             SELECT lm.pokedex, lm.pokemon_id, lm.move_id, p.name as pokemon_name, m.name as move_name
-            FROM Pokemon_Has_Learned_Move lm
-            JOIN Pokemon_1 p ON lm.pokedex = p.pokedex AND lm.pokemon_id = p.pokemon_id
-            JOIN Move m ON lm.move_id = m.move_id
+            FROM Pokemon_Has_Learned_Move lm, Pokemon_1 p, Move m
+            WHERE lm.pokedex = p.pokedex AND lm.pokemon_id = p.pokemon_id AND lm.move_id = m.move_id
             ORDER BY lm.pokedex, lm.pokemon_id, lm.move_id
         `);
         return result.rows;
@@ -712,7 +711,7 @@ async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMov
 
     const alreadyKnowsMove = await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            'SELECT 1 FROM Pokemon_Has_Learned_Move WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :moveId',
+            'SELECT * FROM Pokemon_Has_Learned_Move WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :moveId',
             [validPokedex, validPokemonId, validNewMoveId]
         );
         return result.rows.length > 0;
@@ -723,8 +722,11 @@ async function updatePokemonHasLearnedMove(pokedex, pokemonId, oldMoveId, newMov
     }
 
     return await withOracleDB(async (connection) => {
-        const result = await connection.execute(
-            'UPDATE Pokemon_Has_Learned_Move SET move_id = :newMoveId WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :oldMoveId',
+        const result = await connection.execute(`
+            UPDATE Pokemon_Has_Learned_Move 
+            SET move_id = :newMoveId 
+            WHERE pokedex = :pokedex AND pokemon_id = :pokemonId AND move_id = :oldMoveId
+            `,
             [validNewMoveId, validPokedex, validPokemonId, validOldMoveId],
             { autoCommit: true }
         );
@@ -827,16 +829,16 @@ async function updateEntity(table, idField, idValue, updates, allowedFields) {
 async function executeSelectionQuery(conditions) {
     return await withOracleDB(async (connection) => {
         let query = `
-            SELECT p.pokedex, p.pokemon_id, p.name, p3.pokemon_level, p.nature,
-                   p.HP_IV, p.attack_IV, p.defense_IV, p.speed_IV, p.ability_id, p.trainer_id
-            FROM Pokemon_1 p
-            JOIN Pokemon_3 p3 ON p.total_XP = p3.total_XP
+            SELECT p1.pokedex, p1.pokemon_id, p1.name, p3.pokemon_level, p1.nature,
+                   p1.HP_IV, p1.attack_IV, p1.defense_IV, p1.speed_IV, p1.ability_id, p1.trainer_id
+            FROM Pokemon_1 p1, Pokemon_3 p3
+            WHERE p1.total_XP = p3.total_XP
         `;
         const bindVars = {};
         let bindIndex = 1;
 
         if (conditions && conditions.length > 0) {
-            query += " WHERE ";
+            query += " AND (";
             for (let i = 0; i < conditions.length; i++) {
                 const condition = conditions[i];
 
@@ -854,7 +856,7 @@ async function executeSelectionQuery(conditions) {
             }
         }
 
-        query += " ORDER BY p.pokedex, p.pokemon_id";
+        query += ") ORDER BY p1.pokedex, p1.pokemon_id";
 
         const result = await connection.execute(query, bindVars);
         return result.rows;
@@ -925,16 +927,15 @@ async function executeSpeciesLocationJoin(locationName = null) {
     return await withOracleDB(async (connection) => {
         let query = `
             SELECT s.pokedex, s.name as species_name, s.description, l.name as location_name, l.climate, l.terrain_type
-            FROM Species s
-            JOIN Species_Located_In sli ON s.pokedex = sli.pokedex
-            JOIN Location l ON sli.location_name = l.name
+            FROM Species s, Species_Located_In sli, Location l
+            WHERE s.pokedex = sli.pokedex AND sli.location_name = l.name
         `;
         const bindVars = {};
 
         if (locationName) {
 
             const validLocation = validateString(locationName, 'Location Name', { required: true, maxLength: 40 });
-            query += " WHERE l.name = :locationName";
+            query += " AND l.name = :locationName";
             bindVars.locationName = validLocation;
         }
 
@@ -963,14 +964,14 @@ async function executeDefenseIVGroupBy(minDefenseIV = null) {
     return await withOracleDB(async (connection) => {
         let query = `
             SELECT t.trainer_id, t.name as trainer_name, p.name as pokemon_name, p.defense_IV
-            FROM Pokemon_1 p
-            JOIN Trainer t ON p.trainer_id = t.trainer_id
+            FROM Pokemon_1 p, Trainer t
+            WHERE p.trainer_id = t.trainer_id
         `;
         const bindVars = {};
 
         if (minDefenseIV !== null) {
             const validMinDefenseIV = validateInteger(minDefenseIV, 'Minimum Defense IV', { min: 0, max: 31 });
-            query += " WHERE p.defense_IV >= :minDefenseIV";
+            query += " AND p.defense_IV >= :minDefenseIV";
             bindVars.minDefenseIV = validMinDefenseIV;
         }
 
@@ -1010,8 +1011,8 @@ async function executeHighestXPHaving(minPokemonCount = 2) {
 
         const query = `
             SELECT t.trainer_id, t.name as trainer_name, MAX(p.total_XP) as highest_xp, COUNT(p.pokemon_id) as pokemon_count
-            FROM Trainer t
-            JOIN Pokemon_1 p ON t.trainer_id = p.trainer_id
+            FROM Trainer t, Pokemon_1 p 
+            WHERE t.trainer_id = p.trainer_id
             GROUP BY t.trainer_id, t.name
             HAVING COUNT(p.pokemon_id) >= :minPokemonCount
             ORDER BY highest_xp DESC
@@ -1033,14 +1034,14 @@ async function executeTrainersWithMultiplePokemon(minXP = null) {
                    AVG(p.total_XP) as avg_xp,
                    MAX(p.total_XP) as max_xp,
                    MIN(p.total_XP) as min_xp
-            FROM Trainer t
-            JOIN Pokemon_1 p ON t.trainer_id = p.trainer_id
+            FROM Trainer t, Pokemon_1 p
+            WHERE t.trainer_id = p.trainer_id
         `;
         const bindVars = { minPokemonCount: 2 };
 
         if (minXP !== null) {
             const validMinXP = validateInteger(minXP, 'Minimum XP', { min: 0 });
-            query += " WHERE p.total_XP >= :minXP";
+            query += " AND p.total_XP >= :minXP";
             bindVars.minXP = validMinXP;
         }
 
@@ -1065,8 +1066,8 @@ async function executeNestedAggregation() {
             SELECT t.trainer_id, t.name as trainer_name, 
                    COUNT(p.pokemon_id) as pokemon_count,
                    AVG(p.total_XP) as avg_xp
-            FROM Trainer t
-            JOIN Pokemon_1 p ON t.trainer_id = p.trainer_id
+            FROM Trainer t, Pokemon_1 p
+            WHERE t.trainer_id = p.trainer_id
             GROUP BY t.trainer_id, t.name
             HAVING AVG(p.total_XP) > (
                 SELECT AVG(total_XP) 
@@ -1095,11 +1096,10 @@ async function executeTrainersAboveAverageXP() {
                 SELECT t.trainer_id, t.name as trainer_name, 
                        COUNT(p.pokemon_id) as pokemon_count,
                        AVG(p.total_XP) as avg_trainer_xp
-                FROM Trainer t
-                JOIN Pokemon_1 p ON t.trainer_id = p.trainer_id
+                FROM Trainer t, Pokemon_1 p
+                WHERE t.trainer_id = p.trainer_id
                 GROUP BY t.trainer_id, t.name
-            ) trainer_stats
-            CROSS JOIN (
+            ) trainer_stats, (
                 SELECT AVG(total_XP) as overall_avg_xp
                 FROM Pokemon_1
             ) global_stats
@@ -1124,8 +1124,8 @@ async function executeSpeciesWithAllTypes(typeNames = []) {
             const query = `
                 SELECT s.pokedex, s.name as species_name, 
                        LISTAGG(sht.type_name, ', ') WITHIN GROUP (ORDER BY sht.type_name) as types
-                FROM Species s
-                JOIN Species_Has_Type sht ON s.pokedex = sht.pokedex
+                FROM Species s, Species_Has_Type sht
+                WHERE s.pokedex = sht.pokedex
                 GROUP BY s.pokedex, s.name
                 ORDER BY s.pokedex
             `;
@@ -1155,9 +1155,9 @@ async function executeSpeciesWithAllTypes(typeNames = []) {
         const query = `
             SELECT s.pokedex, s.name as species_name,
                    LISTAGG(sht.type_name, ', ') WITHIN GROUP (ORDER BY sht.type_name) as types
-            FROM Species s
-            JOIN Species_Has_Type sht ON s.pokedex = sht.pokedex
-            WHERE s.pokedex IN (
+            FROM Species s, Species_Has_Type sht
+            WHERE s.pokedex = sht.pokedex
+            AND s.pokedex IN (
                 SELECT sht2.pokedex
                 FROM Species_Has_Type sht2
                 WHERE sht2.type_name IN (${typeConditions})
@@ -1193,8 +1193,8 @@ async function executeSpeciesByTypeCount(exactTypeCount = null) {
             SELECT s.pokedex, s.name as species_name, 
                    COUNT(sht.type_name) as type_count,
                    LISTAGG(sht.type_name, ', ') WITHIN GROUP (ORDER BY sht.type_name) as types
-            FROM Species s
-            JOIN Species_Has_Type sht ON s.pokedex = sht.pokedex
+            FROM Species s, Species_Has_Type sht
+            WHERE s.pokedex = sht.pokedex
             GROUP BY s.pokedex, s.name
         `;
         const bindVars = {};
