@@ -871,14 +871,17 @@ async function populateAttributeCheckboxes() {
             attributeCheckboxes.innerHTML = '<p>No attributes available for this table.</p>';
             return;
         }
+
+        attributeCheckboxes.style.display = 'flex';
+        attributeCheckboxes.style.flexDirection = 'column';
+        attributeCheckboxes.style.gap = '10px';
         
         columns.forEach(column => {
             const label = document.createElement('label');
             label.style.display = 'flex';
             label.style.alignItems = 'center';
-            label.style.justifyContent = 'start';
             label.style.gap = '8px';
-            label.style.marginBottom = '10px';
+            label.style.width = 'fit-content';
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = column;
@@ -1268,14 +1271,17 @@ async function populateTypeCheckboxes() {
         
         const typeContainer = document.getElementById('typeCheckboxes');
         typeContainer.innerHTML = '';
+
+        typeContainer.style.display = 'flex';
+        typeContainer.style.flexDirection = 'column';
+        typeContainer.style.gap = '10px';
         
         types.forEach(type => {
             const label = document.createElement('label');
             label.style.display = 'flex';
             label.style.alignItems = 'center';
-            label.style.justifyContent = 'start';
             label.style.gap = '8px';
-            label.style.marginBottom = '10px';
+            label.style.width = 'fit-content';
             
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
