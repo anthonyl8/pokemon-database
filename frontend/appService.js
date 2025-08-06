@@ -348,96 +348,62 @@ async function initiatePokemonDB() {
 }
 
 // FETCH FUNCTIONS
-async function fetchTrainersFromDb() {
+async function fetchFromDb(query) {
     return await withOracleDB(async (connection) => {
-        console.log('Fetching trainers...');
-        const result = await connection.execute('SELECT * FROM Trainer ORDER BY trainer_id');
-        console.log('Trainers result:', result.rows.length, 'rows');
-        console.log('First trainer:', result.rows[0]);
+        const result = await connection.execute(query);
         return result.rows;
     }).catch((err) => {
-        console.error('Error fetching trainers:', err);
+        console.error('Error in fetching:', err);
         return [];
     });
+}
+
+async function fetchTrainersFromDb() {
+    return await fetchFromDb('SELECT * FROM Trainer ORDER BY trainer_id');
 }
 
 async function fetchPlayersFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`
-            SELECT p.trainer_id, t.name, p.money 
-            FROM Player p, Trainer t
-            WHERE p.trainer_id = t.trainer_id 
-            ORDER BY p.trainer_id
-        `);
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
+    return await fetchFromDb(`
+        SELECT p.trainer_id, t.name, p.money 
+        FROM Player p, Trainer t
+        WHERE p.trainer_id = t.trainer_id 
+        ORDER BY p.trainer_id
+    `);
 }
 
 async function fetchPokemonFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`
-            SELECT p1.pokedex, p1.pokemon_id, p1.name, p3.pokemon_level, p1.nature, 
-                   p1.HP_IV, p1.attack_IV, p1.defense_IV, p1.speed_IV, p1.ability_id, p1.trainer_id
-            FROM Pokemon_1 p1, Pokemon_3 p3 
-            WHERE p1.total_XP = p3.total_XP
-            ORDER BY p1.pokedex, p1.pokemon_id
-        `);
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
+    return await fetchFromDb(`
+        SELECT p1.pokedex, p1.pokemon_id, p1.name, p3.pokemon_level, p1.nature, 
+               p1.HP_IV, p1.attack_IV, p1.defense_IV, p1.speed_IV, p1.ability_id, p1.trainer_id
+        FROM Pokemon_1 p1, Pokemon_3 p3 
+        WHERE p1.total_XP = p3.total_XP
+        ORDER BY p1.pokedex, p1.pokemon_id
+    `);
 }
 
 async function fetchLearnedMovesFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute(`
-            SELECT lm.pokedex, lm.pokemon_id, lm.move_id, p.name as pokemon_name, m.name as move_name
-            FROM Pokemon_Has_Learned_Move lm, Pokemon_1 p, Move m
-            WHERE lm.pokedex = p.pokedex AND lm.pokemon_id = p.pokemon_id AND lm.move_id = m.move_id
-            ORDER BY lm.pokedex, lm.pokemon_id, lm.move_id
-        `);
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
+    return await fetchFromDb(`
+        SELECT lm.pokedex, lm.pokemon_id, lm.move_id, p.name as pokemon_name, m.name as move_name
+        FROM Pokemon_Has_Learned_Move lm, Pokemon_1 p, Move m
+        WHERE lm.pokedex = p.pokedex AND lm.pokemon_id = p.pokemon_id AND lm.move_id = m.move_id
+        ORDER BY lm.pokedex, lm.pokemon_id, lm.move_id
+    `);
 }
 
 async function fetchSpeciesFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM Species ORDER BY pokedex');
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
+    return await fetchFromDb('SELECT * FROM Species ORDER BY pokedex');
 }
 
 async function fetchMovesFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT move_id, name, type_name, power, pp, accuracy FROM Move ORDER BY move_id');
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
+    return await fetchFromDb('SELECT move_id, name, type_name, power, pp, accuracy FROM Move ORDER BY move_id');
 }
 
 async function fetchAbilitiesFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM Ability ORDER BY ability_id');
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
+    return await fetchFromDb('SELECT * FROM Ability ORDER BY ability_id');
 }
 
 async function fetchNaturesFromDb() {
-    return await withOracleDB(async (connection) => {
-        const result = await connection.execute('SELECT * FROM Pokemon_2 ORDER BY nature');
-        return result.rows;
-    }).catch(() => {
-        return [];
-    });
+    return await fetchFromDb('SELECT * FROM Pokemon_2 ORDER BY nature');
 }
 
 // INSERT FUNCTIONS
