@@ -45,167 +45,196 @@ async function resetDemotable() {
 // ==================== TABLE DISPLAY FUNCTIONS ====================
 
 async function fetchAndDisplayTrainers() {
-    const tableElement = document.getElementById('trainersTable');
-    const tableBody = tableElement.querySelector('tbody');
+    fetchAndDisplay('trainersTable', '/trainers');
+    // const tableElement = document.getElementById('trainersTable');
+    // const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/trainers', { method: 'GET' });
-    const responseData = await response.json();
-    const trainersContent = responseData.data;
+    // const response = await fetch('/trainers', { method: 'GET' });
+    // const responseData = await response.json();
+    // const trainersContent = responseData.data;
 
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
 
-    trainersContent.forEach(trainer => {
-        const row = tableBody.insertRow();
-        trainer.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
-        });
-    });
+    // trainersContent.forEach(trainer => {
+    //     const row = tableBody.insertRow();
+    //     trainer.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
 }
 
 async function fetchAndDisplayPlayers() {
-    const tableElement = document.getElementById('playersTable');
-    const tableBody = tableElement.querySelector('tbody');
+    fetchAndDisplay('playersTable', '/players');
+    // const tableElement = document.getElementById('playersTable');
+    // const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/players', { method: 'GET' });
-    const responseData = await response.json();
-    const playersContent = responseData.data;
+    // const response = await fetch('/players', { method: 'GET' });
+    // const responseData = await response.json();
+    // const playersContent = responseData.data;
 
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
 
-    playersContent.forEach(player => {
-        const row = tableBody.insertRow();
-        player.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
-        });
-    });
+    // playersContent.forEach(player => {
+    //     const row = tableBody.insertRow();
+    //     player.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
 }
 
 async function fetchAndDisplayPokemon() {
-    const tableElement = document.getElementById('pokemonTable');
-    const tableBody = tableElement.querySelector('tbody');
+    fetchAndDisplay('pokemonTable', '/pokemon');
+    // const tableElement = document.getElementById('pokemonTable');
+    // const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/pokemon', { method: 'GET' });
-    const responseData = await response.json();
-    const pokemonContent = responseData.data;
+    // const response = await fetch('/pokemon', { method: 'GET' });
+    // const responseData = await response.json();
+    // const pokemonContent = responseData.data;
 
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
 
-    pokemonContent.forEach(pokemon => {
-        const row = tableBody.insertRow();
-        pokemon.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
-        });
-    });
+    // pokemonContent.forEach(pokemon => {
+    //     const row = tableBody.insertRow();
+    //     pokemon.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
 }
 
 async function fetchAndDisplayLearnedMoves() {
-    const tableElement = document.getElementById('learnedMovesTable');
-    const tableBody = tableElement.querySelector('tbody');
+    fetchAndDisplay('learnedMovesTable', '/learned-moves');
+    // const tableElement = document.getElementById('learnedMovesTable');
+    // const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/learned-moves', { method: 'GET' });
-    const responseData = await response.json();
-    const movesContent = responseData.data;
+    // const response = await fetch('/learned-moves', { method: 'GET' });
+    // const responseData = await response.json();
+    // const movesContent = responseData.data;
 
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
 
-    movesContent.forEach(move => {
-        const row = tableBody.insertRow();
-        move.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
-        });
-    });
+    // movesContent.forEach(move => {
+    //     const row = tableBody.insertRow();
+    //     move.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
 }
 
 async function fetchAndDisplaySpecies() {
-    const tableElement = document.getElementById('speciesTable');
-    const tableBody = tableElement.querySelector('tbody');
+    fetchAndDisplay('speciesTable', '/species');
+    // const tableElement = document.getElementById('speciesTable');
+    // const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/species', { method: 'GET' });
-    const responseData = await response.json();
-    const speciesContent = responseData.data;
+    // const response = await fetch('/species', { method: 'GET' });
+    // const responseData = await response.json();
+    // const speciesContent = responseData.data;
 
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
 
-    speciesContent.forEach(species => {
-        const row = tableBody.insertRow();
-        species.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
-        });
-    });
+    // speciesContent.forEach(species => {
+    //     const row = tableBody.insertRow();
+    //     species.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
 }
 
 async function fetchAndDisplayMoves() {
-    const tableElement = document.getElementById('movesTable');
-    const tableBody = tableElement.querySelector('tbody');
+    fetchAndDisplay('movesTable', '/moves');
+    // const tableElement = document.getElementById('movesTable');
+    // const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/moves', { method: 'GET' });
-    const responseData = await response.json();
-    const movesContent = responseData.data;
+    // const response = await fetch('/moves', { method: 'GET' });
+    // const responseData = await response.json();
+    // const movesContent = responseData.data;
 
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
 
-    movesContent.forEach(move => {
-        const row = tableBody.insertRow();
-        move.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
-        });
-    });
+    // movesContent.forEach(move => {
+    //     const row = tableBody.insertRow();
+    //     move.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
 }
 
 async function fetchAndDisplayAbilities() {
-    const tableElement = document.getElementById('abilitiesTable');
-    const tableBody = tableElement.querySelector('tbody');
+    fetchAndDisplay('abilitiesTable', '/abilities');
+    // const tableElement = document.getElementById('abilitiesTable');
+    // const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/abilities', { method: 'GET' });
-    const responseData = await response.json();
-    const abilitiesContent = responseData.data;
+    // const response = await fetch('/abilities', { method: 'GET' });
+    // const responseData = await response.json();
+    // const abilitiesContent = responseData.data;
 
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
 
-    abilitiesContent.forEach(ability => {
-        const row = tableBody.insertRow();
-        ability.forEach((field, index) => {
-            const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
-        });
-    });
+    // abilitiesContent.forEach(ability => {
+    //     const row = tableBody.insertRow();
+    //     ability.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
 }
 
 async function fetchAndDisplayNatures() {
-    const tableElement = document.getElementById('naturesTable');
+    fetchAndDisplay('naturesTable', '/natures');
+    // const tableElement = document.getElementById('naturesTable');
+    // const tableBody = tableElement.querySelector('tbody');
+
+    // const response = await fetch('/natures', { method: 'GET' });
+    // const responseData = await response.json();
+    // const naturesContent = responseData.data;
+
+    // if (tableBody) {
+    //     tableBody.innerHTML = '';
+    // }
+
+    // naturesContent.forEach(nature => {
+    //     const row = tableBody.insertRow();
+    //     nature.forEach((field, index) => {
+    //         const cell = row.insertCell(index);
+    //         cell.textContent = field || 'NULL';
+    //     });
+    // });
+}
+
+async function fetchAndDisplay(tableId, endpoint) {
+    const tableElement = document.getElementById(tableId);
     const tableBody = tableElement.querySelector('tbody');
 
-    const response = await fetch('/natures', { method: 'GET' });
+    const response = await fetch(endpoint, { method: 'GET' });
     const responseData = await response.json();
-    const naturesContent = responseData.data;
+    const content = responseData.data;
 
     if (tableBody) {
         tableBody.innerHTML = '';
     }
 
-    naturesContent.forEach(nature => {
+    content.forEach(tuple => {
         const row = tableBody.insertRow();
-        nature.forEach((field, index) => {
+        tuple.forEach((field, index) => {
             const cell = row.insertCell(index);
             cell.textContent = field || 'NULL';
         });
@@ -566,7 +595,8 @@ async function updatePokemon(event) {
             updates[field] = type === 'number' ? parseInt(element.value) : element.value;
         }
     });
-    
+
+    const messageElement = document.getElementById('updatePokemonResultMsg');
     try {
         const response = await fetch('/update-pokemon', {
             method: 'POST',
@@ -575,7 +605,6 @@ async function updatePokemon(event) {
         });
         
         const responseData = await response.json();
-        const messageElement = document.getElementById('updatePokemonResultMsg');
         
         messageElement.textContent = responseData.message;
         messageElement.style.color = responseData.success ? 'green' : 'red';
@@ -588,8 +617,8 @@ async function updatePokemon(event) {
             alert("Error updating Pokemon! Check your input.");
         }
     } catch (error) {
-        document.getElementById('updatePokemonResultMsg').textContent = 'Error: ' + error.message;
-        document.getElementById('updatePokemonResultMsg').style.color = 'red';
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
     }
 }
 
