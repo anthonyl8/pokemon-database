@@ -3,7 +3,7 @@
  * Handles all form submissions, data display, and table refreshing
  */
 
-// ==================== DATABASE CONNECTION ====================
+// ==================== SYSTEM FUNCTIONS ====================
 
 async function checkDbConnection() {
     const statusElem = document.getElementById('dbStatus');
@@ -212,7 +212,6 @@ async function fetchAndDisplayNatures() {
     });
 }
 
-// Master function to refresh all tables
 function refreshAllTables() {
     fetchAndDisplayTrainers();
     fetchAndDisplayPlayers();
@@ -252,77 +251,10 @@ async function insertTrainer(event) {
         alert("Trainer inserted successfully!");
         messageElement.textContent = "Trainer inserted successfully!";
         document.getElementById('insertTrainer').reset();
-        refreshAllTables(); // Refresh all tables to show changes
+        refreshAllTables();
     } else {
         alert("Error inserting trainer! Check your input.");
         messageElement.textContent = "Error inserting trainer!";
-    }
-}
-
-async function deleteTrainer(event) {
-    event.preventDefault();
-
-    const trainerIdValue = document.getElementById('deleteTrainerId').value;
-
-    const response = await fetch('/delete-trainer', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({trainerId: trainerIdValue})
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('deleteTrainerResultMsg');
-
-    if (responseData.success) {
-        alert("Trainer deleted successfully!");
-        messageElement.textContent = "Trainer deleted successfully!";
-        document.getElementById('deleteTrainer').reset();
-        refreshAllTables(); // Refresh all tables to show changes
-    } else {
-        alert("Error deleting trainer! Check your input.");
-        messageElement.textContent = "Error deleting trainer!";
-    }
-}
-
-async function updateTrainer(event) {
-    event.preventDefault();
-    
-    const trainerId = document.getElementById('updateTrainerId').value;
-    const updates = {};
-    
-    const name = document.getElementById('updateTrainerName').value.trim();
-    if (name) updates.name = name;
-    
-    const location = document.getElementById('updateTrainerLocation').value.trim();
-    if (location) updates.location_name = location;
-    
-    try {
-        const response = await fetch('/update-trainer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ trainerId, updates })
-        });
-        
-        const responseData = await response.json();
-        const messageElement = document.getElementById('updateTrainerResultMsg');
-        
-        messageElement.textContent = responseData.message;
-        messageElement.style.color = responseData.success ? 'green' : 'red';
-        
-        if (responseData.success) {
-            alert("Trainer updated successfully!");
-            messageElement.textContent = "Trainer updated successfully!";
-            document.getElementById('updateTrainer').reset();
-            refreshAllTables(); // Refresh all tables to show changes
-        } else {
-            alert("Error updating Trainer! Check your input.");
-            messageElement.textContent = "Error updating Trainer!";
-        }
-    } catch (error) {
-        document.getElementById('updateTrainerResultMsg').textContent = 'Error: ' + error.message;
-        document.getElementById('updateTrainerResultMsg').style.color = 'red';
     }
 }
 
@@ -350,47 +282,10 @@ async function insertPlayer(event) {
         alert("Player inserted successfully!");
         messageElement.textContent = "Player inserted successfully!";
         document.getElementById('insertPlayer').reset();
-        refreshAllTables(); // Refresh all tables to show changes
+        refreshAllTables();
     } else {
         alert("Error inserting player! Make sure trainer exists.");
         messageElement.textContent = "Error inserting player!";
-    }
-}
-
-async function updatePlayer(event) {
-    event.preventDefault();
-    
-    const trainerId = document.getElementById('updatePlayerTrainerId').value;
-    const updates = {};
-    
-    const money = document.getElementById('updatePlayerMoney').value;
-    if (money) {
-        updates.money = money;
-    }
-    
-    try {
-        const response = await fetch('/update-player', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ trainerId, updates })
-        });
-        
-        const responseData = await response.json();
-        const messageElement = document.getElementById('updatePlayerResultMsg');
-        
-        if (responseData.success) {
-            alert("Player updated successfully!");
-            messageElement.textContent = "Player updated successfully!";
-            document.getElementById('updatePlayer').reset();
-            refreshAllTables(); // Refresh all tables to show changes
-        } else {
-            alert("Error updating Player! " + responseData.message);
-            messageElement.textContent = "Error updating Player: " + responseData.message;
-        }
-    } catch (error) {
-        const messageElement = document.getElementById('updatePlayerResultMsg');
-        messageElement.textContent = 'Error: ' + error.message;
-        messageElement.style.color = 'red';
     }
 }
 
@@ -436,10 +331,72 @@ async function insertPokemon(event) {
         alert("Pokemon inserted successfully!");
         messageElement.textContent = "Pokemon inserted successfully!";
         document.getElementById('insertPokemon').reset();
-        refreshAllTables(); // Refresh all tables to show changes
+        refreshAllTables();
     } else {
         alert("Error inserting Pokemon! Check your input values.");
         messageElement.textContent = "Error inserting Pokemon!";
+    }
+}
+
+async function insertLearnedMove(event) {
+    event.preventDefault();
+
+    const pokedexValue = document.getElementById('insertLearnedMovePokedex').value;
+    const pokemonIdValue = document.getElementById('insertLearnedMovePokemonId').value;
+    const moveIdValue = document.getElementById('insertLearnedMoveId').value;
+
+    const response = await fetch('/insert-learned-move', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            pokedex: pokedexValue,
+            pokemon_id: pokemonIdValue,
+            move_id: moveIdValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('insertLearnedMoveResultMsg');
+
+    if (responseData.success) {
+        alert("Move taught successfully!");
+        messageElement.textContent = "Move taught successfully!";
+        document.getElementById('insertLearnedMove').reset();
+        refreshAllTables();
+    } else {
+        alert("Error teaching move! Make sure Pokemon and Move exist.");
+        messageElement.textContent = "Error teaching move!";
+    }
+}
+
+// ==================== DELETE FUNCTIONS ====================
+
+async function deleteTrainer(event) {
+    event.preventDefault();
+
+    const trainerIdValue = document.getElementById('deleteTrainerId').value;
+
+    const response = await fetch('/delete-trainer', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({trainerId: trainerIdValue})
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('deleteTrainerResultMsg');
+
+    if (responseData.success) {
+        alert("Trainer deleted successfully!");
+        messageElement.textContent = "Trainer deleted successfully!";
+        document.getElementById('deleteTrainer').reset();
+        refreshAllTables();
+    } else {
+        alert("Error deleting trainer! Check your input.");
+        messageElement.textContent = "Error deleting trainer!";
     }
 }
 
@@ -467,10 +424,120 @@ async function deletePokemon(event) {
         alert("Pokemon deleted successfully!");
         messageElement.textContent = "Pokemon deleted successfully!";
         document.getElementById('deletePokemon').reset();
-        refreshAllTables(); // Refresh all tables to show changes
+        refreshAllTables();
     } else {
         alert("Error deleting Pokemon! Check your input.");
         messageElement.textContent = "Error deleting Pokemon!";
+    }
+}
+
+async function deleteLearnedMove(event) {
+    event.preventDefault();
+
+    const pokedexValue = document.getElementById('deleteLearnedMovePokedex').value;
+    const pokemonIdValue = document.getElementById('deleteLearnedMovePokemonId').value;
+    const moveIdValue = document.getElementById('deleteLearnedMoveId').value;
+
+    const response = await fetch('/delete-learned-move', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            pokedex: pokedexValue,
+            pokemon_id: pokemonIdValue,
+            move_id: moveIdValue
+        })
+    });
+
+    const responseData = await response.json();
+    const messageElement = document.getElementById('deleteLearnedMoveResultMsg');
+
+    if (responseData.success) {
+        alert("Move removed successfully!");
+        messageElement.textContent = "Move removed successfully!";
+        document.getElementById('deleteLearnedMove').reset();
+        refreshAllTables();
+    } else {
+        alert("Error removing move! Check your input.");
+        messageElement.textContent = "Error removing move!";
+    }
+}
+
+// ==================== UPDATE FUNCTIONS ====================
+
+async function updateTrainer(event) {
+    event.preventDefault();
+    
+    const trainerId = document.getElementById('updateTrainerId').value;
+    const updates = {};
+    
+    const name = document.getElementById('updateTrainerName').value.trim();
+    if (name) updates.name = name;
+    
+    const location = document.getElementById('updateTrainerLocation').value.trim();
+    if (location) updates.location_name = location;
+    
+    try {
+        const response = await fetch('/update-trainer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ trainerId, updates })
+        });
+        
+        const responseData = await response.json();
+        const messageElement = document.getElementById('updateTrainerResultMsg');
+        
+        messageElement.textContent = responseData.message;
+        messageElement.style.color = responseData.success ? 'green' : 'red';
+        
+        if (responseData.success) {
+            alert("Trainer updated successfully!");
+            document.getElementById('updateTrainer').reset();
+            refreshAllTables();
+        } else {
+            alert("Error updating Trainer! Check your input.");
+        }
+    } catch (error) {
+        document.getElementById('updateTrainerResultMsg').textContent = 'Error: ' + error.message;
+        document.getElementById('updateTrainerResultMsg').style.color = 'red';
+    }
+}
+
+async function updatePlayer(event) {
+    event.preventDefault();
+    
+    const trainerId = document.getElementById('updatePlayerTrainerId').value;
+    const updates = {};
+    
+    const money = document.getElementById('updatePlayerMoney').value;
+    if (money) {
+        updates.money = money;
+    }
+    
+    try {
+        const response = await fetch('/update-player', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ trainerId, updates })
+        });
+        
+        const responseData = await response.json();
+        const messageElement = document.getElementById('updatePlayerResultMsg');
+        
+        if (responseData.success) {
+            alert("Player updated successfully!");
+            messageElement.textContent = "Player updated successfully!";
+            document.getElementById('updatePlayer').reset();
+            refreshAllTables();
+        } else {
+            alert("Error updating Player! " + responseData.message);
+            messageElement.textContent = "Error updating Player: " + responseData.message;
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('updatePlayerResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
     }
 }
 
@@ -481,7 +548,6 @@ async function updatePokemon(event) {
     const pokemonId = document.getElementById('updatePokemonId').value;
     const updates = {};
     
-    // Add all possible fields
     const fields = [
         { id: 'updatePokemonName', field: 'name', type: 'string' },
         { id: 'updatePokemonXP', field: 'total_XP', type: 'number' },
@@ -516,49 +582,14 @@ async function updatePokemon(event) {
         
         if (responseData.success) {
             alert("Pokemon updated successfully!");
-            messageElement.textContent = "Pokemon updated successfully!";
             document.getElementById('updatePokemon').reset();
-            refreshAllTables(); // Refresh all tables to show changes
+            refreshAllTables();
         } else {
             alert("Error updating Pokemon! Check your input.");
-            messageElement.textContent = "Error updating Pokemon!";
         }
     } catch (error) {
         document.getElementById('updatePokemonResultMsg').textContent = 'Error: ' + error.message;
         document.getElementById('updatePokemonResultMsg').style.color = 'red';
-    }
-}
-
-async function insertLearnedMove(event) {
-    event.preventDefault();
-
-    const pokedexValue = document.getElementById('insertLearnedMovePokedex').value;
-    const pokemonIdValue = document.getElementById('insertLearnedMovePokemonId').value;
-    const moveIdValue = document.getElementById('insertLearnedMoveId').value;
-
-    const response = await fetch('/insert-learned-move', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            pokedex: pokedexValue,
-            pokemon_id: pokemonIdValue,
-            move_id: moveIdValue
-        })
-    });
-
-    const responseData = await response.json();
-    const messageElement = document.getElementById('insertLearnedMoveResultMsg');
-
-    if (responseData.success) {
-        alert("Move taught successfully!");
-        messageElement.textContent = "Move taught successfully!";
-        document.getElementById('insertLearnedMove').reset();
-        refreshAllTables(); // Refresh all tables to show changes
-    } else {
-        alert("Error teaching move! Make sure Pokemon and Move exist.");
-        messageElement.textContent = "Error teaching move!";
     }
 }
 
@@ -602,7 +633,152 @@ async function updateLearnedMove(event) {
     }
 }
 
-// Selection
+// ==================== SELECTION QUERY FUNCTIONS ====================
+
+function createConditionRow() {
+    const conditionDiv = document.createElement('div');
+    conditionDiv.className = 'condition-row';
+    conditionDiv.style.marginBottom = '10px';
+
+    const attributes = ['pokedex', 'pokemon_id', 'name', 'total_XP', 'nature', 'HP_IV', 'attack_IV', 'defense_IV', 'speed_IV', 'ability_id', 'trainer_id'];
+    const attrSelect = document.createElement('select');
+    attrSelect.className = 'attribute-select';
+    attributes.forEach(attr => {
+        const option = document.createElement('option');
+        option.value = attr;
+        option.textContent = attr;
+        attrSelect.appendChild(option);
+    });
+
+    const operators = ['=', '!=', '>', '<', '>=', '<='];
+    const opSelect = document.createElement('select');
+    opSelect.className = 'operator-select';
+    operators.forEach(op => {
+        const option = document.createElement('option');
+        option.value = op;
+        option.textContent = op;
+        opSelect.appendChild(option);
+    });
+
+    const valueInput = document.createElement('input');
+    valueInput.type = 'text';
+    valueInput.className = 'value-input';
+    valueInput.placeholder = 'Enter value';
+
+    const logicalSelect = document.createElement('select');
+    logicalSelect.className = 'logical-select';
+    logicalSelect.innerHTML = '<option value="AND">AND</option><option value="OR">OR</option>';
+    logicalSelect.style.display = 'none';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = () => {
+        conditionDiv.remove();
+        updateLogicalSelects();
+    };
+    
+    conditionDiv.appendChild(attrSelect);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(opSelect);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(valueInput);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(logicalSelect);
+    conditionDiv.appendChild(document.createTextNode(' '));
+    conditionDiv.appendChild(removeBtn);
+    
+    document.getElementById('conditionsContainer').appendChild(conditionDiv);
+    updateLogicalSelects();
+}
+
+function updateLogicalSelects() {
+    const conditions = document.querySelectorAll('.condition-row');
+    conditions.forEach((condition, index) => {
+        const logicalSelect = condition.querySelector('.logical-select');
+        if (index < conditions.length - 1) {
+            logicalSelect.style.display = 'inline';
+        } else {
+            logicalSelect.style.display = 'none';
+        }
+    });
+}
+
+async function handleSelectionQuery(event) {
+    event.preventDefault();
+
+    const conditions = [];
+    const conditionRows = document.querySelectorAll('.condition-row');
+    
+    if (conditionRows.length === 0) {
+        document.getElementById('selectionResultMsg').textContent = 'Please add at least one condition.';
+        document.getElementById('selectionResultMsg').style.color = 'red';
+        return;
+    }
+
+    conditionRows.forEach(row => {
+        const attribute = row.querySelector('.attribute-select').value;
+        const operator = row.querySelector('.operator-select').value;
+        const value = row.querySelector('.value-input').value;
+        const logical = row.querySelector('.logical-select').value;
+
+        if (value.trim() === '') {
+            return;
+        }
+        conditions.push({ attribute, operator, value, logical });
+    });
+    
+    try {
+        const response = await fetch('/selection-query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ conditions })
+        });
+        
+        const result = await response.json();
+        const resultElement = document.getElementById('selectionResultMsg');
+
+        if (result.success) {
+            resultElement.textContent = `Found ${result.data.length} Pokemon.`;
+            resultElement.style.color = 'green';
+            displaySelectionResults(result.data);
+        } else {
+            resultElement.textContent = result.message || 'Error executing selection query!';
+            resultElement.style.color = 'red';
+        }
+    } catch (error) {
+        const resultElement = document.getElementById('selectionResultMsg');
+        resultElement.textContent = 'Client-side error: ' + error.message;
+        resultElement.style.color = 'red';
+    }
+}
+
+function displaySelectionResults(data) {
+    const tableElement = document.getElementById('selectionResultTable');
+    const tableHead = tableElement.querySelector('thead');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableHead.innerHTML = '';
+    tableBody.innerHTML = '';
+
+    if (data.length === 0) return;
+
+    const headers = ['Pokedex #', 'Pokemon ID', 'Name', 'Level', 'Nature', 'HP IV', 'Attack IV', 'Defense IV', 'Speed IV', 'Ability ID', 'Trainer ID'];
+    const headerRow = tableHead.insertRow();
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+
+    data.forEach(rowData => {
+        const tr = tableBody.insertRow();
+        rowData.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
 
 function addCondition() {
     const container = document.getElementById('selectionConditions');
@@ -654,7 +830,7 @@ async function handlePokemonSelection(event) {
     }
 }
 
-// Projection
+// ==================== PROJECTION QUERY FUNCTIONS ====================
 
 async function populateTableDropdown() {
     try {
@@ -778,184 +954,515 @@ function displayProjectionResults(data, attributes) {
     });
 }
 
-function createConditionRow() {
-    const conditionDiv = document.createElement('div');
-    conditionDiv.className = 'condition-row';
-    conditionDiv.style.marginBottom = '10px';
+// ==================== JOIN QUERY FUNCTIONS ====================
 
-    // Dropdown for Pokemon attributes
-    const attributes = ['pokedex', 'pokemon_id', 'name', 'total_XP', 'nature', 'HP_IV', 'attack_IV', 'defense_IV', 'speed_IV', 'ability_id', 'trainer_id'];
-    const attrSelect = document.createElement('select');
-    attrSelect.className = 'attribute-select';
-    attributes.forEach(attr => {
-        const option = document.createElement('option');
-        option.value = attr;
-        option.textContent = attr;
-        attrSelect.appendChild(option);
-    });
-
-    // Dropdown for operators
-    const operators = ['=', '!=', '>', '<', '>=', '<='];
-    const opSelect = document.createElement('select');
-    opSelect.className = 'operator-select';
-    operators.forEach(op => {
-        const option = document.createElement('option');
-        option.value = op;
-        option.textContent = op;
-        opSelect.appendChild(option);
-    });
-
-    // Input for value
-    const valueInput = document.createElement('input');
-    valueInput.type = 'text';
-    valueInput.className = 'value-input';
-    valueInput.placeholder = 'Enter value';
-
-    // Dropdown for logical operator (AND/OR)
-    const logicalSelect = document.createElement('select');
-    logicalSelect.className = 'logical-select';
-    logicalSelect.innerHTML = '<option value="AND">AND</option><option value="OR">OR</option>';
-    logicalSelect.style.display = 'none'; // Hide by default
-
-    // Remove button
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.textContent = 'Remove';
-    removeBtn.onclick = () => {
-        conditionDiv.remove();
-        updateLogicalSelects();
-    };
-    
-    conditionDiv.appendChild(attrSelect);
-    conditionDiv.appendChild(document.createTextNode(' '));
-    conditionDiv.appendChild(opSelect);
-    conditionDiv.appendChild(document.createTextNode(' '));
-    conditionDiv.appendChild(valueInput);
-    conditionDiv.appendChild(document.createTextNode(' '));
-    conditionDiv.appendChild(logicalSelect);
-    conditionDiv.appendChild(document.createTextNode(' '));
-    conditionDiv.appendChild(removeBtn);
-    
-    document.getElementById('conditionsContainer').appendChild(conditionDiv);
-    updateLogicalSelects();
-}
-
-function updateLogicalSelects() {
-    const conditions = document.querySelectorAll('.condition-row');
-    conditions.forEach((condition, index) => {
-        const logicalSelect = condition.querySelector('.logical-select');
-        if (index < conditions.length - 1) {
-            logicalSelect.style.display = 'inline';
-        } else {
-            logicalSelect.style.display = 'none';
-        }
-    });
-}
-
-async function handleSelectionQuery(event) {
-    event.preventDefault();
-
-    const conditions = [];
-    const conditionRows = document.querySelectorAll('.condition-row');
-    
-    if (conditionRows.length === 0) {
-        document.getElementById('selectionResultMsg').textContent = 'Please add at least one condition.';
-        document.getElementById('selectionResultMsg').style.color = 'red';
-        return;
+async function populateLocationDropdown() {
+    try {
+        const response = await fetch('/locations', { method: 'GET' });
+        const responseData = await response.json();
+        const locations = responseData.data;
+        
+        const locationSelect = document.getElementById('locationFilter');
+        locationSelect.innerHTML = '<option value="">All Locations</option>';
+        
+        locations.forEach(location => {
+            const option = document.createElement('option');
+            option.value = location;
+            option.textContent = location;
+            locationSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error fetching locations:', error);
     }
+}
 
-    conditionRows.forEach(row => {
-        const attribute = row.querySelector('.attribute-select').value;
-        const operator = row.querySelector('.operator-select').value;
-        const value = row.querySelector('.value-input').value;
-        const logical = row.querySelector('.logical-select').value;
-
-        if (value.trim() === '') {
-            return; // Skip empty conditions
-        }
-        conditions.push({ attribute, operator, value, logical });
-    });
+async function handleJoinQuery(event) {
+    event.preventDefault();
+    
+    const location = document.getElementById('locationFilter').value;
+    const url = location ? `/join/species-location?location=${encodeURIComponent(location)}` : '/join/species-location';
     
     try {
-        const response = await fetch('/selection-query', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ conditions })
-        });
-        
+        const response = await fetch(url, { method: 'GET' });
         const result = await response.json();
-        const resultElement = document.getElementById('selectionResultMsg');
-
+        const messageElement = document.getElementById('joinResultMsg');
+        
         if (result.success) {
-            resultElement.textContent = `Found ${result.data.length} Pokemon.`;
-            resultElement.style.color = 'green';
-            displaySelectionResults(result.data);
+            messageElement.textContent = `Found ${result.data.length} species-location combinations.`;
+            messageElement.style.color = 'green';
+            displayJoinResults(result.data);
         } else {
-            resultElement.textContent = result.message || 'Error executing selection query!';
-            resultElement.style.color = 'red';
+            messageElement.textContent = result.message || 'Error executing join query!';
+            messageElement.style.color = 'red';
         }
     } catch (error) {
-        const resultElement = document.getElementById('selectionResultMsg');
-        resultElement.textContent = 'Client-side error: ' + error.message;
-        resultElement.style.color = 'red';
+        const messageElement = document.getElementById('joinResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
     }
 }
 
-function displaySelectionResults(data) {
-    const tableElement = document.getElementById('selectionResultTable');
-    const tableHead = tableElement.querySelector('thead');
+function displayJoinResults(data) {
+    const tableElement = document.getElementById('joinResultTable');
     const tableBody = tableElement.querySelector('tbody');
     
-    tableHead.innerHTML = '';
     tableBody.innerHTML = '';
-
-    if (data.length === 0) return;
-
-    // These are the columns returned by our new backend endpoint
-    const headers = ['Pokedex #', 'Pokemon ID', 'Name', 'Level', 'Nature', 'HP IV', 'Attack IV', 'Defense IV', 'Speed IV', 'Ability ID', 'Trainer ID'];
-    const headerRow = tableHead.insertRow();
-    headers.forEach(headerText => {
-        const th = document.createElement('th');
-        th.textContent = headerText;
-        headerRow.appendChild(th);
-    });
-
-    data.forEach(rowData => {
+    
+    data.forEach(row => {
         const tr = tableBody.insertRow();
-        rowData.forEach(field => {
+        row.forEach(field => {
             const td = tr.insertCell();
             td.textContent = field !== null ? field : 'NULL';
         });
     });
 }
 
+// ==================== AGGREGATION QUERY FUNCTIONS ====================
+
+async function handleDefenseIVQuery(event) {
+    event.preventDefault();
+    
+    const minDefenseIV = document.getElementById('minDefenseIV').value;
+    const url = minDefenseIV ? `/aggregation/defense-iv?minDefenseIV=${minDefenseIV}` : '/aggregation/defense-iv';
+    
+    try {
+        const response = await fetch(url, { method: 'GET' });
+        const result = await response.json();
+        const messageElement = document.getElementById('defenseIVResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = `Found ${result.data.length} Pokemon records.`;
+            messageElement.style.color = 'green';
+            displayDefenseIVResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing defense IV query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('defenseIVResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayDefenseIVResults(data) {
+    const tableElement = document.getElementById('defenseIVTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+async function handleTrainerStats() {
+    try {
+        const response = await fetch('/aggregation/trainer-pokemon-count', { method: 'GET' });
+        const result = await response.json();
+        const messageElement = document.getElementById('trainerStatsResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = `Showing statistics for ${result.data.length} trainers.`;
+            messageElement.style.color = 'green';
+            displayTrainerStatsResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing trainer stats query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('trainerStatsResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayTrainerStatsResults(data) {
+    const tableElement = document.getElementById('trainerStatsTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+// ==================== AGGREGATION WITH HAVING FUNCTIONS ====================
+
+async function handleHighestXPQuery(event) {
+    event.preventDefault();
+    
+    const minPokemonCount = document.getElementById('minPokemonCount').value;
+    const url = `/aggregation/highest-xp-having?minPokemonCount=${minPokemonCount}`;
+    
+    try {
+        const response = await fetch(url, { method: 'GET' });
+        const result = await response.json();
+        const messageElement = document.getElementById('highestXPResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = `Found ${result.data.length} trainers with at least ${minPokemonCount} Pokemon.`;
+            messageElement.style.color = 'green';
+            displayHighestXPResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing highest XP query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('highestXPResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayHighestXPResults(data) {
+    const tableElement = document.getElementById('highestXPTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+async function handleMultiplePokemonQuery(event) {
+    event.preventDefault();
+    
+    const minXP = document.getElementById('minXPFilter').value;
+    const url = minXP ? `/aggregation/trainers-multiple-pokemon?minXP=${minXP}` : '/aggregation/trainers-multiple-pokemon';
+    
+    try {
+        const response = await fetch(url, { method: 'GET' });
+        const result = await response.json();
+        const messageElement = document.getElementById('multiplePokemonResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = `Found ${result.data.length} trainers with multiple Pokemon.`;
+            messageElement.style.color = 'green';
+            displayMultiplePokemonResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing multiple Pokemon query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('multiplePokemonResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayMultiplePokemonResults(data) {
+    const tableElement = document.getElementById('multiplePokemonTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+// ==================== NESTED AGGREGATION FUNCTIONS ====================
+
+async function handleNestedAggregation() {
+    try {
+        const response = await fetch('/aggregation/nested', { method: 'GET' });
+        const result = await response.json();
+        const messageElement = document.getElementById('nestedAggregationResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = `Found ${result.data.length} trainers with above-average Pokemon XP.`;
+            messageElement.style.color = 'green';
+            displayNestedAggregationResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing nested aggregation query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('nestedAggregationResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayNestedAggregationResults(data) {
+    const tableElement = document.getElementById('nestedAggregationTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+async function handleAboveAverageQuery() {
+    try {
+        const response = await fetch('/aggregation/trainers-above-average', { method: 'GET' });
+        const result = await response.json();
+        const messageElement = document.getElementById('aboveAverageResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = `Found ${result.data.length} trainers above global average.`;
+            messageElement.style.color = 'green';
+            displayAboveAverageResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing above average query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('aboveAverageResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayAboveAverageResults(data) {
+    const tableElement = document.getElementById('aboveAverageTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+// ==================== DIVISION QUERY FUNCTIONS ====================
+
+async function populateTypeCheckboxes() {
+    try {
+        const response = await fetch('/types', { method: 'GET' });
+        const responseData = await response.json();
+        const types = responseData.data;
+        
+        const typeContainer = document.getElementById('typeCheckboxes');
+        typeContainer.innerHTML = '';
+        
+        types.forEach(type => {
+            const label = document.createElement('label');
+            label.style.marginRight = '15px';
+            label.style.display = 'inline-block';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = type;
+            checkbox.name = 'types';
+            
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(` ${type}`));
+            typeContainer.appendChild(label);
+        });
+    } catch (error) {
+        console.error('Error fetching types:', error);
+    }
+}
+
+async function handleDivisionQuery(event) {
+    event.preventDefault();
+    
+    const checkboxes = document.getElementsByName('types');
+    const selectedTypes = Array.from(checkboxes)
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.value);
+    
+    try {
+        const response = await fetch('/division/species-with-types', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ types: selectedTypes })
+        });
+        
+        const result = await response.json();
+        const messageElement = document.getElementById('divisionResultMsg');
+        
+        if (result.success) {
+            if (selectedTypes.length === 0) {
+                messageElement.textContent = `Showing all ${result.data.length} species and their types.`;
+            } else {
+                messageElement.textContent = `Found ${result.data.length} species with types: ${selectedTypes.join(', ')}.`;
+            }
+            messageElement.style.color = 'green';
+            displayDivisionResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing division query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('divisionResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+async function showAllSpeciesTypes() {
+    try {
+        const response = await fetch('/division/species-with-types', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ types: [] })
+        });
+        
+        const result = await response.json();
+        const messageElement = document.getElementById('divisionResultMsg');
+        
+        if (result.success) {
+            messageElement.textContent = `Showing all ${result.data.length} species and their types.`;
+            messageElement.style.color = 'green';
+            displayDivisionResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error showing all species types!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('divisionResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayDivisionResults(data) {
+    const tableElement = document.getElementById('divisionResultTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+async function handleTypeCountQuery(event) {
+    event.preventDefault();
+    
+    const exactTypeCount = document.getElementById('exactTypeCount').value;
+    const url = exactTypeCount ? `/division/species-by-type-count?exactTypeCount=${exactTypeCount}` : '/division/species-by-type-count';
+    
+    try {
+        const response = await fetch(url, { method: 'GET' });
+        const result = await response.json();
+        const messageElement = document.getElementById('typeCountResultMsg');
+        
+        if (result.success) {
+            if (exactTypeCount) {
+                messageElement.textContent = `Found ${result.data.length} species with exactly ${exactTypeCount} type(s).`;
+            } else {
+                messageElement.textContent = `Showing ${result.data.length} species grouped by type count.`;
+            }
+            messageElement.style.color = 'green';
+            displayTypeCountResults(result.data);
+        } else {
+            messageElement.textContent = result.message || 'Error executing type count query!';
+            messageElement.style.color = 'red';
+        }
+    } catch (error) {
+        const messageElement = document.getElementById('typeCountResultMsg');
+        messageElement.textContent = 'Error: ' + error.message;
+        messageElement.style.color = 'red';
+    }
+}
+
+function displayTypeCountResults(data) {
+    const tableElement = document.getElementById('typeCountTable');
+    const tableBody = tableElement.querySelector('tbody');
+    
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        row.forEach(field => {
+            const td = tr.insertCell();
+            td.textContent = field !== null ? field : 'NULL';
+        });
+    });
+}
+
+// ==================== EVENT LISTENERS AND INITIALIZATION ====================
 
 window.onload = function() {
     checkDbConnection();
     refreshAllTables();
     populateTableDropdown();
+    populateLocationDropdown();
+    populateTypeCheckboxes();
     
+    // System events
     document.getElementById("resetDemotable").addEventListener("click", resetDemotable);
+    
+    // Insert events
     document.getElementById("insertTrainer").addEventListener("submit", insertTrainer);
     document.getElementById("insertPlayer").addEventListener("submit", insertPlayer);
     document.getElementById("insertPokemon").addEventListener("submit", insertPokemon);
     document.getElementById("insertLearnedMove").addEventListener("submit", insertLearnedMove);
     
+    // Delete events
     document.getElementById("deleteTrainer").addEventListener("submit", deleteTrainer);
     document.getElementById("deletePokemon").addEventListener("submit", deletePokemon);
+    document.getElementById("deleteLearnedMove").addEventListener("submit", deleteLearnedMove);
     
+    // Update events
     document.getElementById('updateTrainer').addEventListener('submit', updateTrainer);
     document.getElementById('updatePlayer').addEventListener('submit', updatePlayer);
     document.getElementById('updatePokemon').addEventListener('submit', updatePokemon);
     document.getElementById('updateLearnedMove').addEventListener('submit', updateLearnedMove);
 
+    // Selection events
     document.getElementById('addCondition').addEventListener('click', addCondition);
     document.getElementById('pokemonSelectionForm').addEventListener('submit', handlePokemonSelection);
-
-    document.getElementById('tableSelect').addEventListener('change', populateAttributeCheckboxes);
-    document.getElementById('projectionQuery').addEventListener('submit', runProjectionQuery);
-
     document.getElementById('addConditionBtn').addEventListener('click', createConditionRow);
     document.getElementById('selectionQueryForm').addEventListener('submit', handleSelectionQuery);
 
+    // Projection events
+    document.getElementById('tableSelect').addEventListener('change', populateAttributeCheckboxes);
+    document.getElementById('projectionQuery').addEventListener('submit', runProjectionQuery);
+
+    // Join events
+    document.getElementById('joinQueryForm').addEventListener('submit', handleJoinQuery);
+
+    // Aggregation events
+    document.getElementById('defenseIVForm').addEventListener('submit', handleDefenseIVQuery);
+    document.getElementById('trainerStatsBtn').addEventListener('click', handleTrainerStats);
+
+    // Aggregation with HAVING events
+    document.getElementById('highestXPForm').addEventListener('submit', handleHighestXPQuery);
+    document.getElementById('multiplePokemonForm').addEventListener('submit', handleMultiplePokemonQuery);
+
+    // Nested aggregation events
+    document.getElementById('nestedAggregationBtn').addEventListener('click', handleNestedAggregation);
+    document.getElementById('aboveAverageBtn').addEventListener('click', handleAboveAverageQuery);
+
+    // Division events
+    document.getElementById('divisionQueryForm').addEventListener('submit', handleDivisionQuery);
+    document.getElementById('showAllSpeciesTypesBtn').addEventListener('click', showAllSpeciesTypes);
+    document.getElementById('typeCountForm').addEventListener('submit', handleTypeCountQuery);
 };

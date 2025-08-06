@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <!-- Database Connection Status -->
+    <!-- ====================== SYSTEM STATUS ====================== -->
     <h1>Pokemon Database Connection Status:
         <span id="dbStatus"> </span>
         <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
@@ -18,7 +18,7 @@
     <br>
     <hr><br>
 
-    <!-- Database Reset -->
+    <!-- ====================== DATABASE RESET ====================== -->
     <h2>Reset Pokemon Database</h2>
     <p>Click reset to set up the Pokemon database. <strong>Use this first!</strong></p>
     <button id="resetDemotable">Reset Database</button>
@@ -27,7 +27,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== TRAINER SECTION ====================== -->
+    <!-- ====================== TRAINER MANAGEMENT ====================== -->
     <h2>Trainers</h2>
     <table id="trainersTable" border="1">
         <thead>
@@ -73,7 +73,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== PLAYER SECTION ====================== -->
+    <!-- ====================== PLAYER MANAGEMENT ====================== -->
     <h2>Players</h2>
     <table id="playersTable" border="1">
         <thead>
@@ -106,46 +106,7 @@
     <br>
     <hr><br>
 
-    <br>
-    <hr><br>
-
-    <h2>Projection</h2>
-    <form id="projectionQuery">
-        <label for="tableSelect">Select Table:</label>
-        <select id="tableSelect" required>
-            <option value="" disabled selected>Select a table</option>
-        </select>
-        <br><br>
-        <div id="attributeCheckboxes"></div>
-        <br>
-        <button type="submit">Run Projection Query</button>
-    </form>
-    <div id="projectionResultMsg"></div>
-    <table id="projectionResultTable" border="1">
-        <thead></thead>
-        <tbody></tbody>
-    </table>
-
-
-    <!-- ====================== SELECTION SECTION ====================== -->
-<h2>Selection on Pokemon Table</h2>
-<p>Create a query to filter Pokemon based on specific criteria. Add multiple conditions using AND/OR logic.</p>
-<form id="selectionQueryForm">
-    <div id="conditionsContainer">
-        <!-- Conditions will be added here dynamically -->
-    </div>
-    <br>
-    <button type="button" id="addConditionBtn">Add Condition</button>
-    <button type="submit">Run Selection Query</button>
-</form>
-<div id="selectionResultMsg"></div>
-<table id="selectionResultTable" border="1">
-    <thead></thead>
-    <tbody></tbody>
-</table>
-
-
-    <!-- ====================== POKEMON SECTION ====================== -->
+    <!-- ====================== POKEMON MANAGEMENT ====================== -->
     <h2>Pokemon</h2>
     <table id="pokemonTable" border="1">
         <thead>
@@ -224,66 +185,7 @@
     <br>
     <hr><br>
 
-    <!-- ====================== POKEMON SELECTION QUERY ====================== -->
-    <h2>Search Pokémon</h2>
-    <form id="pokemonSelectionForm">
-        <div id="selectionConditions">
-            <div class="condition">
-                <select name="attribute">
-                    <option value="p.pokedex">Pokedex #</option>
-                    <option value="p.pokemon_id">Pokemon ID</option>
-                    <option value="p.name">Name</option>
-                    <option value="p.nature">Nature</option>
-                    <option value="p.HP_IV">HP IV</option>
-                    <option value="p.attack_IV">Attack IV</option>
-                    <option value="p.defense_IV">Defense IV</option>
-                    <option value="p.speed_IV">Speed IV</option>
-                    <option value="p.ability_id">Ability ID</option>
-                    <option value="p.trainer_id">Trainer ID</option>
-                </select>
-                <select name="operator">
-                    <option value="=">=</option>
-                    <option value=">">></option>
-                    <option value="<">
-                        << /option>
-                    <option value=">=">>=</option>
-                    <option value="<=">
-                        <=< /option>
-                    <option value="LIKE">LIKE</option>
-                </select>
-                <input type="text" name="value" placeholder="Value" required>
-                <select name="logical">
-                    <option value="AND">AND</option>
-                    <option value="OR">OR</option>
-                </select>
-            </div>
-        </div>
-        <button type="button" id="addCondition">Add Condition</button>
-        <button type="submit">Search</button>
-    </form>
-    <div id="pokemonSelectionResultMsg"></div>
-
-    <h3>Search Results</h3>
-    <table id="pokemonSelectionTable" border="1">
-        <thead>
-            <tr>
-                <th>Pokedex #</th>
-                <th>Pokemon ID</th>
-                <th>Name</th>
-                <th>Level</th>
-                <th>Nature</th>
-                <th>HP IV</th>
-                <th>Attack IV</th>
-                <th>Defense IV</th>
-                <th>Speed IV</th>
-                <th>Ability ID</th>
-                <th>Trainer ID</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
-    <!-- ====================== LEARNED MOVES SECTION ====================== -->
+    <!-- ====================== LEARNED MOVES MANAGEMENT ====================== -->
     <h2>Pokemon Learned Moves</h2>
     <table id="learnedMovesTable" border="1">
         <thead>
@@ -331,7 +233,318 @@
     <br>
     <hr><br>
 
-    <!-- ====================== REFERENCE TABLES ====================== -->
+    <!-- ====================== SELECTION QUERIES ====================== -->
+    <h2>Selection Query on Pokemon</h2>
+    <p>Create a query to filter Pokemon based on specific criteria. Add multiple conditions using AND/OR logic.</p>
+    <form id="selectionQueryForm">
+        <div id="conditionsContainer">
+            <!-- Conditions will be added here dynamically -->
+        </div>
+        <br>
+        <button type="button" id="addConditionBtn">Add Condition</button>
+        <button type="submit">Run Selection Query</button>
+    </form>
+    <div id="selectionResultMsg"></div>
+    <table id="selectionResultTable" border="1">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Alternative Pokemon Selection Interface -->
+    <h3>Alternative Pokemon Search Interface</h3>
+    <form id="pokemonSelectionForm">
+        <div id="selectionConditions">
+            <div class="condition">
+                <select name="attribute">
+                    <option value="p.pokedex">Pokedex #</option>
+                    <option value="p.pokemon_id">Pokemon ID</option>
+                    <option value="p.name">Name</option>
+                    <option value="p.nature">Nature</option>
+                    <option value="p.HP_IV">HP IV</option>
+                    <option value="p.attack_IV">Attack IV</option>
+                    <option value="p.defense_IV">Defense IV</option>
+                    <option value="p.speed_IV">Speed IV</option>
+                    <option value="p.ability_id">Ability ID</option>
+                    <option value="p.trainer_id">Trainer ID</option>
+                </select>
+                <select name="operator">
+                    <option value="=">=</option>
+                    <option value=">">></option>
+                    <option value="<"><</option>
+                    <option value=">=">>=</option>
+                    <option value="<="><=</option>
+                    <option value="LIKE">LIKE</option>
+                </select>
+                <input type="text" name="value" placeholder="Value" required>
+                <select name="logical">
+                    <option value="AND">AND</option>
+                    <option value="OR">OR</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" id="addCondition">Add Condition</button>
+        <button type="submit">Search</button>
+    </form>
+    <div id="pokemonSelectionResultMsg"></div>
+
+    <h4>Search Results</h4>
+    <table id="pokemonSelectionTable" border="1">
+        <thead>
+            <tr>
+                <th>Pokedex #</th>
+                <th>Pokemon ID</th>
+                <th>Name</th>
+                <th>Level</th>
+                <th>Nature</th>
+                <th>HP IV</th>
+                <th>Attack IV</th>
+                <th>Defense IV</th>
+                <th>Speed IV</th>
+                <th>Ability ID</th>
+                <th>Trainer ID</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br>
+    <hr><br>
+
+    <!-- ====================== PROJECTION QUERIES ====================== -->
+    <h2>Projection Query</h2>
+    <p>Select specific attributes from any table in the database.</p>
+    <form id="projectionQuery">
+        <label for="tableSelect">Select Table:</label>
+        <select id="tableSelect" required>
+            <option value="" disabled selected>Select a table</option>
+        </select>
+        <br><br>
+        <div id="attributeCheckboxes"></div>
+        <br>
+        <button type="submit">Run Projection Query</button>
+    </form>
+    <div id="projectionResultMsg"></div>
+    <table id="projectionResultTable" border="1">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+
+    <br>
+    <hr><br>
+
+    <!-- ====================== JOIN QUERIES ====================== -->
+    <h2>Join Query: Species Located In</h2>
+    <p>Find Pokemon species and their locations using JOIN operation.</p>
+    <form id="joinQueryForm">
+        <label for="locationFilter">Filter by Location (optional):</label>
+        <select id="locationFilter">
+            <option value="">All Locations</option>
+        </select>
+        <br><br>
+        <button type="submit">Run Join Query</button>
+    </form>
+    <div id="joinResultMsg"></div>
+    <table id="joinResultTable" border="1">
+        <thead>
+            <tr>
+                <th>Pokedex #</th>
+                <th>Species Name</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Climate</th>
+                <th>Terrain Type</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br>
+    <hr><br>
+
+    <!-- ====================== AGGREGATION QUERIES ====================== -->
+    <h2>Aggregation with GROUP BY</h2>
+    <p>Group Pokemon by trainer and analyze statistics.</p>
+    
+    <h3>Pokemon Defense IV by Trainer</h3>
+    <form id="defenseIVForm">
+        <label for="minDefenseIV">Minimum Defense IV (optional):</label>
+        <input type="number" id="minDefenseIV" placeholder="Enter minimum Defense IV" min="0" max="31">
+        <br><br>
+        <button type="submit">Show Pokemon by Defense IV</button>
+    </form>
+    <div id="defenseIVResultMsg"></div>
+    <table id="defenseIVTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Trainer Name</th>
+                <th>Pokemon Name</th>
+                <th>Defense IV</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Trainer Pokemon Statistics</h3>
+    <button id="trainerStatsBtn">Show Trainer Statistics</button>
+    <div id="trainerStatsResultMsg"></div>
+    <table id="trainerStatsTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Trainer Name</th>
+                <th>Pokemon Count</th>
+                <th>Average Defense IV</th>
+                <th>Max Defense IV</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br>
+    <hr><br>
+
+    <!-- ====================== AGGREGATION WITH HAVING ====================== -->
+    <h2>Aggregation with HAVING</h2>
+    <p>Find trainers with multiple Pokemon and analyze their highest XP Pokemon.</p>
+    
+    <h3>Trainers with Highest XP Pokemon (Having Multiple Pokemon)</h3>
+    <form id="highestXPForm">
+        <label for="minPokemonCount">Minimum Pokemon Count:</label>
+        <input type="number" id="minPokemonCount" value="2" min="1" max="10" required>
+        <br><br>
+        <button type="submit">Find Trainers with High XP Pokemon</button>
+    </form>
+    <div id="highestXPResultMsg"></div>
+    <table id="highestXPTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Trainer Name</th>
+                <th>Highest XP</th>
+                <th>Pokemon Count</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Trainers with Multiple Pokemon - Detailed Stats</h3>
+    <form id="multiplePokemonForm">
+        <label for="minXPFilter">Minimum XP Filter (optional):</label>
+        <input type="number" id="minXPFilter" placeholder="Enter minimum XP">
+        <br><br>
+        <button type="submit">Show Detailed Trainer Stats</button>
+    </form>
+    <div id="multiplePokemonResultMsg"></div>
+    <table id="multiplePokemonTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Trainer Name</th>
+                <th>Pokemon Count</th>
+                <th>Average XP</th>
+                <th>Max XP</th>
+                <th>Min XP</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br>
+    <hr><br>
+
+    <!-- ====================== NESTED AGGREGATION ====================== -->
+    <h2>Nested Aggregation with GROUP BY</h2>
+    <p>Complex aggregation queries with nested subqueries.</p>
+    
+    <h3>Trainers with Above-Average Pokemon XP</h3>
+    <button id="nestedAggregationBtn">Find Trainers Above Average XP</button>
+    <div id="nestedAggregationResultMsg"></div>
+    <table id="nestedAggregationTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Trainer Name</th>
+                <th>Pokemon Count</th>
+                <th>Average XP</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Detailed Above-Average Analysis</h3>
+    <button id="aboveAverageBtn">Show Detailed Above-Average Analysis</button>
+    <div id="aboveAverageResultMsg"></div>
+    <table id="aboveAverageTable" border="1">
+        <thead>
+            <tr>
+                <th>Trainer ID</th>
+                <th>Trainer Name</th>
+                <th>Pokemon Count</th>
+                <th>Trainer Avg XP</th>
+                <th>Global Avg XP</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br>
+    <hr><br>
+
+    <!-- ====================== DIVISION QUERIES ====================== -->
+    <h2>Division Query: Species Has Type</h2>
+    <p>Find all species that have specific types or combinations of types.</p>
+    
+    <h3>Find Species with Specific Types (Division)</h3>
+    <form id="divisionQueryForm">
+        <label>Select Types (species must have ALL selected types):</label><br>
+        <div id="typeCheckboxes" style="margin: 10px 0;">
+            <!-- Type checkboxes will be populated here -->
+        </div>
+        <br>
+        <button type="submit">Find Species with Selected Types</button>
+        <button type="button" id="showAllSpeciesTypesBtn">Show All Species and Their Types</button>
+    </form>
+    <div id="divisionResultMsg"></div>
+    <table id="divisionResultTable" border="1">
+        <thead>
+            <tr>
+                <th>Pokedex #</th>
+                <th>Species Name</th>
+                <th>Types</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Species by Type Count</h3>
+    <form id="typeCountForm">
+        <label for="exactTypeCount">Exact Type Count (optional):</label>
+        <select id="exactTypeCount">
+            <option value="">All Type Counts</option>
+            <option value="1">Exactly 1 Type</option>
+            <option value="2">Exactly 2 Types</option>
+        </select>
+        <br><br>
+        <button type="submit">Filter by Type Count</button>
+    </form>
+    <div id="typeCountResultMsg"></div>
+    <table id="typeCountTable" border="1">
+        <thead>
+            <tr>
+                <th>Pokedex #</th>
+                <th>Species Name</th>
+                <th>Type Count</th>
+                <th>Types</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br>
+    <hr><br>
+
+    <!-- ====================== REFERENCE DATA TABLES ====================== -->
     <h2>Reference Data</h2>
 
     <h3>Available Pokemon Species</h3>
