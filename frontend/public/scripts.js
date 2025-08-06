@@ -874,9 +874,9 @@ async function populateAttributeCheckboxes() {
         
         columns.forEach(column => {
             const label = document.createElement('label');
-            label.style.marginRight = '15px';
             label.style.display = 'flex';
             label.style.alignItems = 'center';
+            label.style.justifyContent = 'start';
             label.style.gap = '8px';
             label.style.marginBottom = '10px';
             const checkbox = document.createElement('input');
@@ -1271,9 +1271,9 @@ async function populateTypeCheckboxes() {
         
         types.forEach(type => {
             const label = document.createElement('label');
-            label.style.marginRight = '15px';
             label.style.display = 'flex';
             label.style.alignItems = 'center';
+            label.style.justifyContent = 'start';
             label.style.gap = '8px';
             label.style.marginBottom = '10px';
             
