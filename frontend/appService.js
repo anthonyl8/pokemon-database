@@ -850,7 +850,10 @@ async function fetchTableNames() {
         const allowedTables = [
             'TRAINER', 'PLAYER', 'POKEMON_1', 'POKEMON_2', 'POKEMON_3',
             'SPECIES', 'MOVE', 'ABILITY', 'TYPE', 'LOCATION', 'BADGE',
-            'EGG_GROUP', 'ITEM_1', 'ITEM_2', 'GYM_LEADER_1', 'GYM_LEADER_2'
+            'EGG_GROUP', 'ITEM_1', 'ITEM_2', 'GYM_LEADER_1', 'GYM_LEADER_2',
+            'SPECIES_EVOLVES_INTO', 'POKEMON_HAS_LEARNED_MOVE', 'SPECIES_HAS_TYPE',
+            'SPECIES_CAN_LEARN_MOVE', 'SPECIES_CAN_HAVE_ABILITY', 'SPECIES_LOCATED_IN',
+            'SPECIES_BELONGS_TO_EGG_GROUP', 'PLAYER_OWNS_BADGE'
         ];
 
         return result.rows.map(row => row[0]).filter(table => allowedTables.includes(table));
