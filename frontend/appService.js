@@ -5,8 +5,6 @@ const path = require('path');
 
 const envVariables = loadEnvFile('./.env');
 
-// Database configuration setup. Ensure your .env file has the required database credentials.
-
 const dbConfig = {
     user: envVariables.ORACLE_USER,
     password: envVariables.ORACLE_PASS,
@@ -162,7 +160,7 @@ function validatePokemonAttribute(attribute) {
 function validateLogicalOperator(operator) {
     const validLogical = ['AND', 'OR'];
     if (!validLogical.includes(operator)) {
-        return 'AND'; // AND is safest
+        return 'AND';
     }
     return operator;
 }
@@ -194,7 +192,7 @@ async function initializeConnectionPool() {
 async function closePoolAndExit() {
     console.log('\nTerminating');
     try {
-        await oracledb.getPool().close(10); // 10 seconds grace period for connections to finish
+        await oracledb.getPool().close(10);
         console.log('Pool closed');
         process.exit(0);
     } catch (err) {
@@ -209,8 +207,6 @@ process
     .once('SIGTERM', closePoolAndExit)
     .once('SIGINT', closePoolAndExit);
 
-// ----------------------------------------------------------
-// Wrapper to manage OracleDB actions, simplifying connection handling.
 async function withOracleDB(action) {
     let connection;
     try {
@@ -230,9 +226,6 @@ async function withOracleDB(action) {
     }
 }
 
-// ----------------------------------------------------------
-// Core functions for database operations
-// Modify these functions, especially the SQL queries, based on your project's requirements and design.
 async function testOracleConnection() {
     return await withOracleDB(async (connection) => {
         return true;

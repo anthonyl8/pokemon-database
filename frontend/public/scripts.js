@@ -77,7 +77,6 @@ async function fetchAndDisplayNatures() {
     fetchAndDisplay('naturesTable', '/natures');
 }
 
-// Fetches data from given table using given endpoint and displays it.
 async function fetchAndDisplay(tableId, endpoint) {
     const tableElement = document.getElementById(tableId);
     const tableBody = tableElement.querySelector('tbody');
@@ -86,7 +85,6 @@ async function fetchAndDisplay(tableId, endpoint) {
     const responseData = await response.json();
     const content = responseData.data;
 
-    // Always clear old, already fetched data before new fetching process.
     if (tableBody) {
         tableBody.innerHTML = '';
     }
@@ -104,8 +102,6 @@ async function fetchAndDisplay(tableId, endpoint) {
     });
 }
 
-// General function to refresh the displayed table data. 
-// You can invoke this after any table-modifying operation to keep consistency.
 function refreshAllTables() {
     fetchAndDisplayTrainers();
     fetchAndDisplayPlayers();
@@ -118,7 +114,6 @@ function refreshAllTables() {
 }
 
 // INSERT FUNCTIONS
-// Inserts new records into each table.
 async function insertTrainer(event) {
     event.preventDefault();
 
@@ -266,7 +261,6 @@ async function insertLearnedMove(event) {
 }
 
 // DELETE FUNCTIONS
-// Delete row based on primary key values
 async function deleteTrainer(event) {
     event.preventDefault();
 
@@ -1262,8 +1256,6 @@ function displayTypeCountResults(data) {
 }
 
 // EVENT LISTENERS AND INITIALIZATION
-// Initializes the webpage functionalities.
-// Add or remove event listeners based on the desired functionalities.
 window.onload = function () {
     checkDbConnection();
     refreshAllTables();
