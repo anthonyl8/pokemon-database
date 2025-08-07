@@ -95,7 +95,11 @@ async function fetchAndDisplay(tableId, endpoint) {
         const row = tableBody.insertRow();
         tuple.forEach((field, index) => {
             const cell = row.insertCell(index);
-            cell.textContent = field || 'NULL';
+            if (field || field === 0) {
+                cell.textContent = field;
+            } else {
+                cell.textContent = 'NULL';
+            };
         });
     });
 }
@@ -794,7 +798,11 @@ function displayProjectionResults(data, attributes) {
         const tr = tableBody.insertRow();
         row.forEach((field, index) => {
             const td = tr.insertCell(index);
-            td.textContent = field || 'NULL';
+            if (field || field === 0) {
+                td.textContent = field;
+            } else {
+                td.textContent = 'NULL';
+            }
         });
     });
 }
