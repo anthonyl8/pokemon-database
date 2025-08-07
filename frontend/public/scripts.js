@@ -22,7 +22,7 @@ async function checkDbConnection() {
             statusElem.textContent = text;
         })
         .catch((error) => {
-            statusElem.textContent = 'connection timed out'; // Adjust error handling if required.
+            statusElem.textContent = 'connection timed out';
         });
 }
 
