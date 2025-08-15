@@ -1,9 +1,0 @@
-ABILITY_ID,NAME,DESCRIPTION
-2,Static,"Contact with the Pok??mon may cause paralysis."
-4,Overgrow,"Powers up Grass-type moves when the Pok??mon's HP is low."
-5,Blaze,"Powers up Fire-type moves when the Pok??mon's HP is low."
-6,Torrent,"Powers up Water-type moves when the Pok??mon's HP is low."
-8,Chlorophyll,"Boosts the Pok??mon's Speed stat in harsh sunlight."
-9,Solar Power,"Boosts the Sp. Atk stat in harsh sunlight, but HP decreases every turn."
-10,Rain Dish,"The Pok??mon gradually regains HP in rain."
-11,Lightning Rod,"Draws in all Electric-type moves to boost its Sp. Atk stat."

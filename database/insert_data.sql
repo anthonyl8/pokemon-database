@@ -1,4 +1,3 @@
-
 INSERT INTO Location (name, climate, terrain_type) VALUES ('Pallet Town', 'Temperate', 'Grassland');
 INSERT INTO Location (name, climate, terrain_type) VALUES ('Viridian City', 'Temperate', 'Urban');
 INSERT INTO Location (name, climate, terrain_type) VALUES ('Pewter City', 'Mountainous', 'Rocky');
